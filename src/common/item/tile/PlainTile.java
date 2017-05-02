@@ -4,8 +4,8 @@ package common.item.tile;
  * Created on 2017/04/30.
  */
 public class PlainTile extends Tile {
-    public PlainTile(int positionX, int positionY) {
-        super(positionX, positionY);
+    public PlainTile(int orderX, int orderY) {
+        super(orderX, orderY);
     }
 
     @Override

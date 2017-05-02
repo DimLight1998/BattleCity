@@ -4,8 +4,8 @@ package common.item.tile;
  * Created on 2017/04/30.
  */
 public class BrickWall extends Tile {
-    public BrickWall(int positionX, int positionY) {
-        super(positionX, positionY);
+    public BrickWall(int orderX, int orderY) {
+        super(orderX, orderY);
     }
 
     @Override

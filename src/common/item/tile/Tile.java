@@ -1,5 +1,7 @@
 package common.item.tile;
 
+
+
 /**
  * Created on 2017/04/30.
  */
@@ -7,9 +9,9 @@ abstract public class Tile {
     private int positionX;
     private int positionY;
 
-    public Tile(int positionX, int positionY) {
-        this.positionX = positionX;
-        this.positionY = positionY;
+    public Tile(int orderX, int orderY) {
+        this.positionX = orderX * TILE_RES_SIZE;
+        this.positionY = orderY * TILE_RES_SIZE;
     }
 
     public int getPositionX() {
@@ -33,4 +35,17 @@ abstract public class Tile {
     abstract boolean isDecisive();
 
     abstract int getPaintLayer();
+
+    public static final int PLAIN_TILE = 0;
+    public static final int BRICK_WALL = 1;
+    public static final int METAL_WALL = 2;
+    public static final int METAL_TILE = 3;
+    public static final int PLANT = 4;
+    public static final int WATER = 5;
+    public static final int HEAD_QUARTER_LU = 6;
+    public static final int HEAD_QUARTER_RU = 7;
+    public static final int HEAD_QUARTER_LD = 8;
+    public static final int HEAD_QUARTER_RD = 9;
+
+    static final int TILE_RES_SIZE = 16;
 }

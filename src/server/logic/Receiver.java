@@ -2,6 +2,7 @@ package server.logic;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -22,6 +23,8 @@ public class Receiver extends Thread{
     public void run() {
         // 从两个不同的客户端进行监听，所以每次都要换一个套接字
         DataInputStream dataInputStream;
+        int port = 0;
+        InetAddress address = null;
 
         while(true) {
             String info = null;
@@ -30,17 +33,19 @@ public class Receiver extends Thread{
                 Socket socket = serverSocket.accept();
                 dataInputStream = new DataInputStream(socket.getInputStream());
                 info = dataInputStream.readUTF();
+                address = socket.getInetAddress();
+                port = socket.getPort();
                 socket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            observer.handleInfo(info);
+            observer.handleInfo(info,address,port);
         }
     }
 
 
-    public void close() throws IOException {
+    public void closeSocket() throws IOException {
         serverSocket.close();
     }
 }

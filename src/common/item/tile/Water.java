@@ -4,8 +4,8 @@ package common.item.tile;
  * Created on 2017/04/30.
  */
 public class Water extends Tile {
-    public Water(int positionX, int positionY) {
-        super(positionX, positionY);
+    public Water(int orderX, int orderY) {
+        super(orderX, orderY);
     }
 
     @Override

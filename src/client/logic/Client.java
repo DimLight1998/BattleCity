@@ -7,13 +7,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Created on 2017/04/30.
  */
 public class Client implements ActionListener,KeyListener {
-    String IPAddress;
-    String portNumber;
+    InetAddress IPAddress;
+    int portNumber;
     Panel_Login panel_login;
     Panel_Game panel_game;
 
@@ -32,7 +34,11 @@ public class Client implements ActionListener,KeyListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getActionCommand().equals("Start")) {
-            IPAddress = panel_login.getAddress();
+            try {
+                IPAddress = panel_login.getAddress();
+            } catch (UnknownHostException e1) {
+                e1.printStackTrace();
+            }
             portNumber = panel_login.getPort();
         }
 

@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Created on 2017/04/30.
@@ -58,12 +60,12 @@ public class Panel_Login extends JPanel implements ActionListener{
         mainFrame.dispose();
     }
 
-    public String getAddress() {
-        return text_address.getText();
+    public InetAddress getAddress() throws UnknownHostException {
+        return InetAddress.getByName( text_address.getText());
     }
 
-    public String getPort() {
-        return text_port.getText();
+    public int getPort() {
+        return Integer.valueOf( text_port.getText());
     }
 
 

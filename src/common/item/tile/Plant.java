@@ -4,8 +4,8 @@ package common.item.tile;
  * Created on 2017/04/30.
  */
 public class Plant extends Tile {
-    public Plant(int positionX, int positionY) {
-        super(positionX, positionY);
+    public Plant(int orderX, int orderY) {
+        super(orderX, orderY);
     }
 
     @Override

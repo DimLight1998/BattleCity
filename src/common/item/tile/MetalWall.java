@@ -4,8 +4,8 @@ package common.item.tile;
  * Created on 2017/04/30.
  */
 public class MetalWall extends Tile {
-    public MetalWall(int positionX, int positionY) {
-        super(positionX, positionY);
+    public MetalWall(int orderX, int orderY) {
+        super(orderX, orderY);
     }
 
     @Override

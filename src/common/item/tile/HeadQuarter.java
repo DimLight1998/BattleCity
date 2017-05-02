@@ -4,8 +4,8 @@ package common.item.tile;
  * Created on 2017/04/30.
  */
 public class HeadQuarter extends Tile {
-    public HeadQuarter(int positionX, int positionY) {
-        super(positionX, positionY);
+    public HeadQuarter(int orderX, int orderY) {
+        super(orderX, orderY);
     }
 
     @Override

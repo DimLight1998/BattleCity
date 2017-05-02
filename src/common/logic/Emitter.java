@@ -8,16 +8,28 @@ import java.net.Socket;
 /**
  * Created on 2017/05/01.
  */
-public class Emitter extends Thread{
+public class Emitter{
     private Socket socket;
-    String info;
 
 
-    Emitter(InetAddress address,int port,String info) throws IOException {
+    public Emitter(InetAddress address, int port) throws IOException {
         socket = new Socket(address,port);
-        this.info = info;
     }
 
+
+    public void emit(String info) {
+        new EmitterThread(socket,info).start();
+    }
+}
+
+class EmitterThread extends Thread {
+    Socket socket;
+    String info;
+
+    EmitterThread(Socket socket,String info) {
+        this.socket = socket;
+        this.info = info;
+    }
 
     public void run() {
         DataOutputStream dataOutputStream = null;
