@@ -23,7 +23,6 @@ public class Receiver extends Thread{
     public void run() {
         // 从两个不同的客户端进行监听，所以每次都要换一个套接字
         DataInputStream dataInputStream;
-        int port = 0;
         InetAddress address = null;
 
         while(true) {
@@ -34,13 +33,14 @@ public class Receiver extends Thread{
                 dataInputStream = new DataInputStream(socket.getInputStream());
                 info = dataInputStream.readUTF();
                 address = socket.getInetAddress();
-                port = socket.getPort();
                 socket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            observer.handleInfo(info,address,port);
+            System.out.println("Received "+info+" from "+address);
+            observer.handleInfo(info,address);
+
         }
     }
 

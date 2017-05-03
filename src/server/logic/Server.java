@@ -23,20 +23,21 @@ import static common.item.tile.Tile.*;
  * Created on 2017/05/01.
  */
 public class Server implements ActionListener{
-    Tile[][] tiles;
-    ArrayList<Tank> tanks;
-    ArrayList<Bullet> bullets;
+    private Tile[][] tiles;
+    private ArrayList<Tank> tanks;
+    private ArrayList<Bullet> bullets;
 
-    int serverPortNumber;
-    Emitter emitter_1;
-    Emitter emitter_2;
-    InetAddress address_1;
-    InetAddress address_2;
-    int portNumber_1;
-    int portNumber_2;
-    Receiver receiver;
-    Panel_Setup panel_setup;
+    private int serverPortNumber;
+    private Emitter emitter_1;
+    private Emitter emitter_2;
+    private InetAddress address_1;
+    private InetAddress address_2;
+    private int portNumber_1;
+    private int portNumber_2;
+    private Receiver receiver;
+    private Panel_Setup panel_setup;
     Panel_Status panel_status;
+    private File mapFile;
 
     boolean isPortSet = false;
     boolean isPlayerReady_1 = false;
@@ -52,20 +53,25 @@ public class Server implements ActionListener{
 //        panel_status = new Panel_Status();
     }
 
-    void handleInfo(String info, InetAddress address, int port) {
+    void handleInfo(String info, InetAddress address) {
         // TODO
 
         // player registers
-        if(info.equals("reg")) {
+        if(info.startsWith("reg")) {
             if(!isPlayerReady_1) {
                 isPlayerReady_1 = true;
                 address_1 = address;
-                portNumber_1 = port;
+                portNumber_1 = Integer.parseInt(info.substring(3));
             } else if(!isPlayerReady_2) {
                 isPlayerReady_2 = true;
                 address_2 =address;
-                portNumber_2 = port;
+                portNumber_2 = Integer.parseInt(info.substring(3));
             }
+        }
+
+        // player selects map
+        if(info.startsWith("map")) {
+            mapFile = new File("src/res/map/"+info.substring(3)+".txt");
         }
 
         // player asks if others ready
@@ -85,9 +91,9 @@ public class Server implements ActionListener{
             }
         }
 
-        // player moves
-        // e.g. movu1
-        if(info.startsWith("mov")) {
+        // player presses key
+        // e.g. prsu1
+        if(info.startsWith("prs")) {
             if(info.endsWith("1")) {
                 switch (info.charAt(3)) {
                     // TODO
@@ -96,6 +102,16 @@ public class Server implements ActionListener{
                 switch (info.charAt(3)) {
                     // TODO
                 }
+            }
+        }
+
+        // player release key
+        // e.g. rls1
+        if(info.startsWith("rls")) {
+            if(info.endsWith("1")) {
+                // TODO
+            } else if(info.endsWith("2")) {
+                // TODO
             }
         }
 
@@ -120,9 +136,6 @@ public class Server implements ActionListener{
         panel_setup.dispose();
         receiver = new Receiver(serverPortNumber,this);
 
-        // TODO complete map selection
-        loadMap(new File("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\map\\test.txt"));
-
         receiver.start();
 
         while(!isPlayerReady_2) {
@@ -131,12 +144,22 @@ public class Server implements ActionListener{
 
         emitter_1 = new Emitter(address_1,portNumber_1);
         emitter_2 = new Emitter(address_2,portNumber_2);
+
+        emitter_1.emit("dis1");
+        emitter_2.emit("dis2");
 //        panel_status.show();
 
+        // TODO remove this
+        System.out.println("ready");
+
+        // TODO complete map selection
+        loadMap(mapFile);
+
         while(!isGameOver) {
-            // TODO complete
-            // check game over
-            // emit info
+            Thread.sleep(100);// TODO 这是必要的吗
+            updateStatus();
+            checkGameOver();
+            emitInfo();
         }
 
         JOptionPane.showConfirmDialog(panel_status,"Game over");
@@ -197,6 +220,18 @@ public class Server implements ActionListener{
                 rowCounter++;
             }
         }
+    }
+
+    void updateStatus() {
+
+    }
+
+    void checkGameOver() {
+
+    }
+
+    void emitInfo() {
+
     }
 
     static final int MAX_MAP_SIZE_X = 30;

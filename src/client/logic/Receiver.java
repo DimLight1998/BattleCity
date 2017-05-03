@@ -13,9 +13,14 @@ public class Receiver extends Thread{
     private Client observer;
 
 
-    Receiver(int port,Client observer) throws IOException {
+    Receiver(Client observer) throws IOException {
         this.observer = observer;
-        this.serverSocket = new ServerSocket(port);
+        this.serverSocket = new ServerSocket(0);
+    }
+
+
+    int getLocalPort() {
+        return serverSocket.getLocalPort();
     }
 
 
@@ -45,6 +50,8 @@ public class Receiver extends Thread{
             }
 
             observer.handleInfo(info);
+            System.out.println("Received "+info+" from "+ socket.getInetAddress()+":"+socket.getPort());
+
         }
     }
 

@@ -40,6 +40,8 @@ class EmitterThread extends Thread {
             e.printStackTrace();
         }
 
+        System.out.println("Emitting "+ info + " to "+socket.getInetAddress()+":"+socket.getPort());
+
         try {
             dataOutputStream.writeUTF(info);
         } catch (IOException e) {
