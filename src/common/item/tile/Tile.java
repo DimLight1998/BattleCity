@@ -23,17 +23,17 @@ abstract public class Tile {
         return positionY;
     }
 
-    abstract boolean isTankThrough();
+    public abstract boolean isTankThrough();
 
-    abstract boolean isBulletThrough();
+    public abstract boolean isBulletThrough();
 
-    abstract boolean isDamageable();
+    public abstract boolean isDamageable();
 
-    abstract boolean isSuperDamageable();
+    public abstract boolean isSuperDamageable();
 
-    abstract boolean isSlippery();
+    public abstract boolean isSlippery();
 
-    abstract boolean isDecisive();
+    public abstract boolean isDecisive();
 
     public abstract int getPaintLayer();
 

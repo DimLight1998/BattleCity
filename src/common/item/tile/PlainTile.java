@@ -12,32 +12,32 @@ public class PlainTile extends Tile {
     }
 
     @Override
-    boolean isTankThrough() {
+    public boolean isTankThrough() {
         return true;
     }
 
     @Override
-    boolean isBulletThrough() {
+    public boolean isBulletThrough() {
         return true;
     }
 
     @Override
-    boolean isDamageable() {
+    public boolean isDamageable() {
         return false;
     }
 
     @Override
-    boolean isSuperDamageable() {
+    public boolean isSuperDamageable() {
         return false;
     }
 
     @Override
-    boolean isSlippery() {
+    public boolean isSlippery() {
         return false;
     }
 
     @Override
-    boolean isDecisive() {
+    public boolean isDecisive() {
         return false;
     }
 

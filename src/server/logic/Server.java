@@ -1,10 +1,12 @@
 package server.logic;
 
 import common.item.bullet.Bullet;
+import common.item.tank.PlayerTank;
 import common.item.tank.Tank;
 import common.item.tile.*;
 import common.logic.Emitter;
 import common.logic.MapLoader;
+import javafx.util.Pair;
 import server.gui.Panel_Setup;
 import server.gui.Panel_Status;
 
@@ -18,6 +20,7 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static common.item.tank.Tank.*;
 import static common.item.tile.Tile.*;
 
 /**
@@ -52,8 +55,13 @@ public class Server implements ActionListener{
         tanks = new ArrayList<>();
         bullets = new ArrayList<>();
 
+        // TODO for test
+        hero_1 = new PlayerTank(0,0);
+        hero_2 = new PlayerTank(0,0);
+
         panel_setup = new Panel_Setup(this);
 //        panel_status = new Panel_Status();
+
     }
 
     void handleInfo(String info, InetAddress address) {
@@ -95,15 +103,26 @@ public class Server implements ActionListener{
         }
 
         // player presses key
-        // e.g. prsu1
+        // e.g. prsw1
         if(info.startsWith("prs")) {
             if(info.endsWith("1")) {
-                switch (info.charAt(3)) {
-                    // TODO
+                // todo check if illegal
+                if(!isBlockedInDirection(hero_1,getDirectionFromChar(info.charAt(3)))) {
+                    emitter_1.emit("updp1"+info.charAt(3));
+                    emitter_2.emit("updp1"+info.charAt(3));
+                } else {
+                    emitter_1.emit("updp10");
+                    emitter_2.emit("updp10");
                 }
+
             } else if(info.endsWith("2")) {
-                switch (info.charAt(3)) {
-                    // TODO
+                // todo check if illegal
+                if(!isBlockedInDirection(hero_2,getDirectionFromChar(info.charAt(3)))) {
+                    emitter_1.emit("updp2" + info.charAt(3));
+                    emitter_2.emit("updp2" + info.charAt(3));
+                } else {
+                    emitter_1.emit("updp20");
+                    emitter_2.emit("updp20");
                 }
             }
         }
@@ -112,9 +131,12 @@ public class Server implements ActionListener{
         // e.g. rls1
         if(info.startsWith("rls")) {
             if(info.endsWith("1")) {
-                // TODO
+                emitter_1.emit("updp10");
+                emitter_2.emit("updp10");
             } else if(info.endsWith("2")) {
-                // TODO
+                emitter_1.emit("updp20");
+                emitter_2.emit("updp20");
+
             }
         }
 
@@ -158,11 +180,20 @@ public class Server implements ActionListener{
         // todo for test
 //        MapLoader.loadMap(mapFile,tiles);
 
+
+        int counter = 0;
+
         while(!isGameOver) {
             Thread.sleep(100);// TODO 这是必要的吗
             updateStatus();
             checkGameOver();
             emitInfo();
+
+            counter ++;
+            if(counter == 5) {
+                forceSynchronize();
+                counter = 0;
+            }
         }
 
         JOptionPane.showConfirmDialog(panel_status,"Game over");
@@ -179,10 +210,85 @@ public class Server implements ActionListener{
         }
     }
 
+    static Pair<Integer,Integer> getOrderFromLocation(int locationX,int locationY) {
+        Integer column = locationX / 16;
+        Integer row = locationY / 16;
 
+        return new Pair<Integer,Integer>(row,column);
+    }
+
+    static int getDirectionFromChar(char c) {
+        switch (c) {
+            case 'a':
+                return kDirectionLeft;
+            case 's':
+                return kDirectionDown;
+            case 'd':
+                return kDirectionRight;
+            case 'w':
+                return kDirectionUp;
+        }
+
+        return 0;
+    }
+
+    boolean isBlockedInDirection(Tank tank,int direction) {
+        int tankLocationX = tank.getLocationX();
+        int tankLocationY = tank.getLocationY();
+
+        switch(direction) {
+            case kDirectionLeft:
+            {
+                Pair<Integer,Integer> order= getOrderFromLocation(tankLocationX-1,tankLocationY);
+
+                if(!tiles[order.getKey()][order.getValue()].isTankThrough()) {
+                    return true;
+                }
+
+                return false;
+                // TODO add tank-tank check
+            }
+            case kDirectionRight:
+            {
+                Pair<Integer,Integer> order= getOrderFromLocation(tankLocationX+1,tankLocationY);
+
+                if(!tiles[order.getKey()][order.getValue()].isTankThrough()) {
+                    return true;
+                }
+
+                return false;
+                // TODO add tank-tank check
+            }
+            case kDirectionUp:
+            {
+                Pair<Integer,Integer> order= getOrderFromLocation(tankLocationX,tankLocationY-1);
+
+                if(!tiles[order.getKey()][order.getValue()].isTankThrough()) {
+                    return true;
+                }
+
+                return false;
+                // TODO add tank-tank check
+            }
+            case kDirectionDown:
+            {
+                Pair<Integer,Integer> order= getOrderFromLocation(tankLocationX,tankLocationY+1);
+
+                if(!tiles[order.getKey()][order.getValue()].isTankThrough()) {
+                    return true;
+                }
+
+                return false;
+                // TODO add tank-tank check
+            }
+        }
+
+        return false;
+    }
 
     void updateStatus() {
-
+        hero_1.updateLocation();
+        hero_2.updateLocation();
     }
 
     void checkGameOver() {
@@ -192,6 +298,13 @@ public class Server implements ActionListener{
     void emitInfo() {
 
     }
+
+    void forceSynchronize() {
+        // this function is used to force synchronize tanks, heroes and bullets
+
+
+    }
+
 
     static final int MAX_MAP_SIZE_X = 30;
     static final int MAX_MAP_SIZE_Y = 30;

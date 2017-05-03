@@ -27,7 +27,7 @@ public abstract class Tank {
         this.locationX = locationX;
         this.locationY = locationY;
         this.velocityStatus = kNotMoving;
-        this.facingStatus = kFacingLeft;
+        this.facingStatus = kDirectionLeft;
         this.isSuper = false;
         this.isMovable = true;
     }
@@ -76,7 +76,7 @@ public abstract class Tank {
         this.facingStatus = facingStatus;
     }
 
-    void updateLocation() {
+    public void updateLocation() {
         if (isMovable) {
             switch (velocityStatus) {
                 // TODO check whether it is valid and reset MoveVelocity
@@ -127,13 +127,13 @@ public abstract class Tank {
         String imagePath = "D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\";
 
         switch (facingStatus) {
-            case kFacingLeft:
+            case kDirectionLeft:
                 return new ImageIcon(imagePath+getImagePrefix()+"_L.png").getImage();
-            case kFacingRight:
+            case kDirectionRight:
                 return new ImageIcon(imagePath+getImagePrefix()+"_R.png").getImage();
-            case kFacingUp:
+            case kDirectionUp:
                 return new ImageIcon(imagePath+getImagePrefix()+"_U.png").getImage();
-            case kFacingDown:
+            case kDirectionDown:
                 return new ImageIcon(imagePath+getImagePrefix()+"_D.png").getImage();
             default:
                 return new ImageIcon().getImage();
@@ -143,14 +143,14 @@ public abstract class Tank {
     abstract String getImagePrefix();
 
 
-    static final int kNotMoving = 0;
-    static final int kMovingLeft = 1;
-    static final int kMovingRight = 2;
-    static final int kMovingUp = 3;
-    static final int kMovingDown = 4;
+    public static final int kNotMoving = 0;
+    public static final int kMovingLeft = 1;
+    public static final int kMovingRight = 2;
+    public static final int kMovingUp = 3;
+    public static final int kMovingDown = 4;
 
-    static final int kFacingLeft = 1;
-    static final int kFacingRight = 2;
-    static final int kFacingUp = 3;
-    static final int kFacingDown = 4;
+    public static final int kDirectionLeft = 1;
+    public static final int kDirectionRight = 2;
+    public static final int kDirectionUp = 3;
+    public static final int kDirectionDown = 4;
 }

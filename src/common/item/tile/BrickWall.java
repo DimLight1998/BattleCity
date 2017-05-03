@@ -12,32 +12,32 @@ public class BrickWall extends Tile {
     }
 
     @Override
-    boolean isTankThrough() {
+    public boolean isTankThrough() {
         return false;
     }
 
     @Override
-    boolean isBulletThrough() {
+    public boolean isBulletThrough() {
         return false;
     }
 
     @Override
-    boolean isDamageable() {
+    public boolean isDamageable() {
         return true;
     }
 
     @Override
-    boolean isSuperDamageable() {
+    public boolean isSuperDamageable() {
         return true;
     }
 
     @Override
-    boolean isSlippery() {
+    public boolean isSlippery() {
         return false;
     }
 
     @Override
-    boolean isDecisive() {
+    public boolean isDecisive() {
         return false;
     }
 

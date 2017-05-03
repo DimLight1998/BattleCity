@@ -20,6 +20,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import static common.item.tank.Tank.*;
+
 
 /**
  * Created on 2017/04/30.
@@ -50,7 +52,7 @@ public class Client implements ActionListener,KeyListener {
         bullets = new ArrayList<>();
         hero_1 = new PlayerTank(PLAYER_1_INIT_LOC_X,PLAYER_1_INIT_LOC_Y);
         hero_2 = new PlayerTank(PLAYER_2_INIT_LOC_X,PLAYER_2_INIT_LOC_Y);
-        MapLoader.loadMap(new File("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\map\\gene.txt"),tiles);
+        MapLoader.loadMap(new File("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\map\\test.txt"),tiles);
         // TODO for test
 
 
@@ -98,6 +100,27 @@ public class Client implements ActionListener,KeyListener {
             hero_2 = new PlayerTank(PLAYER_2_INIT_LOC_X,PLAYER_2_INIT_LOC_Y);
         }
 
+        if(info.startsWith("updp")) {
+            Tank updated = (info.charAt(4)=='1'?hero_1:hero_2);
+            switch (info.charAt(5)) {
+                case 'w':
+                    updated.setVelocityStatus(kMovingUp);
+                    break;
+                case 'a':
+                    updated.setVelocityStatus(kMovingLeft);
+                    break;
+                case 's':
+                    updated.setVelocityStatus(kMovingDown);
+                    break;
+                case 'd':
+                    updated.setVelocityStatus(kMovingRight);
+                    break;
+                case '0':
+                    updated.setVelocityStatus(kNotMoving);
+                    break;
+            }
+        }
+
         if(info.startsWith("gmo")) {
             if(info.charAt(3)=='w') {
                 // todo remove
@@ -111,6 +134,10 @@ public class Client implements ActionListener,KeyListener {
     void updateStatus() {
         // todo for test
         tiles[5][5] = new Water(5,5);
+
+        hero_1.updateLocation();
+        hero_2.updateLocation();
+
     }
 
 
