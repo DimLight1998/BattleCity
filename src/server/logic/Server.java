@@ -4,6 +4,7 @@ import common.item.bullet.Bullet;
 import common.item.tank.Tank;
 import common.item.tile.*;
 import common.logic.Emitter;
+import common.logic.MapLoader;
 import server.gui.Panel_Setup;
 import server.gui.Panel_Status;
 
@@ -26,6 +27,8 @@ public class Server implements ActionListener{
     private Tile[][] tiles;
     private ArrayList<Tank> tanks;
     private ArrayList<Bullet> bullets;
+    Tank hero_1;
+    Tank hero_2;
 
     private int serverPortNumber;
     private Emitter emitter_1;
@@ -153,7 +156,7 @@ public class Server implements ActionListener{
         System.out.println("ready");
 
         // TODO complete map selection
-        loadMap(mapFile);
+        MapLoader.loadMap(mapFile,tiles);
 
         while(!isGameOver) {
             Thread.sleep(100);// TODO 这是必要的吗
@@ -176,51 +179,7 @@ public class Server implements ActionListener{
         }
     }
 
-    void loadMap(File mapFile) throws FileNotFoundException {
-        Scanner mapScanner = new Scanner(mapFile);
 
-        int rowCounter = 0;
-        int columnCounter = 0;
-
-        while(mapScanner.hasNextInt()) {
-            int read = mapScanner.nextInt();
-
-            switch (read) {
-                case PLAIN_TILE:
-                    tiles[rowCounter][columnCounter] = new PlainTile(columnCounter,rowCounter);
-                    break;
-                case BRICK_WALL:
-                    tiles[rowCounter][columnCounter] = new BrickWall(columnCounter,rowCounter);
-                    break;
-                case METAL_WALL:
-                    tiles[rowCounter][columnCounter] = new MetalWall(columnCounter,rowCounter);
-                    break;
-                case METAL_TILE:
-                    tiles[rowCounter][columnCounter] = new MetalTile(columnCounter,rowCounter);
-                    break;
-                case PLANT:
-                    tiles[rowCounter][columnCounter] = new Plant(columnCounter,rowCounter);
-                    break;
-                case WATER:
-                    tiles[rowCounter][columnCounter] = new Water(columnCounter,rowCounter);
-                    break;
-                case HEAD_QUARTER_LU:
-                case HEAD_QUARTER_RU:
-                case HEAD_QUARTER_LD:
-                case HEAD_QUARTER_RD:
-                    tiles[rowCounter][columnCounter] = new HeadQuarter(columnCounter,rowCounter);
-                    break;
-                default:
-                    break;
-            }
-
-            columnCounter++;
-            if(columnCounter == MAX_MAP_SIZE_X + 1) {
-                columnCounter = 0;
-                rowCounter++;
-            }
-        }
-    }
 
     void updateStatus() {
 

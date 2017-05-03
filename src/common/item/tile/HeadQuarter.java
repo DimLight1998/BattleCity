@@ -1,9 +1,11 @@
 package common.item.tile;
 
+import java.awt.*;
+
 /**
  * Created on 2017/04/30.
  */
-public class HeadQuarter extends Tile {
+public abstract class HeadQuarter extends Tile {
     public HeadQuarter(int orderX, int orderY) {
         super(orderX, orderY);
     }
@@ -39,7 +41,7 @@ public class HeadQuarter extends Tile {
     }
 
     @Override
-    int getPaintLayer() {
+    public int getPaintLayer() {
         return 0;
     }
 }

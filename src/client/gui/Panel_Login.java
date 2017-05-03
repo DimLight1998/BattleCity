@@ -12,32 +12,28 @@ import java.net.UnknownHostException;
 /**
  * Created on 2017/04/30.
  */
-public class Panel_Login extends JPanel implements ActionListener{
-    private  JTextField text_address;
+public class Panel_Login extends JPanel implements ActionListener {
+    private JTextField text_address;
     private JTextField text_port;
-//    private JTextField text_localPort;
-    private JFrame mainFrame;
+    private JFrame     mainFrame;
 
     public Panel_Login(Client client) {
         mainFrame = new JFrame("Login");
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setContentPane(this);
         mainFrame.setResizable(false);
-        mainFrame.setSize(300,180);
+        mainFrame.setSize(300, 180);
 
         JPanel panel_address = new JPanel(new FlowLayout());
-        JPanel panel_port = new JPanel(new FlowLayout());
-//        JPanel panel_localPort   = new JPanel(new FlowLayout());
+        JPanel panel_port    = new JPanel(new FlowLayout());
         JPanel panel_buttons = new JPanel(new FlowLayout());
 
         JLabel label_address = new JLabel("Server IP address");
-        JLabel label_port = new JLabel("Server port number");
-//        JLabel label_localPort  = new JLabel("Run on local port");
-        text_address = new JTextField(10);
-        text_port = new JTextField(10);
-//        text_localPort = new JTextField(10);
+        JLabel label_port    = new JLabel("Server port number");
+        text_address         = new JTextField(10);
+        text_port            = new JTextField(10);
         JButton button_start = new JButton("Start");
-        JButton button_exit = new JButton("Exit");
+        JButton button_exit  = new JButton("Exit");
 
         button_start.addActionListener(client);
         button_exit.addActionListener(this);
@@ -47,14 +43,11 @@ public class Panel_Login extends JPanel implements ActionListener{
         panel_address.add(text_address);
         panel_port.add(label_port);
         panel_port.add(text_port);
-//        panel_localPort.add(label_localPort);
-//        panel_localPort.add(text_localPort);
         panel_buttons.add(button_start);
         panel_buttons.add(button_exit);
 
         mainFrame.getContentPane().add(panel_address);
         mainFrame.getContentPane().add(panel_port);
-//        mainFrame.getContentPane().add(panel_localPort);
         mainFrame.getContentPane().add(panel_buttons);
 
         mainFrame.setLocationRelativeTo(null);
@@ -69,14 +62,12 @@ public class Panel_Login extends JPanel implements ActionListener{
     }
 
     public InetAddress getAddress() throws UnknownHostException {
-        return InetAddress.getByName( text_address.getText());
+        return InetAddress.getByName(text_address.getText());
     }
 
     public int getPort() {
-        return Integer.valueOf( text_port.getText());
+        return Integer.valueOf(text_port.getText());
     }
-
-//    public int getLocalPort() {return Integer.valueOf(text_localPort.getText());}
 
     @Override
     public void actionPerformed(ActionEvent e) {

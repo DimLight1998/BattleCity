@@ -1,5 +1,8 @@
 package common.item.tile;
 
+import javax.swing.*;
+import java.awt.*;
+
 /**
  * Created on 2017/04/30.
  */
@@ -39,7 +42,12 @@ public class Plant extends Tile {
     }
 
     @Override
-    int getPaintLayer() {
-        return 2;
+    public int getPaintLayer() {
+        return 3;
+    }
+
+    @Override
+    public Image getImage() {
+        return new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\plant.png").getImage();
     }
 }

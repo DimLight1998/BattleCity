@@ -1,6 +1,7 @@
 package common.item.tile;
 
 
+import java.awt.*;
 
 /**
  * Created on 2017/04/30.
@@ -34,7 +35,9 @@ abstract public class Tile {
 
     abstract boolean isDecisive();
 
-    abstract int getPaintLayer();
+    public abstract int getPaintLayer();
+
+    public abstract Image getImage();
 
     public static final int PLAIN_TILE = 0;
     public static final int BRICK_WALL = 1;

@@ -8,6 +8,7 @@ public abstract class Tank {
     int locationX;
     int locationY;
     int velocityStatus;
+    int facingStatus;
 
     boolean isSuper;
     boolean isMovable;
@@ -58,10 +59,18 @@ public abstract class Tank {
     }
 
 
+
     public void setMovable(boolean movable) {
         isMovable = movable;
     }
 
+    public int getFacingStatus() {
+        return facingStatus;
+    }
+
+    public void setFacingStatus(int facingStatus) {
+        this.facingStatus = facingStatus;
+    }
 
     void updateLocation() {
         if (isMovable) {
@@ -115,4 +124,9 @@ public abstract class Tank {
     static final int kMovingRight = 2;
     static final int kMovingUp = 3;
     static final int kMovingDown = 4;
+
+    static final int kFacingLeft = 1;
+    static final int kFacingRight = 2;
+    static final int kFacingUp = 3;
+    static final int kFacingDown = 4;
 }
