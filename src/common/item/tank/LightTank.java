@@ -10,6 +10,11 @@ public class LightTank extends Tank {
     }
 
     @Override
+    String getImagePrefix() {
+        return "LT";
+    }
+
+    @Override
     int getMoveVelocity() {
         return 2;
     }

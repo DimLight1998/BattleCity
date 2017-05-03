@@ -8,38 +8,12 @@ import common.item.tile.Tile;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created on 2017/04/30.
  */
 public class Panel_Game extends JPanel {
-    // clang-format off
-    Image image_armoredTankLeft    = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\AM_L.png").getImage();
-    Image image_armoredTankRight   = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\AM_R.png").getImage();
-    Image image_armoredTankUp      = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\AM_U.png").getImage();
-    Image image_armoredTankDown    = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\AM_D.png").getImage();
-    Image image_lightTankLeft      = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\LT_L.png").getImage();
-    Image image_lightTankRight     = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\LT_R.png").getImage();
-    Image image_lightTankUp        = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\LT_U.png").getImage();
-    Image image_lightTankDown      = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\LT_D.png").getImage();
-    Image image_tankDestroyerLeft  = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\TD_L.png").getImage();
-    Image image_tankDestroyerRight = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\TD_R.png").getImage();
-    Image image_tankDestroyerUp    = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\TD_U.png").getImage();
-    Image image_tankDestroyerDown  = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\TD_D.png").getImage();
-    Image image_heavyTankLeft      = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\HT_L.png").getImage();
-    Image image_heavyTankRight     = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\HT_R.png").getImage();
-    Image image_heavyTankUp        = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\HT_U.png").getImage();
-    Image image_heavyTankDown      = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\HT_D.png").getImage();
-    Image image_player_1_TankLeft  = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\P1_L.png").getImage();
-    Image image_player_1_TankRight = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\P1_R.png").getImage();
-    Image image_player_1_TankUp    = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\P1_U.png").getImage();
-    Image image_player_1_TankDown  = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\P1_D.png").getImage();
-    Image image_player_2_TankLeft  = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\P2_L.png").getImage();
-    Image image_player_2_TankRight = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\P2_R.png").getImage();
-    Image image_player_2_TankUp    = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\P2_U.png").getImage();
-    Image image_player_2_TankDown  = new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\P2_D.png").getImage();
-    // clang-format on
-
     Tile[][] tiles;
     ArrayList<Tank>   tanks;
     ArrayList<Bullet> bullets;
@@ -74,8 +48,22 @@ public class Panel_Game extends JPanel {
         }
 
         // paint layer 1 (tank)
+        Iterator<Tank> tankIterator = tanks.iterator();
+        while(tankIterator.hasNext()) {
+            Tank next = tankIterator.next();
+            graphics.drawImage(next.getImage(),next.getLocationX(),next.getLocationY(),this);
+        }
+
+        // paint layer 1 (player)
+        graphics.drawImage(hero_1.getImage(),hero_1.getLocationX(),hero_1.getLocationY(),this);
+        graphics.drawImage(hero_2.getImage(),hero_2.getLocationX(),hero_2.getLocationY(),this);
 
         // paint layer 2 (bullet)
+//        Iterator<Bullet> bulletIterator = bullets.iterator();
+//        while(bulletIterator.hasNext()) {
+//            Bullet next = bulletIterator.next();
+//            graphics.drawImage(next.getImage(),next.getLocationX(),next.getLocationY(),this);
+//        }
 
         // paint layer 3 (plant)
         for (int i = 0; i < 30; i++) {
@@ -87,6 +75,5 @@ public class Panel_Game extends JPanel {
         }
 
         // paint layer 4 (tool)
-        System.out.println("Painted");
     }
 }

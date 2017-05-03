@@ -10,6 +10,11 @@ public class HeavyTank extends Tank {
     }
 
     @Override
+    String getImagePrefix() {
+        return "HT";
+    }
+
+    @Override
     int getMoveVelocity() {
         return 2;
     }

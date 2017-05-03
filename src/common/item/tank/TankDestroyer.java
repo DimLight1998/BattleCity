@@ -10,6 +10,11 @@ public class TankDestroyer extends Tank {
     }
 
     @Override
+    String getImagePrefix() {
+        return "TD";
+    }
+
+    @Override
     int getMoveVelocity() {
         return 2;
     }

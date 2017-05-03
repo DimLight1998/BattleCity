@@ -1,5 +1,8 @@
 package common.item.tank;
 
+import javax.swing.*;
+import java.awt.*;
+
 /**
  * Created on 2017/04/30.
  */
@@ -24,6 +27,7 @@ public abstract class Tank {
         this.locationX = locationX;
         this.locationY = locationY;
         this.velocityStatus = kNotMoving;
+        this.facingStatus = kFacingLeft;
         this.isSuper = false;
         this.isMovable = true;
     }
@@ -117,6 +121,26 @@ public abstract class Tank {
     void shoot() {
         // TODO complete this after bullet
     }
+
+    public Image getImage() {
+        // TODO remove magic
+        String imagePath = "D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\";
+
+        switch (facingStatus) {
+            case kFacingLeft:
+                return new ImageIcon(imagePath+getImagePrefix()+"_L.png").getImage();
+            case kFacingRight:
+                return new ImageIcon(imagePath+getImagePrefix()+"_R.png").getImage();
+            case kFacingUp:
+                return new ImageIcon(imagePath+getImagePrefix()+"_U.png").getImage();
+            case kFacingDown:
+                return new ImageIcon(imagePath+getImagePrefix()+"_D.png").getImage();
+            default:
+                return new ImageIcon().getImage();
+        }
+    }
+
+    abstract String getImagePrefix();
 
 
     static final int kNotMoving = 0;
