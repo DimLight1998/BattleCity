@@ -138,7 +138,6 @@ public class Server implements ActionListener{
 
         panel_setup.dispose();
         receiver = new Receiver(serverPortNumber,this);
-
         receiver.start();
 
         while(!isPlayerReady_2) {
@@ -156,7 +155,8 @@ public class Server implements ActionListener{
         System.out.println("ready");
 
         // TODO complete map selection
-        MapLoader.loadMap(mapFile,tiles);
+        // todo for test
+//        MapLoader.loadMap(mapFile,tiles);
 
         while(!isGameOver) {
             Thread.sleep(100);// TODO 这是必要的吗

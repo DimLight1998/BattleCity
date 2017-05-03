@@ -62,13 +62,13 @@ public class Client implements ActionListener,KeyListener {
 
     // Main function
     public void start() throws InterruptedException, IOException {
-//        panel_login.display();
-//
-//        while(!isReady) {
-//            Thread.sleep(100);
-//        }
-//
-//        panel_login.dispose();
+        panel_login.display();
+
+        while(!isReady) {
+            Thread.sleep(100);
+        }
+
+        panel_login.dispose();
         // TODO remove
         System.out.println("Connected to the server");
 
@@ -145,10 +145,7 @@ public class Client implements ActionListener,KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        // TODO delete this
-        if(e.getKeyChar() == 'e') {
-            System.out.println("is typed.");
-        }
+        emitter.emit("prs"+Character.toLowerCase(e.getKeyChar())+playerNumber);
     }
 
 
@@ -163,7 +160,7 @@ public class Client implements ActionListener,KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        System.out.println("released");
+        emitter.emit("rls"+playerNumber);
     }
 
 

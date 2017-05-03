@@ -1,6 +1,7 @@
 package client.logic;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -25,33 +26,18 @@ public class Receiver extends Thread{
 
 
     public void run() {
-        // 只用从一个服务端进行监听，所以不需要每次更新套接字
-        Socket socket = null;
-        DataInputStream dataInputStream = null;
-
         try {
-            socket = serverSocket.accept();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            while (true) {
+                Socket socket = serverSocket.accept();
+                DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+                String info = dataInputStream.readUTF();
 
-        try {
-             dataInputStream = new DataInputStream(socket.getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        while(true) {
-            String info = null;
-            try {
-                info = dataInputStream.readUTF();
-            } catch (IOException e) {
-                e.printStackTrace();
+                observer.handleInfo(info);
+                System.out.println("Received " + info + " from " + socket.getInetAddress() + ":" + socket.getPort());
+                socket.close();
             }
-
-            observer.handleInfo(info);
-            System.out.println("Received "+info+" from "+ socket.getInetAddress()+":"+socket.getPort());
-
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
