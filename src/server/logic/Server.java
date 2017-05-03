@@ -13,15 +13,15 @@ import server.gui.Panel_Status;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.beans.XMLEncoder;
+import java.io.*;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import static common.item.tank.Tank.*;
 import static common.item.tile.Tile.*;
+import static javax.xml.bind.JAXB.marshal;
 
 /**
  * Created on 2017/05/01.
@@ -151,34 +151,35 @@ public class Server implements ActionListener{
     }
 
     public void start() throws InterruptedException, IOException {
-        // TODO
-        panel_setup.display();
-
-        while (!isPortSet) {
-            Thread.sleep(100);
-        }
-
-        panel_setup.dispose();
-        receiver = new Receiver(serverPortNumber,this);
-        receiver.start();
-
-        while(!isPlayerReady_2) {
-            Thread.sleep(100);
-        }
-
-        emitter_1 = new Emitter(address_1,portNumber_1);
-        emitter_2 = new Emitter(address_2,portNumber_2);
-
-        emitter_1.emit("dis1");
-        emitter_2.emit("dis2");
-//        panel_status.show();
-
-        // TODO remove this
-        System.out.println("ready");
-
-        // TODO complete map selection
-        // todo for test
-//        MapLoader.loadMap(mapFile,tiles);
+//        // TODO
+//        panel_setup.display();
+//
+//        while (!isPortSet) {
+//            Thread.sleep(100);
+//        }
+//
+//        panel_setup.dispose();
+//        receiver = new Receiver(serverPortNumber,this);
+//        receiver.start();
+//
+//        while(!isPlayerReady_2) {
+//            Thread.sleep(100);
+//        }
+//
+//        emitter_1 = new Emitter(address_1,portNumber_1);
+//        emitter_2 = new Emitter(address_2,portNumber_2);
+//
+//        emitter_1.emit("dis1");
+//        emitter_2.emit("dis2");
+////        panel_status.show();
+//
+//        // TODO remove this
+//        System.out.println("ready");
+//
+//        // TODO complete map selection
+//        // todo for test
+        mapFile = new File("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\map\\gene.txt");
+        MapLoader.loadMap(mapFile,tiles);
 
 
         int counter = 0;
@@ -301,8 +302,7 @@ public class Server implements ActionListener{
 
     void forceSynchronize() {
         // this function is used to force synchronize tanks, heroes and bullets
-
-
+        System.out.println(hero_1.toString());
     }
 
 

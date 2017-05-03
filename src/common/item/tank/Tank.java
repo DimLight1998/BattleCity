@@ -142,6 +142,21 @@ public abstract class Tank {
 
     abstract String getImagePrefix();
 
+    public String toString() {
+        return String.format("{%d.%d.%d.%d.%d.%d.%d}",health,locationX,locationY,velocityStatus,facingStatus,isSuper?1:0,isMovable?1:0);
+    }
+
+    public void loadFromString(String info) {
+        String[] slices = info.split("(\\.)|(\\{)|(})");
+        health = Integer.parseInt(slices[0]);
+        locationX = Integer.parseInt(slices[1]);
+        locationY = Integer.parseInt(slices[2]);
+        velocityStatus = Integer.parseInt(slices[3]);
+        facingStatus = Integer.parseInt(slices[4]);
+        isSuper = (slices[5].equals("1"));
+        isMovable = (slices[6].equals("1"));
+    }
+
 
     public static final int kNotMoving = 0;
     public static final int kMovingLeft = 1;
