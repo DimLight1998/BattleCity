@@ -9,6 +9,15 @@ import java.awt.*;
 public abstract class Tank {
     int health;
     int locationX;
+
+    public void setLocationX(int locationX) {
+        this.locationX = locationX;
+    }
+
+    public void setLocationY(int locationY) {
+        this.locationY = locationY;
+    }
+
     int locationY;
     int velocityStatus;
     int facingStatus;
@@ -148,13 +157,15 @@ public abstract class Tank {
 
     public void loadFromString(String info) {
         String[] slices = info.split("(\\.)|(\\{)|(})");
-        health = Integer.parseInt(slices[0]);
-        locationX = Integer.parseInt(slices[1]);
-        locationY = Integer.parseInt(slices[2]);
-        velocityStatus = Integer.parseInt(slices[3]);
-        facingStatus = Integer.parseInt(slices[4]);
-        isSuper = (slices[5].equals("1"));
-        isMovable = (slices[6].equals("1"));
+        // todo debug
+
+        health = Integer.parseInt(slices[1]);
+        locationX = Integer.parseInt(slices[2]);
+        locationY = Integer.parseInt(slices[3]);
+        velocityStatus = Integer.parseInt(slices[4]);
+        facingStatus = Integer.parseInt(slices[5]);
+        isSuper = (slices[6].equals("1"));
+        isMovable = (slices[7].equals("1"));
     }
 
 

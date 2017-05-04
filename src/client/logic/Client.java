@@ -105,20 +105,36 @@ public class Client implements ActionListener,KeyListener {
             switch (info.charAt(5)) {
                 case 'w':
                     updated.setVelocityStatus(kMovingUp);
+                    updated.setFacingStatus(kDirectionUp);
                     break;
                 case 'a':
                     updated.setVelocityStatus(kMovingLeft);
+                    updated.setFacingStatus(kDirectionLeft);
                     break;
                 case 's':
                     updated.setVelocityStatus(kMovingDown);
+                    updated.setFacingStatus(kDirectionDown);
                     break;
                 case 'd':
                     updated.setVelocityStatus(kMovingRight);
+                    updated.setFacingStatus(kDirectionRight);
                     break;
                 case '0':
                     updated.setVelocityStatus(kNotMoving);
                     break;
             }
+        }
+
+        if(info.startsWith("sync")) {
+            if(info.charAt(4) == 'h') {
+                if(info.charAt(5) == '1') {
+                    hero_1.loadFromString(info.substring(6));
+                } else if(info.charAt(5) == '2') {
+                    hero_2.loadFromString(info.substring(6));
+                }
+            }
+
+            // todo tank sync bullet sync
         }
 
         if(info.startsWith("gmo")) {
