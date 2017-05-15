@@ -1,5 +1,9 @@
 package common.item.tank;
 
+import common.item.tile.Tile;
+import javafx.util.Pair;
+import server.logic.Server;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -70,8 +74,6 @@ public abstract class Tank {
     public void setSuper(boolean aSuper) {
         isSuper = aSuper;
     }
-
-
 
     public void setMovable(boolean movable) {
         isMovable = movable;

@@ -9,43 +9,28 @@ import java.net.Socket;
  * Created on 2017/05/01.
  */
 public class Emitter{
-    InetAddress address;
-    int port;
+    private Socket localSocket;
+    private DataOutputStream dataOutputStream;
 
 
-    public Emitter(InetAddress address, int port) throws IOException {
-        this.address = address;
-        this.port = port;
+    public Emitter(InetAddress toAddress, int toPort) throws IOException {
+        localSocket = new Socket(toAddress,toPort);
+        dataOutputStream = new DataOutputStream(localSocket.getOutputStream());
     }
 
 
-    public void emit(String info) {
-
+    public void emit(String info){
         try {
-            new EmitterThread(address,port,info).start();
+            dataOutputStream.writeUTF(info);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-}
 
-class EmitterThread extends Thread {
-    Socket socket;
-    String info;
 
-    EmitterThread(InetAddress address,int port,String info) throws IOException {
-        this.socket = new Socket(address,port);
-        this.info = info;
-    }
-
-    public void run() {
-        DataOutputStream dataOutputStream = null;
-
+    public void closeSocket(){
         try {
-            dataOutputStream = new DataOutputStream(socket.getOutputStream());
-            System.out.println("Emitting "+ info + " to "+socket.getInetAddress()+":"+socket.getPort());
-            dataOutputStream.writeUTF(info);
-            socket.close();
+            localSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

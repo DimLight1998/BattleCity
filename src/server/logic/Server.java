@@ -5,7 +5,9 @@ import common.item.tank.PlayerTank;
 import common.item.tank.Tank;
 import common.item.tile.*;
 import common.logic.Emitter;
+import common.logic.InfoHandler;
 import common.logic.MapLoader;
+import common.logic.Receiver;
 import javafx.util.Pair;
 import server.gui.Panel_Setup;
 import server.gui.Panel_Status;
@@ -13,20 +15,16 @@ import server.gui.Panel_Status;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.XMLEncoder;
 import java.io.*;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import static common.item.tank.Tank.*;
-import static common.item.tile.Tile.*;
-import static javax.xml.bind.JAXB.marshal;
 
 /**
  * Created on 2017/05/01.
  */
-public class Server implements ActionListener{
+public class Server implements ActionListener, InfoHandler{
     private Tile[][] tiles;
     private ArrayList<Tank> tanks;
     private ArrayList<Bullet> bullets;
@@ -40,7 +38,8 @@ public class Server implements ActionListener{
     private InetAddress address_2;
     private int portNumber_1;
     private int portNumber_2;
-    private Receiver receiver;
+    private Receiver receiver_1;
+    private Receiver receiver_2;
     private Panel_Setup panel_setup;
     Panel_Status panel_status;
     private File mapFile;
@@ -64,7 +63,7 @@ public class Server implements ActionListener{
 
     }
 
-    void handleInfo(String info, InetAddress address) {
+    public void handleInfo(String info, InetAddress address) {
         // TODO
 
         // player registers
@@ -229,7 +228,7 @@ public class Server implements ActionListener{
         }
     }
 
-    private static Pair<Integer,Integer> getOrderFromLocation(int locationX, int locationY) {
+    public static Pair<Integer,Integer> getOrderFromLocation(int locationX, int locationY) {
         Integer column = locationX / 16;
         Integer row = locationY / 16;
 
@@ -252,32 +251,31 @@ public class Server implements ActionListener{
     }
 
     private boolean isBlockedInDirection(Tank tank, int direction) {
-        // todo for test
-        return false;
-
-        /*
         int tankLocationX = tank.getLocationX();
         int tankLocationY = tank.getLocationY();
 
         switch(direction) {
             case kDirectionLeft:
             {
-                Pair<Integer,Integer> order= getOrderFromLocation(tankLocationX-1,tankLocationY);
+                Pair<Integer,Integer> order_1 = getOrderFromLocation(tankLocationX-1,tankLocationY);
+                Pair<Integer,Integer> order_2 = getOrderFromLocation(tankLocationX-1,tankLocationY+16);
 
-                if(!tiles[order.getKey()][order.getValue()].isTankThrough()) {
-                    return true;
+                if(tiles[order_1.getKey()][order_1.getValue()].isTankThrough() && tiles[order_2.getKey()][order_2.getValue()].isTankThrough()) {
+                    return false;
                 }
 
-                return false;
+                return true;
                 // TODO add tank-tank check
                 // Todo add border check
             }
             case kDirectionRight:
             {
-                Pair<Integer,Integer> order= getOrderFromLocation(tankLocationX+1+32,tankLocationY);
+                Pair<Integer,Integer> order_1= getOrderFromLocation(tankLocationX+32,tankLocationY);
+                Pair<Integer,Integer> order_2= getOrderFromLocation(tankLocationX+32,tankLocationY+16);
 
-                if(!tiles[order.getKey()][order.getValue()].isTankThrough()) {
-                    return true;
+
+                if(tiles[order_1.getKey()][order_1.getValue()].isTankThrough() && tiles[order_2.getKey()][order_2.getValue()].isTankThrough()) {
+                    return false;
                 }
 
                 return false;
@@ -285,10 +283,11 @@ public class Server implements ActionListener{
             }
             case kDirectionUp:
             {
-                Pair<Integer,Integer> order= getOrderFromLocation(tankLocationX,tankLocationY-1);
+                Pair<Integer,Integer> order_1= getOrderFromLocation(tankLocationX,tankLocationY-1);
+                Pair<Integer,Integer> order_2= getOrderFromLocation(tankLocationX+16,tankLocationY-1);
 
-                if(!tiles[order.getKey()][order.getValue()].isTankThrough()) {
-                    return true;
+                if(tiles[order_1.getKey()][order_1.getValue()].isTankThrough() && tiles[order_2.getKey()][order_2.getValue()].isTankThrough()) {
+                    return false;
                 }
 
                 return false;
@@ -296,10 +295,11 @@ public class Server implements ActionListener{
             }
             case kDirectionDown:
             {
-                Pair<Integer,Integer> order= getOrderFromLocation(tankLocationX,tankLocationY+1+32);
+                Pair<Integer,Integer> order_1= getOrderFromLocation(tankLocationX,tankLocationY+32);
+                Pair<Integer,Integer> order_2= getOrderFromLocation(tankLocationX+16,tankLocationY+32);
 
-                if(!tiles[order.getKey()][order.getValue()].isTankThrough()) {
-                    return true;
+                if(tiles[order_1.getKey()][order_1.getValue()].isTankThrough() && tiles[order_2.getKey()][order_2.getValue()].isTankThrough()) {
+                    return false;
                 }
 
                 return false;
@@ -308,7 +308,7 @@ public class Server implements ActionListener{
         }
 
         return false;
-        */
+
     }
 
     private void correctTankLocation(Tank tank, int direction) {
@@ -369,8 +369,12 @@ public class Server implements ActionListener{
     }
 
     private void updateStatus() {
-        hero_1.updateLocation();
-        hero_2.updateLocation();
+        if(!isBlockedInDirection(hero_1,hero_1.getVelocityStatus())) {
+            hero_1.updateLocation();
+        }
+        if(!isBlockedInDirection(hero_2,hero_2.getVelocityStatus())) {
+            hero_2.updateLocation();
+        }
     }
 
     private void checkGameOver() {
@@ -402,5 +406,5 @@ public class Server implements ActionListener{
     static final int MAX_MAP_SIZE_X = 30;
     static final int MAX_MAP_SIZE_Y = 30;
 
-    static final int kTankPositionCorrectionUnit = 8;
+    static final int kTankPositionCorrectionUnit = 16;
 }

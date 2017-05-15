@@ -7,7 +7,9 @@ import common.item.tank.PlayerTank;
 import common.item.tank.Tank;
 import common.item.tile.*;
 import common.logic.Emitter;
+import common.logic.InfoHandler;
 import common.logic.MapLoader;
+import common.logic.Receiver;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,7 +28,7 @@ import static common.item.tank.Tank.*;
 /**
  * Created on 2017/04/30.
  */
-public class Client implements ActionListener,KeyListener {
+public class Client implements ActionListener,KeyListener,InfoHandler{
     private InetAddress IPAddress;
     private int portNumber;
     private Panel_Login panel_login;
@@ -84,7 +86,7 @@ public class Client implements ActionListener,KeyListener {
     }
 
 
-    void handleInfo(String info) {
+    public void handleInfo(String info, InetAddress inetAddress) {
         if(info.startsWith("dis")) {
             playerNumber =Character.getNumericValue(info.charAt(3));
 
@@ -174,7 +176,7 @@ public class Client implements ActionListener,KeyListener {
 
             try {
                 emitter = new Emitter(IPAddress,portNumber);
-                receiver = new Receiver(this);
+                receiver = new Receiver(0,this);
                 receiver.start();
             } catch (IOException e1) {
                 e1.printStackTrace();
