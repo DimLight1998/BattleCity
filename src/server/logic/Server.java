@@ -162,17 +162,6 @@ public class Server implements ActionListener, InfoHandler{
             if(info.endsWith("1")) {
                 if(hero_1.isAbleToFire()) {
                     bullets.add(new Bullet(hero_1));
-                    bullets.add(new Bullet(hero_1));
-                    bullets.add(new Bullet(hero_1));
-                    bullets.add(new Bullet(hero_1));
-                    bullets.add(new Bullet(hero_1));
-                    bullets.add(new Bullet(hero_1));
-                    bullets.add(new Bullet(hero_1));
-                    bullets.add(new Bullet(hero_1));
-                    bullets.add(new Bullet(hero_1));
-                    bullets.add(new Bullet(hero_1));
-                    bullets.add(new Bullet(hero_1));
-                    bullets.add(new Bullet(hero_1));
                     hero_1.resetFireDelay();
                     broadcast("isb_1");
                 }
@@ -539,8 +528,8 @@ public class Server implements ActionListener, InfoHandler{
         String hero_1_string = hero_1.toString();
         String hero_2_string = hero_2.toString();
 
-        broadcast("synch1"+hero_1_string);
-        broadcast("synch2"+hero_2_string);
+        broadcast("synch1"+hero_1_string+"%");
+        broadcast("synch2"+hero_2_string+"%");
 
         // tanks sync
         // todo
@@ -552,7 +541,7 @@ public class Server implements ActionListener, InfoHandler{
             bullets_string.append("_").append(bullet.toString());
         }
 
-        broadcast(bullets_string.toString());
+        broadcast(bullets_string.toString()+"%");
 
         // tiles sync
     }

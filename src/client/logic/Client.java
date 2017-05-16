@@ -155,22 +155,24 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             tiles[row][column] = new PlainTile(row,column);
         }
 
-        if(info.startsWith("sync")) {
-            if(info.charAt(4) == 'h') {
-                if(info.charAt(5) == '1') {
-                    hero_1.loadFromString(info.substring(6));
-                } else if(info.charAt(5) == '2') {
-                    hero_2.loadFromString(info.substring(6));
+        if(info.startsWith("sync") && info.endsWith("%")) {
+            String infoUsed = info.substring(0,info.length()-1);
+            
+            if(infoUsed.charAt(4) == 'h') {
+                if(infoUsed.charAt(5) == '1') {
+                    hero_1.loadFromString(infoUsed.substring(6));
+                } else if(infoUsed.charAt(5) == '2') {
+                    hero_2.loadFromString(infoUsed.substring(6));
                 }
             }
 
             // todo tank sync
 
-            if(info.charAt(4) == 'b') {
-               String[] slices = info.split("_");
+            if(infoUsed.charAt(4) == 'b') {
+               String[] slices = infoUsed.split("_");
                int numBullet = Integer.valueOf(slices[1]);
 
-               bullets = new ArrayList<>(numBullet);
+               bullets.clear();
                for(int i = 0;i<numBullet;i++) {
                    bullets.add(new Bullet(slices[i+2]));
                }
