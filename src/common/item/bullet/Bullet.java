@@ -42,6 +42,21 @@ public class Bullet {
     }
 
 
+    public Bullet(String constructionInfo) {
+        String[] slices = constructionInfo.split("(\\.)|(\\{)|(})");
+
+        locationX = Integer.valueOf(slices[1]);
+        locationY = Integer.valueOf(slices[2]);
+        velocityStatus = Integer.valueOf(slices[3]);
+        isSuper = Integer.valueOf(slices[4]).equals(1);
+    }
+
+
+    public int getBulletVelocity() {
+        return kBulletVelocity;
+    }
+
+
     public int getLocationX() {
         return locationX;
     }
@@ -97,6 +112,9 @@ public class Bullet {
 
     }
 
+    public String toString() {
+        return String.format("{%d.%d.%d.%d}",locationX,locationY,velocityStatus,isSuper?1:0);
+    }
 
     public Image getImage() {
         // todo remove magic

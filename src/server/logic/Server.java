@@ -16,6 +16,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import static common.item.tank.Tank.*;
 
@@ -50,8 +51,8 @@ public class Server implements ActionListener, InfoHandler{
 
     public Server() {
         tiles = new Tile[30][30];
-        tanks = new ArrayList<>();
-        bullets = new ArrayList<>();
+        tanks = new ArrayList<>(10);
+        bullets = new ArrayList<>(20);
 
         // TODO for test
         hero_1 = new PlayerTank(0,0);
@@ -161,11 +162,24 @@ public class Server implements ActionListener, InfoHandler{
             if(info.endsWith("1")) {
                 if(hero_1.isAbleToFire()) {
                     bullets.add(new Bullet(hero_1));
+                    bullets.add(new Bullet(hero_1));
+                    bullets.add(new Bullet(hero_1));
+                    bullets.add(new Bullet(hero_1));
+                    bullets.add(new Bullet(hero_1));
+                    bullets.add(new Bullet(hero_1));
+                    bullets.add(new Bullet(hero_1));
+                    bullets.add(new Bullet(hero_1));
+                    bullets.add(new Bullet(hero_1));
+                    bullets.add(new Bullet(hero_1));
+                    bullets.add(new Bullet(hero_1));
+                    bullets.add(new Bullet(hero_1));
+                    hero_1.resetFireDelay();
                     broadcast("isb_1");
                 }
             } else if(info.endsWith("2")) {
                 if(hero_2.isAbleToFire()) {
                     bullets.add(new Bullet(hero_2));
+                    hero_2.resetFireDelay();
                     broadcast("isb_2");
                 }
             }
@@ -357,6 +371,63 @@ public class Server implements ActionListener, InfoHandler{
 
     }
 
+    private Pair<Integer,Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>> getHittingWallInfoPack(Bullet bullet) {
+        int bulletLocationX = bullet.getLocationX();
+        int bulletLocationY = bullet.getLocationY();
+        int bulletDirection = bullet.getVelocityStatus();
+
+        Pair<Integer,Integer> order_1 = new Pair<>(0,0);
+        Pair<Integer,Integer> order_2 = new Pair<>(0,0);
+
+
+        switch (bulletDirection) {
+            case kMovingLeft:
+            {
+             order_1 = getOrderFromLocation(bulletLocationX-bullet.getBulletVelocity(),bulletLocationY);
+              order_2 = getOrderFromLocation(bulletLocationX-bullet.getBulletVelocity(),bulletLocationY-16);
+              break;
+            }
+            case kMovingRight:
+            {
+               order_1 = getOrderFromLocation(bulletLocationX+bullet.getBulletVelocity(),bulletLocationY);
+              order_2 = getOrderFromLocation(bulletLocationX+bullet.getBulletVelocity(),bulletLocationY-16);
+                break;
+            }
+            case kMovingUp:
+            {
+                order_1 = getOrderFromLocation(bulletLocationX-16,bulletLocationY-bullet.getBulletVelocity());
+                order_2 = getOrderFromLocation(bulletLocationX,bulletLocationY-bullet.getBulletVelocity());
+                break;
+            }
+            case kMovingDown:
+            {
+                 order_1 = getOrderFromLocation(bulletLocationX-16,bulletLocationY+bullet.getBulletVelocity());
+                order_2 = getOrderFromLocation(bulletLocationX,bulletLocationY+bullet.getBulletVelocity());
+                break;
+            }
+        }
+
+
+        if(!isInBoarder(order_1) || !isInBoarder(order_2)) {
+            return new Pair<>(kBulletOutOfBoard,new Pair<>(order_1,order_2));
+        }
+
+        if(tiles[order_1.getKey()][order_1.getValue()].isBulletThrough() && tiles[order_2.getKey()][order_2.getValue()].isBulletThrough()) {
+            return new Pair<>(kBulletNotHitWall,new Pair<>(order_1,order_2));
+        }
+
+        // todo add tank check
+        return new Pair<>(kBulletHitWall,new Pair<>(order_1,order_2));
+    }
+
+    private void destroyTile(Pair<Integer,Integer> pairRowColumn) {
+        if (tiles[pairRowColumn.getKey()][pairRowColumn.getValue()].isDamageable()) {
+            tiles[pairRowColumn.getKey()][pairRowColumn.getValue()] = new PlainTile(pairRowColumn.getKey(), pairRowColumn.getValue());
+            broadcast(String.format("det_%d_%d",pairRowColumn.getKey(),pairRowColumn.getValue()));
+        }
+    }
+
+
     private void correctTankLocation(Tank tank, int direction) {
         switch (direction) {
             case kDirectionLeft:
@@ -427,8 +498,30 @@ public class Server implements ActionListener, InfoHandler{
             broadcast("updp20");
         }
 
+        hero_1.updateFireDelay();
+        hero_2.updateFireDelay();
+
         // todo add collision check
-        for(Bullet bullet:bullets) {
+
+        Iterator<Bullet> bulletIterator = bullets.iterator();
+
+        while(bulletIterator.hasNext()) {
+            Bullet bullet = bulletIterator.next();
+
+            Pair<Integer,Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>> hittingInfoPack = getHittingWallInfoPack(bullet);
+
+            if(hittingInfoPack.getKey()==kBulletOutOfBoard) {
+                bulletIterator.remove();
+                continue;
+            }
+
+            if(hittingInfoPack.getKey()==kBulletHitWall) {
+                bulletIterator.remove();
+                destroyTile(hittingInfoPack.getValue().getKey());
+                destroyTile(hittingInfoPack.getValue().getValue());
+                continue;
+            }
+
             bullet.updateLocation();
         }
     }
@@ -446,16 +539,22 @@ public class Server implements ActionListener, InfoHandler{
         String hero_1_string = hero_1.toString();
         String hero_2_string = hero_2.toString();
 
-        emitter_1.emit("synch1"+hero_1_string);
-        emitter_1.emit("synch2"+hero_2_string);
-        emitter_2.emit("synch1"+hero_1_string);
-        emitter_2.emit("synch2"+hero_2_string);
+        broadcast("synch1"+hero_1_string);
+        broadcast("synch2"+hero_2_string);
 
         // tanks sync
         // todo
 
         // bullets sync
-        // todo
+        StringBuilder bullets_string = new StringBuilder("syncb_" + bullets.size());
+
+        for(Bullet bullet : bullets) {
+            bullets_string.append("_").append(bullet.toString());
+        }
+
+        broadcast(bullets_string.toString());
+
+        // tiles sync
     }
 
 
@@ -470,7 +569,12 @@ public class Server implements ActionListener, InfoHandler{
     }
 
 
-    static final int MAX_MAP_SIZE = 30;
+    private static final int MAX_MAP_SIZE = 30;
 
-    static final int kTankPositionCorrectionUnit = 16;
+    private static final int kTankPositionCorrectionUnit = 16;
+
+    private static final int kBulletOutOfBoard = 0;
+    private static final int kBulletHitWall = 1;
+    private static final int kBulletNotHitWall = 2;
+
 }

@@ -13,6 +13,10 @@ import java.awt.*;
 public abstract class Tank {
     int health;
     int locationX;
+    int locationY;
+    int velocityStatus;
+    int facingStatus;
+    int fireDelay;
 
     public void setLocationX(int locationX) {
         this.locationX = locationX;
@@ -22,9 +26,7 @@ public abstract class Tank {
         this.locationY = locationY;
     }
 
-    int locationY;
-    int velocityStatus;
-    int facingStatus;
+
 
     boolean isSuper;
     boolean isMovable;
@@ -138,9 +140,21 @@ public abstract class Tank {
     }
 
 
+    public void updateFireDelay() {
+        if(fireDelay>0) {
+            fireDelay--;
+        }
+    }
+
+
+    public void resetFireDelay() {
+        fireDelay = kFireDelay;
+    }
+
+
     public boolean isAbleToFire() {
         // todo
-        return true;
+        return (fireDelay == 0);
     }
 
 
@@ -195,4 +209,6 @@ public abstract class Tank {
     public static final int kDirectionRight = 2;
     public static final int kDirectionUp = 3;
     public static final int kDirectionDown = 4;
+
+    public static final int kFireDelay = 50;
 }

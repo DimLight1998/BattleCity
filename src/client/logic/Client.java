@@ -148,6 +148,13 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             }
         }
 
+        if(info.startsWith("det")) {
+            String[] slices = info.split("_");
+            int row = Integer.parseInt(slices[1]);
+            int column = Integer.parseInt(slices[2]);
+            tiles[row][column] = new PlainTile(row,column);
+        }
+
         if(info.startsWith("sync")) {
             if(info.charAt(4) == 'h') {
                 if(info.charAt(5) == '1') {
@@ -157,7 +164,17 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
                 }
             }
 
-            // todo tank sync bullet sync
+            // todo tank sync
+
+            if(info.charAt(4) == 'b') {
+               String[] slices = info.split("_");
+               int numBullet = Integer.valueOf(slices[1]);
+
+               bullets = new ArrayList<>(numBullet);
+               for(int i = 0;i<numBullet;i++) {
+                   bullets.add(new Bullet(slices[i+2]));
+               }
+            }
         }
 
         if(info.startsWith("gmo")) {
@@ -175,7 +192,10 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
         tiles[5][5] = new Water(5,5);
 
         hero_1.updateLocation();
+        hero_1.updateFireDelay();
+
         hero_2.updateLocation();
+        hero_2.updateFireDelay();
 
         for(Bullet bullet : bullets) {
             bullet.updateLocation();
