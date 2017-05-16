@@ -59,11 +59,9 @@ public class Panel_Game extends JPanel {
         graphics.drawImage(hero_2.getImage(),hero_2.getLocationX(),hero_2.getLocationY(),this);
 
         // paint layer 2 (bullet)
-//        Iterator<Bullet> bulletIterator = bullets.iterator();
-//        while(bulletIterator.hasNext()) {
-//            Bullet next = bulletIterator.next();
-//            graphics.drawImage(next.getImage(),next.getLocationX(),next.getLocationY(),this);
-//        }
+        for(Bullet bullet:bullets) {
+            graphics.drawImage(bullet.getImage(),bullet.getLocationX()-2,bullet.getLocationY()-2,this);
+        }
 
         // paint layer 3 (plant)
         for (int i = 0; i < 30; i++) {

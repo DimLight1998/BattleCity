@@ -159,9 +159,15 @@ public class Server implements ActionListener, InfoHandler{
         // player fire
         if(info.startsWith("fir")) {
             if(info.endsWith("1")) {
-                // TODO
+                if(hero_1.isAbleToFire()) {
+                    bullets.add(new Bullet(hero_1));
+                    broadcast("isb_1");
+                }
             } else if(info.endsWith("2")) {
-                // TODO
+                if(hero_2.isAbleToFire()) {
+                    bullets.add(new Bullet(hero_2));
+                    broadcast("isb_2");
+                }
             }
         }
     }
@@ -419,6 +425,11 @@ public class Server implements ActionListener, InfoHandler{
             hero_2.updateLocation();
         } else {
             broadcast("updp20");
+        }
+
+        // todo add collision check
+        for(Bullet bullet:bullets) {
+            bullet.updateLocation();
         }
     }
 

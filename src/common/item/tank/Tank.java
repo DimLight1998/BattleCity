@@ -75,17 +75,21 @@ public abstract class Tank {
         isSuper = aSuper;
     }
 
+
     public void setMovable(boolean movable) {
         isMovable = movable;
     }
+
 
     public int getFacingStatus() {
         return facingStatus;
     }
 
+
     public void setFacingStatus(int facingStatus) {
         this.facingStatus = facingStatus;
     }
+
 
     public void updateLocation() {
         if (isMovable) {
@@ -133,6 +137,13 @@ public abstract class Tank {
         // TODO complete this after bullet
     }
 
+
+    public boolean isAbleToFire() {
+        // todo
+        return true;
+    }
+
+
     public Image getImage() {
         // TODO remove magic
         String imagePath = "D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\";
@@ -151,11 +162,14 @@ public abstract class Tank {
         }
     }
 
+
     abstract String getImagePrefix();
+
 
     public String toString() {
         return String.format("{%d.%d.%d.%d.%d.%d.%d}",health,locationX,locationY,velocityStatus,facingStatus,isSuper?1:0,isMovable?1:0);
     }
+
 
     public void loadFromString(String info) {
         String[] slices = info.split("(\\.)|(\\{)|(})");

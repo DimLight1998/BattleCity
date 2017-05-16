@@ -1,6 +1,11 @@
 package common.item.bullet;
 
-import common.item.tank.Tank;
+import common.item.tank.*;
+
+import javax.swing.*;
+import java.awt.*;
+
+import static common.item.tank.Tank.*;
 
 /**
  * Created on 2017/04/30.
@@ -12,8 +17,27 @@ public class Bullet {
     boolean isSuper;
 
 
-    Bullet(Tank tank) {
-        // TODO create a bullet based on facing and location
+    public Bullet(Tank tank) {
+        switch (tank.getFacingStatus()) {
+            case kDirectionLeft:
+                locationX = tank.getLocationX();
+                locationY = tank.getLocationY()+16;
+                break;
+            case kDirectionRight:
+                locationX = tank.getLocationX()+32;
+                locationY = tank.getLocationY()+16;
+                break;
+            case kDirectionUp:
+                locationX = tank.getLocationX()+16;
+                locationY = tank.getLocationY();
+                break;
+            case kDirectionDown:
+                locationX = tank.getLocationX()+16;
+                locationY = tank.getLocationY()+32;
+                break;
+        }
+
+        velocityStatus = tank.getFacingStatus();
         isSuper = false;
     }
 
@@ -50,7 +74,7 @@ public class Bullet {
         isSuper = aSuper;
     }
 
-    void updateLocation() {
+    public void updateLocation() {
         switch (velocityStatus) {
             // TODO check whether it is valid and reset MoveVelocity
             case kNotMoving:
@@ -73,11 +97,17 @@ public class Bullet {
 
     }
 
+
+    public Image getImage() {
+        // todo remove magic
+        return new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\bullet.png").getImage();
+    }
+
     private static final int kNotMoving = 0;
     private static final int kMovingLeft = 1;
     private static final int kMovingRight = 2;
     private static final int kMovingUp = 3;
     private static final int kMovingDown = 4;
 
-    private static final int kBulletVelocity = 4;
+    private static final int kBulletVelocity = 3;
 }

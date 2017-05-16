@@ -103,6 +103,18 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             }
         }
 
+        if(info.startsWith("isb")) {
+            if(info.charAt(3) == '_') {
+                if(info.endsWith("1")) {
+                    bullets.add(new Bullet(hero_1));
+                } else if(info.endsWith("2")) {
+                    bullets.add(new Bullet(hero_2));
+                }
+            } else {
+                // todo bullets from AI
+            }
+        }
+
         if(info.startsWith("init")) {
             tiles = new Tile[30][30];
             tanks = new ArrayList<>();
@@ -165,6 +177,10 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
         hero_1.updateLocation();
         hero_2.updateLocation();
 
+        for(Bullet bullet : bullets) {
+            bullet.updateLocation();
+        }
+
     }
 
 
@@ -199,7 +215,11 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
 
     @Override
     public void keyTyped(KeyEvent e) {
-        emitter.emit("prs"+Character.toLowerCase(e.getKeyChar())+playerNumber);
+        if("wasd".indexOf(e.getKeyChar()) >= 0) {
+            emitter.emit("prs" + Character.toLowerCase(e.getKeyChar()) + playerNumber);
+        } else if(e.getKeyChar() == ' ') {
+            emitter.emit("fir"+playerNumber);
+        }
     }
 
 
