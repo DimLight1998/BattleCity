@@ -196,6 +196,7 @@ public abstract class Tank {
     public void tryFire(ArrayList<Bullet> bullets) {
         if (isAbleToFire()) {
             bullets.add(new Bullet(this));
+            resetFireDelay();
         }
     }
 

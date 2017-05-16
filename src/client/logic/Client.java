@@ -212,6 +212,10 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             bullet.updateLocation();
         }
 
+        for(Tank tank:tanks) {
+            tank.updateLocation();
+        }
+
     }
 
 

@@ -566,6 +566,7 @@ public class Server implements ActionListener, InfoHandler{
 
         for(Tank tank:tanks) {
             tank.activate();
+            tank.resetFireDelay();
         }
 
         tankActivated = kInitEnemyNumber;
@@ -579,7 +580,7 @@ public class Server implements ActionListener, InfoHandler{
             tank.updateFireDelay();
             tank.tryFire(bullets);
 
-            if(isBlockedInDirection(tank,tank.getVelocityStatus())) {
+            if(!isBlockedInDirection(tank,tank.getVelocityStatus())) {
                 tank.updateLocation();
                 int rand = ThreadLocalRandom.current().nextInt(0, 160);
                 if(rand == 0) {
