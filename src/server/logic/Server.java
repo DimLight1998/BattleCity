@@ -1,8 +1,7 @@
 package server.logic;
 
 import common.item.bullet.Bullet;
-import common.item.tank.PlayerTank;
-import common.item.tank.Tank;
+import common.item.tank.*;
 import common.item.tile.*;
 import common.logic.*;
 import javafx.util.Pair;
@@ -17,6 +16,7 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static common.item.tank.Tank.*;
 
@@ -49,10 +49,13 @@ public class Server implements ActionListener, InfoHandler{
     boolean isPlayerReady_2 = false;
     boolean isGameOver = false;
 
+    private int tankRemain;
+    private int tankActivated;
+
     public Server() {
         tiles = new Tile[30][30];
-        tanks = new ArrayList<>(10);
-        bullets = new ArrayList<>(20);
+        tanks = new ArrayList<>();// todo
+        bullets = new ArrayList<>();
 
         // TODO for test
         hero_1 = new PlayerTank(0,0);
@@ -213,12 +216,16 @@ public class Server implements ActionListener, InfoHandler{
         mapFile = new File("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\map\\test.txt");
         MapLoader.loadMap(mapFile,tiles);
 
+        AIInitialize();
 
+
+        // game main
         int counter = 0;
 
         while(!isGameOver) {
             Thread.sleep(20);// TODO 这是必要的吗
             updateStatus();
+            AIUpdate();
             checkGameOver();
             emitInfo();
 
@@ -243,6 +250,7 @@ public class Server implements ActionListener, InfoHandler{
         }
     }
 
+
     public static Pair<Integer,Integer> getOrderFromLocation(int locationX, int locationY) {
         Integer column = locationX / 16;
         if(locationX < 0) {
@@ -256,6 +264,7 @@ public class Server implements ActionListener, InfoHandler{
 
         return new Pair<Integer,Integer>(row,column);
     }
+
 
     private static int getDirectionFromChar(char c) {
         switch (c) {
@@ -272,93 +281,57 @@ public class Server implements ActionListener, InfoHandler{
         return 0;
     }
 
+
     private boolean isBlockedInDirection(Tank tank, int direction) {
         int tankLocationX = tank.getLocationX();
         int tankLocationY = tank.getLocationY();
 
+        Pair<Integer,Integer> order_1 = new Pair<>(0,0);
+        Pair<Integer,Integer> order_2 = new Pair<>(0,0);
+
         switch(direction) {
             case kDirectionLeft:
             {
-                Pair<Integer,Integer> order_1 = getOrderFromLocation(tankLocationX-tank.getMoveVelocity(),tankLocationY);
-                Pair<Integer,Integer> order_2 = getOrderFromLocation(tankLocationX-tank.getMoveVelocity(),tankLocationY+16);
-
-                if(!isInBoarder(order_1) || !isInBoarder(order_2)) {
-                    return true;
-                }
-
-                System.out.printf("moving%d %d %d %d %d\n",direction,order_1.getKey(),order_1.getValue(),order_2.getKey(), order_2.getValue());
-                if(tiles[order_1.getKey()][order_1.getValue()].isTankThrough() && tiles[order_2.getKey()][order_2.getValue()].isTankThrough()) {
-                    System.out.println("false returned because not blocked.");
-                    return false;
-                }
-
-                // TODO add tank-tank check
-
-                System.out.println("true returned because blocked.");
-                return true;
+                order_1 = getOrderFromLocation(tankLocationX-tank.getMoveVelocity(),tankLocationY);
+                order_2 = getOrderFromLocation(tankLocationX-tank.getMoveVelocity(),tankLocationY+16);
+                break;
             }
             case kDirectionRight:
             {
-                Pair<Integer,Integer> order_1= getOrderFromLocation(tankLocationX+32+tank.getMoveVelocity(),tankLocationY);
-                Pair<Integer,Integer> order_2= getOrderFromLocation(tankLocationX+32+tank.getMoveVelocity(),tankLocationY+16);
-
-                if(!isInBoarder(order_1) || !isInBoarder(order_2)) {
-                    return true;
-                }
-
-                System.out.printf("moving%d %d %d %d %d\n",direction,order_1.getKey(),order_1.getValue(),order_2.getKey(), order_2.getValue());
-                if(tiles[order_1.getKey()][order_1.getValue()].isTankThrough() && tiles[order_2.getKey()][order_2.getValue()].isTankThrough()) {
-                    System.out.println("false returned because not blocked.");
-                    return false;
-                }
-
-                System.out.println("true returned because blocked.");
-                return true;
-                // TODO add tank-tank check
+                order_1= getOrderFromLocation(tankLocationX+32+tank.getMoveVelocity(),tankLocationY);
+                order_2= getOrderFromLocation(tankLocationX+32+tank.getMoveVelocity(),tankLocationY+16);
+                break;
             }
             case kDirectionUp:
             {
-                Pair<Integer,Integer> order_1= getOrderFromLocation(tankLocationX,tankLocationY-tank.getMoveVelocity());
-                Pair<Integer,Integer> order_2= getOrderFromLocation(tankLocationX+16,tankLocationY-tank.getMoveVelocity());
-
-                if(!isInBoarder(order_1) || !isInBoarder(order_2)) {
-                    return true;
-                }
-
-                System.out.printf("moving%d %d %d %d %d\n",direction,order_1.getKey(),order_1.getValue(),order_2.getKey(), order_2.getValue());
-                if(tiles[order_1.getKey()][order_1.getValue()].isTankThrough() && tiles[order_2.getKey()][order_2.getValue()].isTankThrough()) {
-                    System.out.println("false returned because not blocked.");
-                    return false;
-                }
-
-                System.out.println("true returned because blocked.");
-                return true;
-                // TODO add tank-tank check
+                order_1= getOrderFromLocation(tankLocationX,tankLocationY-tank.getMoveVelocity());
+                order_2= getOrderFromLocation(tankLocationX+16,tankLocationY-tank.getMoveVelocity());
+                break;
             }
             case kDirectionDown:
             {
-                Pair<Integer,Integer> order_1= getOrderFromLocation(tankLocationX,tankLocationY+32+tank.getMoveVelocity());
-                Pair<Integer,Integer> order_2= getOrderFromLocation(tankLocationX+16,tankLocationY+32+tank.getMoveVelocity());
-
-                if(!isInBoarder(order_1) || !isInBoarder(order_2)) {
-                    return true;
-                }
-
-                System.out.printf("moving%d %d %d %d %d\n",direction,order_1.getKey(),order_1.getValue(),order_2.getKey(), order_2.getValue());
-                if(tiles[order_1.getKey()][order_1.getValue()].isTankThrough() && tiles[order_2.getKey()][order_2.getValue()].isTankThrough()) {
-                    System.out.println("false returned because not blocked.");
-                    return false;
-                }
-
-                System.out.println("true returned because blocked.");
-                return true;
-                // TODO add tank-tank check
+                order_1= getOrderFromLocation(tankLocationX,tankLocationY+32+tank.getMoveVelocity());
+                order_2= getOrderFromLocation(tankLocationX+16,tankLocationY+32+tank.getMoveVelocity());
+                break;
             }
         }
 
-        return false;
+        if(!isInBoarder(order_1) || !isInBoarder(order_2)) {
+            return true;
+        }
 
+        System.out.printf("moving%d %d %d %d %d\n",direction,order_1.getKey(),order_1.getValue(),order_2.getKey(), order_2.getValue());
+        if(tiles[order_1.getKey()][order_1.getValue()].isTankThrough() && tiles[order_2.getKey()][order_2.getValue()].isTankThrough()) {
+            System.out.println("false returned because not blocked.");
+            return false;
+        }
+
+        // TODO add tank-tank check
+
+        System.out.println("true returned because blocked.");
+        return true;
     }
+
 
     private Pair<Integer,Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>> getHittingWallInfoPack(Bullet bullet) {
         int bulletLocationX = bullet.getLocationX();
@@ -409,6 +382,7 @@ public class Server implements ActionListener, InfoHandler{
         return new Pair<>(kBulletHitWall,new Pair<>(order_1,order_2));
     }
 
+
     private void destroyTile(Pair<Integer,Integer> pairRowColumn) {
         if (tiles[pairRowColumn.getKey()][pairRowColumn.getValue()].isDamageable()) {
             tiles[pairRowColumn.getKey()][pairRowColumn.getValue()] = new PlainTile(pairRowColumn.getKey(), pairRowColumn.getValue());
@@ -450,6 +424,7 @@ public class Server implements ActionListener, InfoHandler{
         }
     }
 
+
     private boolean isInSameDirection(int direction_1,int direction_2) {
         if(direction_1==direction_2) {
             return true;
@@ -473,6 +448,7 @@ public class Server implements ActionListener, InfoHandler{
 
         return false;
     }
+
 
     private void updateStatus() {
         if(!isBlockedInDirection(hero_1,hero_1.getVelocityStatus())) {
@@ -515,13 +491,16 @@ public class Server implements ActionListener, InfoHandler{
         }
     }
 
+
     private void checkGameOver() {
 
     }
 
+
     private void emitInfo() {
 
     }
+
 
     private void forceSynchronize() {
         // heroes sync
@@ -532,7 +511,13 @@ public class Server implements ActionListener, InfoHandler{
         broadcast("synch2"+hero_2_string+"%");
 
         // tanks sync
-        // todo
+        StringBuilder tanks_string = new StringBuilder("synct_"+tanks.size());
+
+        for(Tank tank: tanks) {
+            tanks_string.append("_").append(tank.toString());
+        }
+
+        broadcast(tanks_string.toString()+"%");
 
         // bullets sync
         StringBuilder bullets_string = new StringBuilder("syncb_" + bullets.size());
@@ -558,12 +543,65 @@ public class Server implements ActionListener, InfoHandler{
     }
 
 
-    private static final int MAX_MAP_SIZE = 30;
+    private void AIInitialize() {
+        int[] initSpawnLocationX = {0*16,9*16,19*16,28*16};
 
+        for(int i = 0;i<kInitEnemyNumber;i++) {
+            int tankID = ThreadLocalRandom.current().nextInt(1, 5);
+            switch (tankID) {
+                case kHeavyTankID:
+                    tanks.add(new HeavyTank(initSpawnLocationX[i],0));
+                    break;
+                case kLightTankID:
+                    tanks.add(new LightTank(initSpawnLocationX[i],0));
+                    break;
+                case kArmoredTankID:
+                    tanks.add(new ArmoredTank(initSpawnLocationX[i],0));
+                    break;
+                case kTankDestroyerID:
+                    tanks.add(new TankDestroyer(initSpawnLocationX[i],0));
+                    break;
+            }
+        }
+
+        for(Tank tank:tanks) {
+            tank.activate();
+        }
+
+        tankActivated = kInitEnemyNumber;
+        tankRemain = kEnemyTankNumber;
+    }
+
+
+    private void AIUpdate() {
+        for(Tank tank:tanks) {
+
+            tank.updateFireDelay();
+            tank.tryFire(bullets);
+
+            if(isBlockedInDirection(tank,tank.getVelocityStatus())) {
+                tank.updateLocation();
+                int rand = ThreadLocalRandom.current().nextInt(0, 160);
+                if(rand == 0) {
+                    tank.setVelocityStatus(ThreadLocalRandom.current().nextInt(0, 5));
+                }
+            } else {
+                tank.setVelocityStatus(ThreadLocalRandom.current().nextInt(0, 5));
+            }
+        }
+    }
+
+
+    private static final int MAX_MAP_SIZE = 30;
     private static final int kTankPositionCorrectionUnit = 16;
 
     private static final int kBulletOutOfBoard = 0;
     private static final int kBulletHitWall = 1;
     private static final int kBulletNotHitWall = 2;
+
+    private static final int kEnemyTankNumber = 20;
+    private static final int kInitEnemyNumber = 4;
+
+
 
 }

@@ -12,6 +12,11 @@ public class PlayerTank extends Tank {
         owner = 1;
     }
 
+    @Override
+    public int getTypeID() {
+        return 0;
+    }
+
     void setOwner(int owner) {
         this.owner = owner;
     }

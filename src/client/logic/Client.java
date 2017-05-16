@@ -157,7 +157,7 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
 
         if(info.startsWith("sync") && info.endsWith("%")) {
             String infoUsed = info.substring(0,info.length()-1);
-            
+
             if(infoUsed.charAt(4) == 'h') {
                 if(infoUsed.charAt(5) == '1') {
                     hero_1.loadFromString(infoUsed.substring(6));
@@ -166,7 +166,15 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
                 }
             }
 
-            // todo tank sync
+            if(infoUsed.charAt(4) == 't') {
+                String[] slices = infoUsed.split("_");
+                int numTank = Integer.valueOf(slices[1]);
+
+                tanks.clear();
+                for(int i = 0;i<numTank;i++) {
+                    tanks.add(tankFactory(slices[i+2]));
+                }
+            }
 
             if(infoUsed.charAt(4) == 'b') {
                String[] slices = infoUsed.split("_");
@@ -188,6 +196,7 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             }
         }
     }
+
 
     void updateStatus() {
         // todo for test

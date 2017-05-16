@@ -4,9 +4,15 @@ package common.item.tank;
  * Created on 2017/04/30.
  */
 public class HeavyTank extends Tank {
-    HeavyTank(int locationX, int locationY) {
+    public HeavyTank(int locationX, int locationY) {
         super(locationX, locationY);
         health = 4;
+        fireDelayBase = kFireDelayLevel_1;
+    }
+
+    @Override
+    public int getTypeID() {
+        return kHeavyTankID;
     }
 
     @Override
@@ -21,7 +27,7 @@ public class HeavyTank extends Tank {
 
     @Override
     public int getShootingVelocity() {
-        return 2;
+        return 1;
     }
 
     @Override

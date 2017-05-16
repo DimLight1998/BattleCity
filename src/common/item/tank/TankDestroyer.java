@@ -4,9 +4,15 @@ package common.item.tank;
  * Created on 2017/04/30.
  */
 public class TankDestroyer extends Tank {
-    TankDestroyer(int locationX, int locationY) {
+    public TankDestroyer(int locationX, int locationY) {
         super(locationX, locationY);
         health = 3;
+        fireDelayBase = kFireDelayLevel_3;
+    }
+
+    @Override
+    public int getTypeID() {
+        return kTankDestroyerID;
     }
 
     @Override
