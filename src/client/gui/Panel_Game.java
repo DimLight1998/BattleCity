@@ -48,10 +48,12 @@ public class Panel_Game extends JPanel {
         }
 
         // paint layer 1 (tank)
-        Iterator<Tank> tankIterator = tanks.iterator();
-        while(tankIterator.hasNext()) {
-            Tank next = tankIterator.next();
-            graphics.drawImage(next.getImage(),next.getLocationX(),next.getLocationY(),this);
+        synchronized (tanks) {
+            Iterator<Tank> tankIterator = tanks.iterator();
+            while (tankIterator.hasNext()) {
+                Tank next = tankIterator.next();
+                graphics.drawImage(next.getImage(), next.getLocationX(), next.getLocationY(), this);
+            }
         }
 
         // paint layer 1 (player)
@@ -59,8 +61,10 @@ public class Panel_Game extends JPanel {
         graphics.drawImage(hero_2.getImage(),hero_2.getLocationX(),hero_2.getLocationY(),this);
 
         // paint layer 2 (bullet)
-        for(Bullet bullet:bullets) {
-            graphics.drawImage(bullet.getImage(),bullet.getLocationX()-2,bullet.getLocationY()-2,this);
+        synchronized (bullets) {
+            for (Bullet bullet : bullets) {
+                graphics.drawImage(bullet.getImage(), bullet.getLocationX() - 2, bullet.getLocationY() - 2, this);
+            }
         }
 
         // paint layer 3 (plant)

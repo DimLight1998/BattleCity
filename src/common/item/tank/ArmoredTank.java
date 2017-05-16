@@ -19,7 +19,7 @@ public class ArmoredTank extends Tank {
 
     @Override
     String getImagePrefix() {
-        return "AT";
+        return "AM";
     }
 
     @Override

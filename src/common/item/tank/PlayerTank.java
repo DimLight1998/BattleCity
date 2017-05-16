@@ -10,6 +10,7 @@ public class PlayerTank extends Tank {
         super(locationX, locationY);
         health = 1;
         owner = 1;
+        facingStatus = kDirectionUp;
     }
 
     @Override
@@ -32,12 +33,12 @@ public class PlayerTank extends Tank {
 
     @Override
     public int getMoveVelocity() {
-        return 1;
+        return 2;
     }
 
     @Override
     public int getShootingVelocity() {
-        return 1;
+        return 2;
     }
 
     @Override

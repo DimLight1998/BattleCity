@@ -262,7 +262,7 @@ public class Server implements ActionListener, InfoHandler{
             row = -1;
         }
 
-        return new Pair<Integer,Integer>(row,column);
+        return new Pair<>(row,column);
     }
 
 
@@ -575,20 +575,34 @@ public class Server implements ActionListener, InfoHandler{
 
 
     private void AIUpdate() {
-        for(Tank tank:tanks) {
+        boolean facingStatusModified = false;
 
+        for(Tank tank:tanks) {
             tank.updateFireDelay();
             tank.tryFire(bullets);
 
-            if(!isBlockedInDirection(tank,tank.getVelocityStatus())) {
+            if(!isBlockedInDirection(tank,tank.getFacingStatus())) {
                 tank.updateLocation();
-                int rand = ThreadLocalRandom.current().nextInt(0, 160);
+                int rand = ThreadLocalRandom.current().nextInt(0, 50);
                 if(rand == 0) {
                     tank.setVelocityStatus(ThreadLocalRandom.current().nextInt(0, 5));
                 }
             } else {
                 tank.setVelocityStatus(ThreadLocalRandom.current().nextInt(0, 5));
             }
+
+            if(!isInSameDirection(tank.getFacingStatus(),tank.getVelocityStatus())) {
+                correctTankLocation(tank,tank.getFacingStatus());
+                facingStatusModified = true;
+            }
+
+            if(tank.getVelocityStatus() != kNotMoving) {
+                tank.setFacingStatus(tank.getVelocityStatus());
+            }
+        }
+
+        if(facingStatusModified) {
+            forceSynchronize();
         }
     }
 

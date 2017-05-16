@@ -170,9 +170,11 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
                 String[] slices = infoUsed.split("_");
                 int numTank = Integer.valueOf(slices[1]);
 
-                tanks.clear();
-                for(int i = 0;i<numTank;i++) {
-                    tanks.add(tankFactory(slices[i+2]));
+                synchronized (tanks) {
+                    tanks.clear();
+                    for (int i = 0; i < numTank; i++) {
+                        tanks.add(tankFactory(slices[i + 2]));
+                    }
                 }
             }
 
@@ -180,9 +182,11 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
                String[] slices = infoUsed.split("_");
                int numBullet = Integer.valueOf(slices[1]);
 
-               bullets.clear();
-               for(int i = 0;i<numBullet;i++) {
-                   bullets.add(new Bullet(slices[i+2]));
+               synchronized (bullets) {
+                   bullets.clear();
+                   for (int i = 0; i < numBullet; i++) {
+                       bullets.add(new Bullet(slices[i + 2]));
+                   }
                }
             }
         }
@@ -208,12 +212,16 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
         hero_2.updateLocation();
         hero_2.updateFireDelay();
 
-        for(Bullet bullet : bullets) {
-            bullet.updateLocation();
+        synchronized (bullets) {
+            for (Bullet bullet : bullets) {
+                bullet.updateLocation();
+            }
         }
 
-        for(Tank tank:tanks) {
-            tank.updateLocation();
+        synchronized (tanks) {
+            for (Tank tank : tanks) {
+                tank.updateLocation();
+            }
         }
 
     }

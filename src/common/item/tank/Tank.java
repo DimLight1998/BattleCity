@@ -63,7 +63,7 @@ public abstract class Tank {
         this.locationX = locationX;
         this.locationY = locationY;
         this.velocityStatus = kNotMoving;
-        this.facingStatus = kDirectionLeft;
+        this.facingStatus = kDirectionDown;
         this.isSuper = false;
         this.isMovable = true;
         this.activated = false;
