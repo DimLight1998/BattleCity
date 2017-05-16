@@ -26,17 +26,17 @@ public class PlayerTank extends Tank {
     }
 
     @Override
-    int getMoveVelocity() {
+    public int getMoveVelocity() {
         return 1;
     }
 
     @Override
-    int getShootingVelocity() {
+    public int getShootingVelocity() {
         return 1;
     }
 
     @Override
-    int getScore() {
+    public int getScore() {
         return 0;
     }
 }

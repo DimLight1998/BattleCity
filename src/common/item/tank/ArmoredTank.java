@@ -17,17 +17,17 @@ public class ArmoredTank extends Tank {
     }
 
     @Override
-    int getMoveVelocity() {
+    public int getMoveVelocity() {
         return 3;
     }
 
     @Override
-    int getShootingVelocity() {
+    public int getShootingVelocity() {
         return 2;
     }
 
     @Override
-    int getScore() {
+    public int getScore() {
         return 200;
     }
 }

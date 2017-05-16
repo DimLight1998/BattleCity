@@ -29,11 +29,11 @@ public abstract class Tank {
     boolean isSuper;
     boolean isMovable;
 
-    abstract int getMoveVelocity();
+    public abstract int getMoveVelocity();
 
-    abstract int getShootingVelocity();
+    public abstract int getShootingVelocity();
 
-    abstract int getScore();
+    public abstract int getScore();
 
 
     Tank(int locationX, int locationY) {

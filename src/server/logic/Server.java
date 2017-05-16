@@ -110,11 +110,11 @@ public class Server implements ActionListener, InfoHandler{
                     forceSynchronize();
                 }
 
+                hero_1.setFacingStatus(getDirectionFromChar(info.charAt(3)));
                 if(!isBlockedInDirection(hero_1,getDirectionFromChar(info.charAt(3)))) {
                     emitter_1.emit("updp1"+info.charAt(3));
                     emitter_2.emit("updp1"+info.charAt(3));
                     hero_1.setVelocityStatus(getDirectionFromChar(info.charAt(3)));
-                    hero_1.setFacingStatus(getDirectionFromChar(info.charAt(3)));
                 } else {
                     emitter_1.emit("updp10");
                     emitter_2.emit("updp10");
@@ -128,11 +128,11 @@ public class Server implements ActionListener, InfoHandler{
                     forceSynchronize();
                 }
 
+                hero_2.setFacingStatus(getDirectionFromChar(info.charAt(3)));
                 if(!isBlockedInDirection(hero_2,getDirectionFromChar(info.charAt(3)))) {
                     emitter_1.emit("updp2" + info.charAt(3));
                     emitter_2.emit("updp2" + info.charAt(3));
                     hero_2.setVelocityStatus(getDirectionFromChar(info.charAt(3)));
-                    hero_2.setFacingStatus(getDirectionFromChar(info.charAt(3)));
                 } else {
                     emitter_1.emit("updp20");
                     emitter_2.emit("updp20");
@@ -201,7 +201,7 @@ public class Server implements ActionListener, InfoHandler{
 
         // TODO complete map selection
         // todo for test
-        mapFile = new File("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\map\\gene.txt");
+        mapFile = new File("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\map\\test.txt");
         MapLoader.loadMap(mapFile,tiles);
 
 
@@ -236,7 +236,14 @@ public class Server implements ActionListener, InfoHandler{
 
     public static Pair<Integer,Integer> getOrderFromLocation(int locationX, int locationY) {
         Integer column = locationX / 16;
+        if(locationX < 0) {
+            column = -1;
+        }
+
         Integer row = locationY / 16;
+        if(locationY < 0) {
+            row = -1;
+        }
 
         return new Pair<Integer,Integer>(row,column);
     }
@@ -263,52 +270,79 @@ public class Server implements ActionListener, InfoHandler{
         switch(direction) {
             case kDirectionLeft:
             {
-                Pair<Integer,Integer> order_1 = getOrderFromLocation(tankLocationX-1,tankLocationY);
-                Pair<Integer,Integer> order_2 = getOrderFromLocation(tankLocationX-1,tankLocationY+16);
+                Pair<Integer,Integer> order_1 = getOrderFromLocation(tankLocationX-tank.getMoveVelocity(),tankLocationY);
+                Pair<Integer,Integer> order_2 = getOrderFromLocation(tankLocationX-tank.getMoveVelocity(),tankLocationY+16);
 
+                if(!isInBoarder(order_1) || !isInBoarder(order_2)) {
+                    return true;
+                }
+
+                System.out.printf("moving%d %d %d %d %d\n",direction,order_1.getKey(),order_1.getValue(),order_2.getKey(), order_2.getValue());
                 if(tiles[order_1.getKey()][order_1.getValue()].isTankThrough() && tiles[order_2.getKey()][order_2.getValue()].isTankThrough()) {
+                    System.out.println("false returned because not blocked.");
                     return false;
                 }
 
-                return true;
                 // TODO add tank-tank check
-                // Todo add border check
+
+                System.out.println("true returned because blocked.");
+                return true;
             }
             case kDirectionRight:
             {
-                Pair<Integer,Integer> order_1= getOrderFromLocation(tankLocationX+32,tankLocationY);
-                Pair<Integer,Integer> order_2= getOrderFromLocation(tankLocationX+32,tankLocationY+16);
+                Pair<Integer,Integer> order_1= getOrderFromLocation(tankLocationX+32+tank.getMoveVelocity(),tankLocationY);
+                Pair<Integer,Integer> order_2= getOrderFromLocation(tankLocationX+32+tank.getMoveVelocity(),tankLocationY+16);
 
+                if(!isInBoarder(order_1) || !isInBoarder(order_2)) {
+                    return true;
+                }
 
+                System.out.printf("moving%d %d %d %d %d\n",direction,order_1.getKey(),order_1.getValue(),order_2.getKey(), order_2.getValue());
                 if(tiles[order_1.getKey()][order_1.getValue()].isTankThrough() && tiles[order_2.getKey()][order_2.getValue()].isTankThrough()) {
+                    System.out.println("false returned because not blocked.");
                     return false;
                 }
 
-                return false;
+                System.out.println("true returned because blocked.");
+                return true;
                 // TODO add tank-tank check
             }
             case kDirectionUp:
             {
-                Pair<Integer,Integer> order_1= getOrderFromLocation(tankLocationX,tankLocationY-1);
-                Pair<Integer,Integer> order_2= getOrderFromLocation(tankLocationX+16,tankLocationY-1);
+                Pair<Integer,Integer> order_1= getOrderFromLocation(tankLocationX,tankLocationY-tank.getMoveVelocity());
+                Pair<Integer,Integer> order_2= getOrderFromLocation(tankLocationX+16,tankLocationY-tank.getMoveVelocity());
 
+                if(!isInBoarder(order_1) || !isInBoarder(order_2)) {
+                    return true;
+                }
+
+                System.out.printf("moving%d %d %d %d %d\n",direction,order_1.getKey(),order_1.getValue(),order_2.getKey(), order_2.getValue());
                 if(tiles[order_1.getKey()][order_1.getValue()].isTankThrough() && tiles[order_2.getKey()][order_2.getValue()].isTankThrough()) {
+                    System.out.println("false returned because not blocked.");
                     return false;
                 }
 
-                return false;
+                System.out.println("true returned because blocked.");
+                return true;
                 // TODO add tank-tank check
             }
             case kDirectionDown:
             {
-                Pair<Integer,Integer> order_1= getOrderFromLocation(tankLocationX,tankLocationY+32);
-                Pair<Integer,Integer> order_2= getOrderFromLocation(tankLocationX+16,tankLocationY+32);
+                Pair<Integer,Integer> order_1= getOrderFromLocation(tankLocationX,tankLocationY+32+tank.getMoveVelocity());
+                Pair<Integer,Integer> order_2= getOrderFromLocation(tankLocationX+16,tankLocationY+32+tank.getMoveVelocity());
 
+                if(!isInBoarder(order_1) || !isInBoarder(order_2)) {
+                    return true;
+                }
+
+                System.out.printf("moving%d %d %d %d %d\n",direction,order_1.getKey(),order_1.getValue(),order_2.getKey(), order_2.getValue());
                 if(tiles[order_1.getKey()][order_1.getValue()].isTankThrough() && tiles[order_2.getKey()][order_2.getValue()].isTankThrough()) {
+                    System.out.println("false returned because not blocked.");
                     return false;
                 }
 
-                return false;
+                System.out.println("true returned because blocked.");
+                return true;
                 // TODO add tank-tank check
             }
         }
@@ -377,9 +411,14 @@ public class Server implements ActionListener, InfoHandler{
     private void updateStatus() {
         if(!isBlockedInDirection(hero_1,hero_1.getVelocityStatus())) {
             hero_1.updateLocation();
+        } else {
+            broadcast("updp10");
         }
+
         if(!isBlockedInDirection(hero_2,hero_2.getVelocityStatus())) {
             hero_2.updateLocation();
+        } else {
+            broadcast("updp20");
         }
     }
 
@@ -409,8 +448,18 @@ public class Server implements ActionListener, InfoHandler{
     }
 
 
-    static final int MAX_MAP_SIZE_X = 30;
-    static final int MAX_MAP_SIZE_Y = 30;
+    private void broadcast(String info) {
+        emitter_1.emit(info);
+        emitter_2.emit(info);
+    }
+
+
+    private boolean isInBoarder(Pair<Integer,Integer> pair) {
+        return (pair.getKey() >= 0 && pair.getKey() < MAX_MAP_SIZE && pair.getValue() >= 0 && pair.getValue() < MAX_MAP_SIZE);
+    }
+
+
+    static final int MAX_MAP_SIZE = 30;
 
     static final int kTankPositionCorrectionUnit = 16;
 }
