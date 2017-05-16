@@ -4,10 +4,7 @@ import common.item.bullet.Bullet;
 import common.item.tank.PlayerTank;
 import common.item.tank.Tank;
 import common.item.tile.*;
-import common.logic.Emitter;
-import common.logic.InfoHandler;
-import common.logic.MapLoader;
-import common.logic.Receiver;
+import common.logic.*;
 import javafx.util.Pair;
 import server.gui.Panel_Setup;
 import server.gui.Panel_Status;
@@ -17,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.InetAddress;
+import java.net.MulticastSocket;
 import java.util.ArrayList;
 
 import static common.item.tank.Tank.*;
@@ -38,6 +36,7 @@ public class Server implements ActionListener, InfoHandler{
     private InetAddress address_2;
     private int portNumber_1;
     private int portNumber_2;
+    private MultipleReceiver multipleReceiver;
     private Receiver receiver_1;
     private Receiver receiver_2;
     private Panel_Setup panel_setup;
@@ -176,8 +175,15 @@ public class Server implements ActionListener, InfoHandler{
         }
 
         panel_setup.dispose();
-        receiver = new Receiver(serverPortNumber,this);
-        receiver.start();
+        receiver_1 = new Receiver(0,this);
+        receiver_2 = new Receiver(0,this);
+
+        receiver_1.start();
+        receiver_2.start();
+
+        multipleReceiver = new MultipleReceiver(serverPortNumber,this);
+        multipleReceiver.start();
+
 
         while(!isPlayerReady_2) {
             Thread.sleep(100);
@@ -186,8 +192,8 @@ public class Server implements ActionListener, InfoHandler{
         emitter_1 = new Emitter(address_1,portNumber_1);
         emitter_2 = new Emitter(address_2,portNumber_2);
 
-        emitter_1.emit("dis1");
-        emitter_2.emit("dis2");
+        emitter_1.emit("dis1"+receiver_1.getLocalPort());
+        emitter_2.emit("dis2"+receiver_2.getLocalPort());
 //        panel_status.show();
 
         // TODO remove this

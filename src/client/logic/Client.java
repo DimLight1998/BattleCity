@@ -86,12 +86,21 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
     }
 
 
-    public void handleInfo(String info, InetAddress inetAddress) {
+    public void handleInfo(String info, InetAddress inetAddress){
         if(info.startsWith("dis")) {
             playerNumber =Character.getNumericValue(info.charAt(3));
 
             // TODO remove
             System.out.println("This client plays as player "+playerNumber);
+
+            int newPort = Integer.parseInt(info.substring(4));
+            emitter.closeSocket();
+            try {
+                emitter = new Emitter(IPAddress,newPort);
+                System.out.println("Emitter is locked on port"+newPort);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         if(info.startsWith("init")) {
