@@ -58,8 +58,8 @@ public class Server implements ActionListener, InfoHandler{
         bullets = new ArrayList<>();
 
         // TODO for test
-        hero_1 = new PlayerTank(0,0);
-        hero_2 = new PlayerTank(0,0);
+        hero_1 = new PlayerTank(160,448);
+        hero_2 = new PlayerTank(288,448);
 
         panel_setup = new Panel_Setup(this);
 //        panel_status = new Panel_Status();
@@ -320,16 +320,67 @@ public class Server implements ActionListener, InfoHandler{
             return true;
         }
 
+        // TODO add tank-tank check
+        if(hero_1!=tank) {
+            if(isTileBlockedByTank(order_1,hero_1) && isTileBlockedByTank(order_2,hero_1)) {
+                return true;
+            }
+        }
+
+        if(hero_2!=tank) {
+            if(isTileBlockedByTank(order_1,hero_2) && isTileBlockedByTank(order_2,hero_2)) {
+                return true;
+            }
+        }
+
+        for(Tank tankIter:tanks) {
+            if(tank!=tankIter) {
+                if(isTileBlockedByTank(order_1,tankIter) && isTileBlockedByTank(order_2,tankIter)) {
+                    return true;
+                }
+            }
+        }
+
+
         System.out.printf("moving%d %d %d %d %d\n",direction,order_1.getKey(),order_1.getValue(),order_2.getKey(), order_2.getValue());
         if(tiles[order_1.getKey()][order_1.getValue()].isTankThrough() && tiles[order_2.getKey()][order_2.getValue()].isTankThrough()) {
             System.out.println("false returned because not blocked.");
             return false;
         }
 
-        // TODO add tank-tank check
+
 
         System.out.println("true returned because blocked.");
         return true;
+    }
+
+
+    private boolean isTileBlockedByTank(Pair<Integer,Integer> order,Tank tank) {
+        int row = order.getKey();
+        int column = order.getValue();
+        int locationX = tank.getLocationX();
+        int locationY = tank.getLocationY();
+        Pair<Integer,Integer> blockLU = getOrderFromLocation(locationX,locationY);
+
+        if((locationX % 16 == 0)&&(locationY % 16 == 0)) {
+            if((row >= blockLU.getKey())&&(row <= blockLU.getKey()+1)&&(column >= blockLU.getValue())&&(column <= blockLU.getValue()+1)) {
+                return true;
+            }
+        }
+
+        if((locationX % 16 == 0)&&(locationY % 16 !=0)) {
+            if((row >= blockLU.getKey())&&(row <= blockLU.getKey()+2)&&(column >= blockLU.getValue())&&(column <= blockLU.getValue()+1)) {
+                return true;
+            }
+        }
+
+        if((locationX % 16 != 0)&&(locationY % 16 ==0)) {
+            if((row >= blockLU.getKey())&&(row <= blockLU.getKey()+1)&&(column >= blockLU.getValue())&&(column <= blockLU.getValue()+2)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
@@ -616,7 +667,4 @@ public class Server implements ActionListener, InfoHandler{
 
     private static final int kEnemyTankNumber = 20;
     private static final int kInitEnemyNumber = 4;
-
-
-
 }
