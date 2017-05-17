@@ -1,6 +1,7 @@
 package server.logic;
 
 import common.item.bullet.Bullet;
+import common.item.bullet.SuperBullet;
 import common.item.tank.*;
 import common.item.tile.*;
 import common.logic.*;
@@ -158,7 +159,6 @@ public class Server implements ActionListener, InfoHandler{
                 emitter_1.emit("updp20");
                 emitter_2.emit("updp20");
                 hero_2.setVelocityStatus(kNotMoving);
-
             }
         }
 
@@ -166,13 +166,13 @@ public class Server implements ActionListener, InfoHandler{
         if(info.startsWith("fir")) {
             if(info.endsWith("1")) {
                 if(hero_1.isAbleToFire()) {
-                    bullets.add(new Bullet(hero_1));
+                    bullets.add(new SuperBullet(hero_1));
                     hero_1.resetFireDelay();
                     broadcast("isb_1");
                 }
             } else if(info.endsWith("2")) {
                 if(hero_2.isAbleToFire()) {
-                    bullets.add(new Bullet(hero_2));
+                    bullets.add(new SuperBullet(hero_2));
                     hero_2.resetFireDelay();
                     broadcast("isb_2");
                 }
@@ -519,7 +519,6 @@ public class Server implements ActionListener, InfoHandler{
         hero_1.updateFireDelay();
         hero_2.updateFireDelay();
 
-        // todo add collision check
         bulletSimplify();
 
         Iterator<Bullet> bulletIterator = bullets.iterator();
@@ -542,6 +541,25 @@ public class Server implements ActionListener, InfoHandler{
             }
 
             bullet.updateLocation();
+        }
+
+        // check bullet-tank
+        for(Bullet bullet:bullets) {
+            if(isBulletHittingTank(bullet,hero_1)) {
+                // todo
+            }
+
+            if(isBulletHittingTank(bullet,hero_2)) {
+                // todo
+            }
+
+            if(bullet.isSuper()) {
+                for(Tank tank:tanks) {
+                    if(isBulletHittingTank(bullet,tank)) {
+                        tank.decreaseHealth();
+                    }
+                }
+            }
         }
 
     }
@@ -587,6 +605,102 @@ public class Server implements ActionListener, InfoHandler{
         if((bullet_1.getLocationX() == bullet_2.getLocationX()) && (delta_y>=-2) &&(delta_y <=2)
                 && (bullet_1.getVelocityStatus()==kMovingDown)&&(bullet_2.getVelocityStatus()==kMovingUp)) {
             return true;
+        }
+
+        return false;
+    }
+
+
+    private boolean isBulletHittingTank(Bullet bullet,Tank tank) {
+        int tankLocationX = tank.getLocationX();
+        int tankLocationY = tank.getLocationY();
+        int bulletLocationX = bullet.getLocationX();
+        int bulletLocationY = bullet.getLocationY();
+
+
+        if((tankLocationX%16 == 0) && (tankLocationY % 16 == 0)) {
+            switch (bullet.getVelocityStatus()) {
+                case kMovingLeft:
+                    if((bulletLocationY == tankLocationY + 16) && (Math.abs(bulletLocationX-tankLocationX)<=2)) {
+                        return true;
+                    }
+                    break;
+                case kMovingRight:
+                    if((bulletLocationY == tankLocationY + 16) && (Math.abs(bulletLocationX-(tankLocationX+32))<=2)) {
+                        return true;
+                    }
+                    break;
+                case kMovingUp:
+                    if((bulletLocationX == tankLocationX + 16) && (Math.abs(bulletLocationY-(tankLocationY+32))<=2)) {
+                        return true;
+                    }
+                    break;
+                case kMovingDown:
+                    if((bulletLocationX == tankLocationX + 16) && (Math.abs(bulletLocationY-(tankLocationY+32))<=2)) {
+                        return true;
+                    }
+                    break;
+            }
+        }
+
+        if((tankLocationX%16 != 0) && (tankLocationY % 16 == 0)) {
+            int tankLocationLeftBound = tankLocationX / 16 * 16;
+            switch (bullet.getVelocityStatus()) {
+                case kMovingLeft:
+                    if((bulletLocationY == tankLocationY + 16) && (Math.abs(bulletLocationX-tankLocationX)<=2)) {
+                        return true;
+                    }
+                    break;
+                case kMovingRight:
+                    if((bulletLocationY == tankLocationY + 16) && (Math.abs(bulletLocationX-(tankLocationX+32))<=2)) {
+                        return true;
+                    }
+                    break;
+                case kMovingUp:
+                    if((bulletLocationX == tankLocationLeftBound + 16) || (bulletLocationX == tankLocationLeftBound + 32)) {
+                        if (Math.abs(bulletLocationY - (tankLocationY + 32)) <= 2) {
+                            return true;
+                        }
+                    }
+                    break;
+                case kMovingDown:
+                    if((bulletLocationX == tankLocationLeftBound + 16) || (bulletLocationX == tankLocationLeftBound + 32)) {
+                        if (Math.abs(bulletLocationY - tankLocationY) <= 2) {
+                            return true;
+                        }
+                    }
+                    break;
+            }
+        }
+
+        if((tankLocationX%16 == 0) && (tankLocationY % 16 != 0)) {
+            int tankLocationUpBound = tankLocationY / 16 * 16;
+            switch (bullet.getVelocityStatus()) {
+                case kMovingLeft:
+                    if((bulletLocationY == tankLocationUpBound + 16) || (bulletLocationY == tankLocationUpBound + 32)) {
+                        if(Math.abs(bulletLocationX - (tankLocationX + 32)) <= 2) {
+                            return true;
+                        }
+                    }
+                    break;
+                case kMovingRight:
+                    if((bulletLocationY == tankLocationUpBound + 16) || (bulletLocationY == tankLocationUpBound + 32)) {
+                        if(Math.abs(bulletLocationX - tankLocationX) <= 2) {
+                            return true;
+                        }
+                    }
+                    break;
+                case kMovingUp:
+                    if((bulletLocationX == tankLocationX + 16) || (Math.abs(bulletLocationY - (tankLocationY+32)) <= 2)) {
+                            return true;
+                    }
+                    break;
+                case kMovingDown:
+                    if((bulletLocationX == tankLocationX + 16) || (Math.abs(bulletLocationY - tankLocationY) <= 2)) {
+                        return true;
+                    }
+                    break;
+            }
         }
 
         return false;
@@ -688,9 +802,19 @@ public class Server implements ActionListener, InfoHandler{
 
 
     private void AIUpdate() {
-        boolean facingStatusModified = false;
+        boolean needSynchronization = false;
+
+        Iterator<Tank> tankIterator = tanks.iterator();
+        while(tankIterator.hasNext()) {
+            if(!tankIterator.next().isActivated()) {
+                tankIterator.remove();
+                needSynchronization = true;
+            }
+        }
+
 
         for(Tank tank:tanks) {
+
             tank.updateFireDelay();
             tank.tryFire(bullets);
 
@@ -706,7 +830,7 @@ public class Server implements ActionListener, InfoHandler{
 
             if(!isInSameDirection(tank.getFacingStatus(),tank.getVelocityStatus())) {
                 correctTankLocation(tank,tank.getFacingStatus());
-                facingStatusModified = true;
+                needSynchronization = true;
             }
 
             if(tank.getVelocityStatus() != kNotMoving) {
@@ -714,7 +838,7 @@ public class Server implements ActionListener, InfoHandler{
             }
         }
 
-        if(facingStatusModified) {
+        if(needSynchronization) {
             forceSynchronizeTank();
         }
     }

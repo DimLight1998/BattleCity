@@ -176,18 +176,18 @@ public abstract class Tank {
     }
 
 
-    void increaseHealth() {
+    public void increaseHealth() {
         if (health > 0) {
             health++;
         }
     }
 
 
-    void decreaseHealth() {
+    public void decreaseHealth() {
         if (health > 0) {
             health--;
             if (health == 0) {
-                // TODO remove this from map and respawn
+                activated = false;
             }
         }
     }
