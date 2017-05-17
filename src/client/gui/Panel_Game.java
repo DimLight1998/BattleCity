@@ -62,8 +62,13 @@ public class Panel_Game extends JPanel {
         }
 
         // paint layer 1 (player)
-        graphics.drawImage(hero_1.getImage(),hero_1.getLocationX(),hero_1.getLocationY(),this);
-        graphics.drawImage(hero_2.getImage(),hero_2.getLocationX(),hero_2.getLocationY(),this);
+        if(hero_1.isActivated()) {
+            graphics.drawImage(hero_1.getImage(), hero_1.getLocationX(), hero_1.getLocationY(), this);
+        }
+
+        if(hero_2.isActivated()) {
+            graphics.drawImage(hero_2.getImage(), hero_2.getLocationX(), hero_2.getLocationY(), this);
+        }
 
         // paint layer 2 (bullet)
         synchronized (bullets) {

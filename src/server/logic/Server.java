@@ -51,6 +51,7 @@ public class Server implements ActionListener, InfoHandler{
     boolean isPlayerReady_1 = false;
     boolean isPlayerReady_2 = false;
     boolean isGameOver = false;
+    boolean isPlayersWin = false;
 
     private int tankRemain;
     private int tankActivated;
@@ -237,6 +238,8 @@ public class Server implements ActionListener, InfoHandler{
                 counter = 0;
             }
         }
+
+        broadcast("gmo"+(isPlayersWin?'w':'l'));
 
         JOptionPane.showConfirmDialog(panel_status,"Game over");
     }
@@ -490,8 +493,13 @@ public class Server implements ActionListener, InfoHandler{
 
     private void destroyTile(Pair<Integer,Integer> pairRowColumn) {
         if (tiles[pairRowColumn.getKey()][pairRowColumn.getValue()].isDamageable()) {
-            tiles[pairRowColumn.getKey()][pairRowColumn.getValue()] = new PlainTile(pairRowColumn.getKey(), pairRowColumn.getValue());
-            broadcast(String.format("det_%d_%d",pairRowColumn.getKey(),pairRowColumn.getValue()));
+            if (tiles[pairRowColumn.getKey()][pairRowColumn.getValue()].isDecisive()) {
+                isGameOver = true;
+                isPlayersWin = false;
+            } else {
+                tiles[pairRowColumn.getKey()][pairRowColumn.getValue()] = new PlainTile(pairRowColumn.getKey(), pairRowColumn.getValue());
+                broadcast(String.format("det_%d_%d", pairRowColumn.getKey(), pairRowColumn.getValue()));
+            }
         }
     }
 
@@ -584,11 +592,17 @@ public class Server implements ActionListener, InfoHandler{
                 Bullet bullet = bulletIterator.next();
 
                 if (isBulletHittingTank(bullet, hero_1)) {
-                    // todo
+                    hero_1.deactivate();
+                    bulletIterator.remove();
+                    broadcast("kill_1");
+                    emitter_1.emit("stop");
                 }
 
                 if (isBulletHittingTank(bullet, hero_2)) {
-                    // todo
+                    hero_2.deactivate();
+                    bulletIterator.remove();
+                    broadcast("kill_2");
+                    emitter_1.emit("stop");
                 }
 
                 if (bullet.isSuper()) {
@@ -772,7 +786,14 @@ public class Server implements ActionListener, InfoHandler{
 
 
     private void checkGameOver() {
+        if((tankActivated == 20)&&(tanks.isEmpty())) {
+            isGameOver = true;
+            isPlayersWin = true;
 
+        } else if((!hero_1.isActivated())&&(!hero_2.isActivated())) {
+            isGameOver = true;
+            isPlayersWin = false;
+        }
     }
 
 
@@ -872,12 +893,10 @@ public class Server implements ActionListener, InfoHandler{
             for(int i:respawnPointOrder) {
                 if(!isRespawnPointBlocked(i)) {
                     respawnTankOnPoint(i);
+                    tankActivated ++;
                     break;
                 }
             }
-
-            tankActivated ++;
-
         }
 
 

@@ -14,6 +14,7 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -100,6 +101,8 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             paintGame();
             Thread.sleep(20);
         }
+
+
     }
 
 
@@ -172,6 +175,19 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             tiles[row][column] = new PlainTile(row,column);
         }
 
+        if(info.startsWith("kill")) {
+            switch (info.charAt(5)) {
+                case '1':
+                    hero_1.deactivate();
+                case '2':
+                    hero_2.deactivate();
+            }
+        }
+
+        if(info.startsWith("stop")) {
+
+        }
+
         if(info.startsWith("sync") && info.endsWith("%")) {
             String infoUsed = info.substring(0,info.length()-1);
 
@@ -220,8 +236,8 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
         }
 
         if(info.startsWith("gmo")) {
+            isGameOver = true;
             if(info.charAt(3)=='w') {
-                // todo remove
                 System.out.println("win");
             } else {
                 System.out.println("lose");

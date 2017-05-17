@@ -11,6 +11,12 @@ import java.net.Socket;
 public class Emitter{
     private Socket localSocket;
     private DataOutputStream dataOutputStream;
+    boolean isDisabled = false;
+
+
+    public void disable() {
+        isDisabled = true;
+    }
 
 
     public Emitter(InetAddress toAddress, int toPort) throws IOException {
@@ -20,10 +26,12 @@ public class Emitter{
 
 
     public void emit(String info){
-        try {
-            dataOutputStream.writeUTF(info);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(!isDisabled) {
+            try {
+                dataOutputStream.writeUTF(info);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
