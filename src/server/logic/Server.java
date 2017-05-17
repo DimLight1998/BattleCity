@@ -521,7 +521,32 @@ public class Server implements ActionListener, InfoHandler{
 
         bulletSimplify();
 
-        Iterator<Bullet> bulletIterator = bullets.iterator();
+        Iterator<Bullet> bulletIterator;
+
+        // check bullet-tank
+        bulletIterator = bullets.iterator();
+        while(bulletIterator.hasNext()) {
+            Bullet bullet = bulletIterator.next();
+
+            if(isBulletHittingTank(bullet,hero_1)) {
+                // todo
+            }
+
+            if(isBulletHittingTank(bullet,hero_2)) {
+                // todo
+            }
+
+            if(bullet.isSuper()) {
+                for(Tank tank:tanks) {
+                    if(isBulletHittingTank(bullet,tank)) {
+                        tank.decreaseHealth();
+                        bulletIterator.remove();
+                    }
+                }
+            }
+        }
+
+        bulletIterator = bullets.iterator();
 
         while(bulletIterator.hasNext()) {
             Bullet bullet = bulletIterator.next();
@@ -543,24 +568,6 @@ public class Server implements ActionListener, InfoHandler{
             bullet.updateLocation();
         }
 
-        // check bullet-tank
-        for(Bullet bullet:bullets) {
-            if(isBulletHittingTank(bullet,hero_1)) {
-                // todo
-            }
-
-            if(isBulletHittingTank(bullet,hero_2)) {
-                // todo
-            }
-
-            if(bullet.isSuper()) {
-                for(Tank tank:tanks) {
-                    if(isBulletHittingTank(bullet,tank)) {
-                        tank.decreaseHealth();
-                    }
-                }
-            }
-        }
 
     }
 
@@ -814,7 +821,6 @@ public class Server implements ActionListener, InfoHandler{
 
 
         for(Tank tank:tanks) {
-
             tank.updateFireDelay();
             tank.tryFire(bullets);
 

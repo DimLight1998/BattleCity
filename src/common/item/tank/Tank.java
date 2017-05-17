@@ -221,7 +221,7 @@ public abstract class Tank {
 
     public Image getImage() {
         // TODO remove magic
-        String imagePath = "D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\";
+        String imagePath = "D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\"+health+"_";
 
         switch (facingStatus) {
             case kDirectionLeft:
