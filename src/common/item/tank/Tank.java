@@ -68,7 +68,7 @@ public abstract class Tank {
         this.isMovable = true;
         this.activated = false;
 
-        this.fireDelayBase = kFireDelayLevel_2;
+        this.fireDelayBase = kFireDelayLevel_p;
     }
 
 
@@ -277,6 +277,7 @@ public abstract class Tank {
     public static final int kFireDelayLevel_1 = 70;
     public static final int kFireDelayLevel_2 = 50;
     public static final int kFireDelayLevel_3 = 30;
+    public static final int kFireDelayLevel_p = 40;
 
     public static final int kHeavyTankID = 1;
     public static final int kLightTankID = 2;

@@ -504,6 +504,8 @@ public class Server implements ActionListener, InfoHandler{
 
 
     private void updateStatus() {
+        long startTime = System.currentTimeMillis();
+
         if(!isBlockedInDirection(hero_1,hero_1.getVelocityStatus())) {
             hero_1.updateLocation();
         } else {
@@ -524,51 +526,54 @@ public class Server implements ActionListener, InfoHandler{
         Iterator<Bullet> bulletIterator;
 
         // check bullet-tank
-        bulletIterator = bullets.iterator();
-        while(bulletIterator.hasNext()) {
-            Bullet bullet = bulletIterator.next();
+        synchronized (bullets) {
+            bulletIterator = bullets.iterator();
+            while (bulletIterator.hasNext()) {
+                Bullet bullet = bulletIterator.next();
 
-            if(isBulletHittingTank(bullet,hero_1)) {
-                // todo
-            }
+                if (isBulletHittingTank(bullet, hero_1)) {
+                    // todo
+                }
 
-            if(isBulletHittingTank(bullet,hero_2)) {
-                // todo
-            }
+                if (isBulletHittingTank(bullet, hero_2)) {
+                    // todo
+                }
 
-            if(bullet.isSuper()) {
-                for(Tank tank:tanks) {
-                    if(isBulletHittingTank(bullet,tank)) {
-                        tank.decreaseHealth();
-                        bulletIterator.remove();
+                if (bullet.isSuper()) {
+                    for (Tank tank : tanks) {
+                        if (isBulletHittingTank(bullet, tank)) {
+                            tank.decreaseHealth();
+                            bulletIterator.remove();
+                        }
                     }
                 }
             }
+
+            bulletIterator = bullets.iterator();
+
+            while (bulletIterator.hasNext()) {
+                Bullet bullet = bulletIterator.next();
+
+                Pair<Integer, Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> hittingInfoPack = getHittingWallInfoPack(bullet);
+
+                if (hittingInfoPack.getKey() == kBulletOutOfBoard) {
+                    bulletIterator.remove();
+                    continue;
+                }
+
+                if (hittingInfoPack.getKey() == kBulletHitWall) {
+                    bulletIterator.remove();
+                    destroyTile(hittingInfoPack.getValue().getKey());
+                    destroyTile(hittingInfoPack.getValue().getValue());
+                    continue;
+                }
+
+                bullet.updateLocation();
+            }
         }
 
-        bulletIterator = bullets.iterator();
-
-        while(bulletIterator.hasNext()) {
-            Bullet bullet = bulletIterator.next();
-
-            Pair<Integer,Pair<Pair<Integer,Integer>,Pair<Integer,Integer>>> hittingInfoPack = getHittingWallInfoPack(bullet);
-
-            if(hittingInfoPack.getKey()==kBulletOutOfBoard) {
-                bulletIterator.remove();
-                continue;
-            }
-
-            if(hittingInfoPack.getKey()==kBulletHitWall) {
-                bulletIterator.remove();
-                destroyTile(hittingInfoPack.getValue().getKey());
-                destroyTile(hittingInfoPack.getValue().getValue());
-                continue;
-            }
-
-            bullet.updateLocation();
-        }
-
-
+        long endTime = System.currentTimeMillis();
+        System.out.println("Updated, "+(endTime-startTime)+" ms");
     }
 
 
@@ -621,89 +626,75 @@ public class Server implements ActionListener, InfoHandler{
     private boolean isBulletHittingTank(Bullet bullet,Tank tank) {
         int tankLocationX = tank.getLocationX();
         int tankLocationY = tank.getLocationY();
+
         int bulletLocationX = bullet.getLocationX();
         int bulletLocationY = bullet.getLocationY();
 
 
         if((tankLocationX%16 == 0) && (tankLocationY % 16 == 0)) {
+            int tankCentLocationX = tankLocationX + 16;
+            int tankCentLocationY = tankLocationY + 16;
+
             switch (bullet.getVelocityStatus()) {
                 case kMovingLeft:
-                    if((bulletLocationY == tankLocationY + 16) && (Math.abs(bulletLocationX-tankLocationX)<=2)) {
-                        return true;
-                    }
-                    break;
                 case kMovingRight:
-                    if((bulletLocationY == tankLocationY + 16) && (Math.abs(bulletLocationX-(tankLocationX+32))<=2)) {
+                    if((bulletLocationY == tankCentLocationY) && (Math.abs(bulletLocationX-tankCentLocationX)<=2)) {
                         return true;
                     }
                     break;
                 case kMovingUp:
-                    if((bulletLocationX == tankLocationX + 16) && (Math.abs(bulletLocationY-(tankLocationY+32))<=2)) {
-                        return true;
-                    }
-                    break;
                 case kMovingDown:
-                    if((bulletLocationX == tankLocationX + 16) && (Math.abs(bulletLocationY-(tankLocationY+32))<=2)) {
+                    if((bulletLocationX == tankCentLocationX) && (Math.abs(bulletLocationY-tankCentLocationY)<=2)) {
                         return true;
                     }
                     break;
             }
-        }
+        } else if(tankLocationX%16 != 0) {
+            int tankLocationLeftBound = tankLocationX / 16;
+            tankLocationLeftBound *= 16;
 
-        if((tankLocationX%16 != 0) && (tankLocationY % 16 == 0)) {
-            int tankLocationLeftBound = tankLocationX / 16 * 16;
+            int tankLineLocationX_1 = tankLocationLeftBound + 16;
+            int tankLineLocationX_2 = tankLocationLeftBound + 32;
+            int tankCentLocationX = tankLocationX + 16;
+            int tankCentLocationY = tankLocationY + 16;
+
             switch (bullet.getVelocityStatus()) {
                 case kMovingLeft:
-                    if((bulletLocationY == tankLocationY + 16) && (Math.abs(bulletLocationX-tankLocationX)<=2)) {
-                        return true;
-                    }
-                    break;
                 case kMovingRight:
-                    if((bulletLocationY == tankLocationY + 16) && (Math.abs(bulletLocationX-(tankLocationX+32))<=2)) {
+                    if((bulletLocationY == tankCentLocationY) && (Math.abs(bulletLocationX-tankCentLocationX)<=2)) {
                         return true;
                     }
                     break;
                 case kMovingUp:
-                    if((bulletLocationX == tankLocationLeftBound + 16) || (bulletLocationX == tankLocationLeftBound + 32)) {
-                        if (Math.abs(bulletLocationY - (tankLocationY + 32)) <= 2) {
-                            return true;
-                        }
-                    }
-                    break;
                 case kMovingDown:
-                    if((bulletLocationX == tankLocationLeftBound + 16) || (bulletLocationX == tankLocationLeftBound + 32)) {
-                        if (Math.abs(bulletLocationY - tankLocationY) <= 2) {
+                    if((bulletLocationX == tankLineLocationX_1) || (bulletLocationX == tankLineLocationX_2)) {
+                        if (Math.abs(bulletLocationY - tankCentLocationY)<=2) {
                             return true;
                         }
                     }
                     break;
             }
-        }
+        } else if(tankLocationY % 16 != 0) {
+            int tankLocationUpBound = tankLocationY / 16;
+            tankLocationUpBound *= 16;
 
-        if((tankLocationX%16 == 0) && (tankLocationY % 16 != 0)) {
-            int tankLocationUpBound = tankLocationY / 16 * 16;
+            int tankLineLocationY_1 = tankLocationUpBound + 16;
+            int tankLineLocationY_2 = tankLocationUpBound + 32;
+            int tankCentLocationX = tankLocationX + 16;
+            int tankCentLocationY = tankLocationY + 16;
+
             switch (bullet.getVelocityStatus()) {
                 case kMovingLeft:
-                    if((bulletLocationY == tankLocationUpBound + 16) || (bulletLocationY == tankLocationUpBound + 32)) {
-                        if(Math.abs(bulletLocationX - (tankLocationX + 32)) <= 2) {
-                            return true;
-                        }
-                    }
-                    break;
                 case kMovingRight:
-                    if((bulletLocationY == tankLocationUpBound + 16) || (bulletLocationY == tankLocationUpBound + 32)) {
-                        if(Math.abs(bulletLocationX - tankLocationX) <= 2) {
+                    if((bulletLocationY == tankLineLocationY_1) || (bulletLocationY == tankLineLocationY_2)) {
+                        if(Math.abs(bulletLocationX - tankCentLocationX) <= 2) {
                             return true;
                         }
                     }
                     break;
                 case kMovingUp:
-                    if((bulletLocationX == tankLocationX + 16) || (Math.abs(bulletLocationY - (tankLocationY+32)) <= 2)) {
-                            return true;
-                    }
-                    break;
                 case kMovingDown:
-                    if((bulletLocationX == tankLocationX + 16) || (Math.abs(bulletLocationY - tankLocationY) <= 2)) {
+                    if((bulletLocationX == tankCentLocationX) && (Math.abs(bulletLocationY - tankCentLocationY) <= 2)) {
                         return true;
                     }
                     break;

@@ -203,8 +203,6 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
 
 
     void updateStatus() {
-        // todo for test
-        tiles[5][5] = new Water(5,5);
 
         hero_1.updateLocation();
         hero_1.updateFireDelay();

@@ -127,5 +127,5 @@ public class Bullet {
     private static final int kMovingUp = 3;
     private static final int kMovingDown = 4;
 
-    private static final int kBulletVelocity = 3;
+    private static final int kBulletVelocity = 4;
 }
