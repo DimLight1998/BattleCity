@@ -52,6 +52,11 @@ public class Bullet {
     }
 
 
+    public int getBelong() {
+        return 0;
+    }
+
+
     public int getBulletVelocity() {
         return kBulletVelocity;
     }

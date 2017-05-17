@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static common.item.tank.Tank.*;
 
@@ -49,6 +50,9 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
     private boolean isGameOver = false;
     private int playerNumber;
 
+    private AtomicInteger player_1_score = new AtomicInteger(0);
+    private AtomicInteger player_2_score = new AtomicInteger(0);
+
 
     public Client() throws FileNotFoundException {
         // TODO for test
@@ -62,7 +66,7 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
 
 
         panel_login = new Panel_Login(this);
-        gui_play = new GUI_Play(this,tiles,tanks,bullets,hero_1,hero_2);
+        gui_play = new GUI_Play(this,tiles,tanks,bullets,hero_1,hero_2,player_1_score,player_2_score);
 
     }
 
@@ -80,16 +84,17 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
         System.out.println("Connected to the server");
 
         gui_play.display();
-//
-//        new JFXPanel();
-//        String backgroundMusicPath = "D:\\File\\Program\\Projects\\BattleCity\\src\\res\\sound\\background.mp3";
-//        Media media = new Media(new File(backgroundMusicPath).toURI().toString());
-//        MediaPlayer mediaPlayer = new MediaPlayer(media);
-//        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-//        mediaPlayer.setAutoPlay(true);
-//
-//        mediaPlayer.play();
-//
+
+        new JFXPanel();
+        String backgroundMusicPath = "D:\\File\\Program\\Projects\\BattleCity\\src\\res\\sound\\background.mp3";
+        Media media = new Media(new File(backgroundMusicPath).toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.setVolume(0.3);
+        mediaPlayer.setAutoPlay(true);
+
+        mediaPlayer.play();
+
         while(!isGameOver) {
             updateStatus();
             paintGame();
@@ -200,6 +205,17 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
                        bullets.add(new Bullet(slices[i + 2]));
                    }
                }
+            }
+        }
+
+        if(info.startsWith("sco")) {
+            switch (info.charAt(3)) {
+                case '1':
+                    player_1_score.set(Integer.valueOf(info.substring(5)));
+                    break;
+                case '2':
+                    player_2_score.set(Integer.valueOf(info.substring(5)));
+                    break;
             }
         }
 

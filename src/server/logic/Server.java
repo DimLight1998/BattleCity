@@ -166,13 +166,13 @@ public class Server implements ActionListener, InfoHandler{
         if(info.startsWith("fir")) {
             if(info.endsWith("1")) {
                 if(hero_1.isAbleToFire()) {
-                    bullets.add(new SuperBullet(hero_1));
+                    bullets.add(new SuperBullet(hero_1,1));
                     hero_1.resetFireDelay();
                     broadcast("isb_1");
                 }
             } else if(info.endsWith("2")) {
                 if(hero_2.isAbleToFire()) {
-                    bullets.add(new SuperBullet(hero_2));
+                    bullets.add(new SuperBullet(hero_2,2));
                     hero_2.resetFireDelay();
                     broadcast("isb_2");
                 }
@@ -595,6 +595,20 @@ public class Server implements ActionListener, InfoHandler{
                     for (Tank tank : tanks) {
                         if (isBulletHittingTank(bullet, tank)) {
                             tank.decreaseHealth();
+
+                            if(!tank.isActivated()) {
+                                switch(bullet.getBelong()) {
+                                    case 1:
+                                        player_1_score += tank.getScore();
+                                        broadcast("sco1_"+player_1_score);
+                                        break;
+                                    case 2:
+                                        plater_2_score += tank.getScore();
+                                        broadcast("sco2_"+plater_2_score);
+                                        break;
+                                }
+                            }
+
                             bulletIterator.remove();
                         }
                     }

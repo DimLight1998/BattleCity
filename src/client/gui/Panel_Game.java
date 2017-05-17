@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created on 2017/04/30.
@@ -19,17 +20,21 @@ public class Panel_Game extends JPanel {
     ArrayList<Bullet> bullets;
     Tank              hero_1;
     Tank              hero_2;
+    AtomicInteger player_1_score;
+    AtomicInteger player_2_score;
 
     Panel_Game(Tile[][] tiles,
-        ArrayList<Tank>   tanks,
-        ArrayList<Bullet> bullets,
-        Tank              hero_1,
-        Tank              hero_2) {
+               ArrayList<Tank> tanks,
+               ArrayList<Bullet> bullets,
+               Tank hero_1,
+               Tank hero_2, AtomicInteger player_1_score, AtomicInteger player_2_score) {
         this.tiles   = tiles;
         this.tanks   = tanks;
         this.bullets = bullets;
         this.hero_1  = hero_1;
         this.hero_2  = hero_2;
+        this.player_1_score = player_1_score;
+        this.player_2_score = player_2_score;
     }
 
     public void paint(Graphics graphics) {
@@ -77,5 +82,16 @@ public class Panel_Game extends JPanel {
         }
 
         // paint layer 4 (tool)
+
+        // paint layer info
+        ((Graphics2D)graphics).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        graphics.setFont(new Font("TimesRoman",Font.BOLD,20));
+        graphics.drawString("Battle City",530,50);
+        graphics.drawString(""+player_1_score,530,200);
+        graphics.drawString(""+player_2_score,530,350);
+
+        graphics.setFont(new Font("TimesRoman",Font.PLAIN,20));
+        graphics.drawString("Player 1 Score",530,150);
+        graphics.drawString("Player 2 Score",530,300);
     }
 }
