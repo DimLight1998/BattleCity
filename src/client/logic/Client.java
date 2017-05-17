@@ -2,6 +2,7 @@ package client.logic;
 
 import client.gui.GUI_Play;
 import client.gui.Panel_Login;
+import client.gui.Panel_Save;
 import common.item.bullet.Bullet;
 import common.item.tank.PlayerTank;
 import common.item.tank.Tank;
@@ -14,7 +15,6 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -49,6 +49,8 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
 
     private boolean isReady = false;
     private boolean isGameOver = false;
+    private boolean isWin = false;
+    private boolean isGameStart = false;
     private int playerNumber;
 
     private AtomicInteger player_1_score = new AtomicInteger(0);
@@ -86,6 +88,10 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
 
         gui_play.display();
 
+        while(!isGameStart) {
+            Thread.sleep(100);
+        }
+
         new JFXPanel();
         String backgroundMusicPath = "D:\\File\\Program\\Projects\\BattleCity\\src\\res\\sound\\background.mp3";
         Media media = new Media(new File(backgroundMusicPath).toURI().toString());
@@ -102,7 +108,12 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             Thread.sleep(20);
         }
 
+        gui_play.dispose();
 
+        String kHistoryFilePath = "history.txt";
+        Panel_Save panel_save = new Panel_Save(this,new File(kHistoryFilePath));
+
+        panel_save.display();
     }
 
 
@@ -118,6 +129,7 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             try {
                 emitter = new Emitter(IPAddress,newPort);
                 System.out.println("Emitter is locked on port"+newPort);
+                isGameStart = true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -241,8 +253,10 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             isGameOver = true;
             if(info.charAt(3)=='w') {
                 System.out.println("win");
+                isWin = true;
             } else {
                 System.out.println("lose");
+                isWin = false;
             }
         }
     }
@@ -273,6 +287,22 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
 
     void paintGame() {
         gui_play.repaintPanelGame();
+    }
+
+
+    public boolean getIsWin() {
+        return isWin;
+    }
+
+
+    public int getScore() {
+        switch ( playerNumber) {
+            case 1:
+                return player_1_score.get();
+            case 2:
+                return player_2_score.get();
+        }
+        return 0;
     }
 
 
@@ -323,4 +353,5 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
     public void keyReleased(KeyEvent e) {
         emitter.emit("rls"+playerNumber);
     }
+
 }

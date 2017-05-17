@@ -1,0 +1,97 @@
+package client.logic;
+
+import java.io.*;
+import java.util.*;
+
+/**
+ * Created on 2017/05/17.
+ */
+public class Recorder {
+    private File historyFile;
+
+    public Recorder(File file)  {
+        historyFile = file;
+        try {
+            historyFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<HistoryItem> getHistoryItems() {
+        ArrayList<HistoryItem> ret = null;
+
+        try {
+            Scanner scanner = new Scanner(historyFile);
+
+            ret = new ArrayList<>();
+
+            while (scanner.hasNextLine()) {
+                String name = scanner.nextLine();
+                if (name.isEmpty()) {
+                    break;
+                }
+
+                int score = scanner.nextInt();
+                ret.add(new HistoryItem(name, score));
+            }
+
+            scanner.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+
+    private void saveHistoryItems(ArrayList<HistoryItem> list) {
+        try {
+            FileWriter writer = new FileWriter(historyFile);
+
+            for (HistoryItem historyItem : list) {
+                writer.append(historyItem.getName()).append("\n");
+                writer.append(Integer.toString(historyItem.getScore())).append("\n");
+            }
+
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static ArrayList<HistoryItem> getTopFive(ArrayList<HistoryItem> historyItems) {
+        ArrayList<HistoryItem> ret = new ArrayList<>();
+
+        historyItems.sort(new Comparator<HistoryItem>() {
+            @Override
+            public int compare(HistoryItem o1, HistoryItem o2) {
+                Integer score_1 = o1.getScore();
+                Integer score_2 = o2.getScore();
+                return score_1.compareTo(score_2);
+            }
+        });
+
+        Collections.reverse(historyItems);
+
+        for(int i = 0;i<Integer.min(5,historyItems.size());i++) {
+            ret.add(historyItems.get(i));
+        }
+
+        int size = ret.size();
+        for(int i = 0;i<5-size;i++) {
+            ret.add(new HistoryItem("Unnamed",0));
+        }
+
+        return ret;
+    }
+
+
+    public void insertItem(HistoryItem item) {
+        ArrayList<HistoryItem> items = getHistoryItems();
+        items.add(item);
+
+        saveHistoryItems(items);
+    }
+}

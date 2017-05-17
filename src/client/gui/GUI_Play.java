@@ -46,6 +46,10 @@ public class GUI_Play extends JPanel {
         //        panel_game.repaint();
     }
 
+    public void dispose() {
+        mainFrame.dispose();
+    }
+
     public void repaintPanelGame() {
         panel_game.repaint();
     }
