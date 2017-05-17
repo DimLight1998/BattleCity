@@ -15,6 +15,8 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -111,7 +113,7 @@ public class Server implements ActionListener, InfoHandler{
                 // todo check if illegal
                 if(!isInSameDirection(getDirectionFromChar(info.charAt(3)),hero_1.getFacingStatus())) {
                     correctTankLocation(hero_1,hero_1.getFacingStatus());
-                    forceSynchronize();
+                    forceSynchronizePlayer();
                 }
 
                 hero_1.setFacingStatus(getDirectionFromChar(info.charAt(3)));
@@ -129,7 +131,7 @@ public class Server implements ActionListener, InfoHandler{
                 // todo check if illegal
                 if(!isInSameDirection(getDirectionFromChar(info.charAt(3)),hero_2.getFacingStatus())) {
                     correctTankLocation(hero_2,hero_2.getFacingStatus());
-                    forceSynchronize();
+                    forceSynchronizePlayer();
                 }
 
                 hero_2.setFacingStatus(getDirectionFromChar(info.charAt(3)));
@@ -518,6 +520,7 @@ public class Server implements ActionListener, InfoHandler{
         hero_2.updateFireDelay();
 
         // todo add collision check
+        bulletSimplify();
 
         Iterator<Bullet> bulletIterator = bullets.iterator();
 
@@ -540,6 +543,53 @@ public class Server implements ActionListener, InfoHandler{
 
             bullet.updateLocation();
         }
+
+    }
+
+
+    private void bulletSimplify() {
+        boolean bulletsRemoved = false;
+        ArrayList<Integer> simplifyIndexes = new ArrayList<>();
+
+        for(int i = 0;i<bullets.size();i++) {
+            for(int j = i+1;j<bullets.size();j++) {
+                if(isBulletsReducible(bullets.get(i),bullets.get(j)) || isBulletsReducible(bullets.get(j),bullets.get(i))) {
+                    if((!simplifyIndexes.contains(i))&&(!simplifyIndexes.contains(j))) {
+                        simplifyIndexes.add(i);
+                        simplifyIndexes.add(j);
+                        bulletsRemoved = true;
+                    }
+                }
+            }
+        }
+
+        simplifyIndexes.sort(Collections.reverseOrder());
+        for(int i : simplifyIndexes) {
+            bullets.remove(i);
+        }
+
+        if(bulletsRemoved) {
+            System.out.println("Bullets removed.");
+            forceSynchronizeBullet();
+        }
+    }
+
+
+    private static boolean isBulletsReducible(Bullet bullet_1,Bullet bullet_2) {
+        int delta_x = bullet_1.getLocationX()-bullet_2.getLocationX();
+        int delta_y = bullet_1.getLocationY()-bullet_2.getLocationY();
+
+        if((bullet_1.getLocationY() == bullet_2.getLocationY()) && (delta_x>=-2) &&(delta_x <=2)
+                && (bullet_1.getVelocityStatus()==kMovingRight)&&(bullet_2.getVelocityStatus()==kMovingLeft)) {
+            return true;
+        }
+
+        if((bullet_1.getLocationX() == bullet_2.getLocationX()) && (delta_y>=-2) &&(delta_y <=2)
+                && (bullet_1.getVelocityStatus()==kMovingDown)&&(bullet_2.getVelocityStatus()==kMovingUp)) {
+            return true;
+        }
+
+        return false;
     }
 
 
@@ -554,13 +604,23 @@ public class Server implements ActionListener, InfoHandler{
 
 
     private void forceSynchronize() {
+        forceSynchronizePlayer();
+        forceSynchronizeTank();
+        forceSynchronizeBullet();
+    }
+
+
+    private void forceSynchronizePlayer() {
         // heroes sync
         String hero_1_string = hero_1.toString();
         String hero_2_string = hero_2.toString();
 
         broadcast("synch1"+hero_1_string+"%");
         broadcast("synch2"+hero_2_string+"%");
+    }
 
+
+    private void forceSynchronizeTank() {
         // tanks sync
         StringBuilder tanks_string = new StringBuilder("synct_"+tanks.size());
 
@@ -569,7 +629,10 @@ public class Server implements ActionListener, InfoHandler{
         }
 
         broadcast(tanks_string.toString()+"%");
+    }
 
+
+    private void forceSynchronizeBullet() {
         // bullets sync
         StringBuilder bullets_string = new StringBuilder("syncb_" + bullets.size());
 
@@ -579,7 +642,6 @@ public class Server implements ActionListener, InfoHandler{
 
         broadcast(bullets_string.toString()+"%");
 
-        // tiles sync
     }
 
 
@@ -653,7 +715,7 @@ public class Server implements ActionListener, InfoHandler{
         }
 
         if(facingStatusModified) {
-            forceSynchronize();
+            forceSynchronizeTank();
         }
     }
 
