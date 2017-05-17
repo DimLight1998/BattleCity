@@ -60,8 +60,8 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
         tiles = new Tile[30][30];
         tanks = new ArrayList<>();
         bullets = new ArrayList<>();
-        hero_1 = new PlayerTank(PLAYER_1_INIT_LOC_X,PLAYER_1_INIT_LOC_Y);
-        hero_2 = new PlayerTank(PLAYER_2_INIT_LOC_X,PLAYER_2_INIT_LOC_Y);
+        hero_1 = new PlayerTank(160,448,1);
+        hero_2 = new PlayerTank(288,448,2);
         MapLoader.loadMap(new File("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\map\\test.txt"),tiles);
         // TODO for test
 
@@ -139,8 +139,8 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             tiles = new Tile[30][30];
             tanks = new ArrayList<>();
             bullets = new ArrayList<>();
-            hero_1 = new PlayerTank(PLAYER_1_INIT_LOC_X,PLAYER_1_INIT_LOC_Y);
-            hero_2 = new PlayerTank(PLAYER_2_INIT_LOC_X,PLAYER_2_INIT_LOC_Y);
+            hero_1 = new PlayerTank(160,448,1);
+            hero_2 = new PlayerTank(288,448,2);
         }
 
         if(info.startsWith("updp")) {
@@ -179,13 +179,15 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             switch (info.charAt(5)) {
                 case '1':
                     hero_1.deactivate();
+                    break;
                 case '2':
                     hero_2.deactivate();
+                    break;
             }
         }
 
         if(info.startsWith("stop")) {
-
+            emitter.disable();
         }
 
         if(info.startsWith("sync") && info.endsWith("%")) {
@@ -321,17 +323,4 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
     public void keyReleased(KeyEvent e) {
         emitter.emit("rls"+playerNumber);
     }
-
-
-    static final int PLAYER_1_INIT_LOC_X = 0;
-    static final int PLAYER_1_INIT_LOC_Y = 0;
-    static final int PLAYER_2_INIT_LOC_X = 0;
-    static final int PLAYER_2_INIT_LOC_Y = 0;
-
-    static final int ENEMY_SPAN_1_LOC_X = 0;
-    static final int ENEMY_SPAN_1_LOC_Y = 0;
-    static final int ENEMY_SPAN_2_LOC_X = 0;
-    static final int ENEMY_SPAN_2_LOC_Y = 0;
-    static final int ENEMY_SPAN_3_LOC_X = 0;
-    static final int ENEMY_SPAN_3_LOC_Y = 0;
 }

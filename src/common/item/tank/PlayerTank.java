@@ -6,10 +6,10 @@ package common.item.tank;
 public class PlayerTank extends Tank {
     int owner;
 
-    public PlayerTank(int locationX, int locationY) {
+    public PlayerTank(int locationX, int locationY,int owner) {
         super(locationX, locationY);
         health = 1;
-        owner = 1;
+        this.owner = owner;
         facingStatus = kDirectionUp;
     }
 
@@ -29,6 +29,14 @@ public class PlayerTank extends Tank {
         } else {
             return "P2";
         }
+    }
+
+    @Override
+    public void deactivate() {
+        this.activated = false;
+        this.setLocationX(-100);
+        this.setLocationY(-100);
+        this.setVelocityStatus(kNotMoving);
     }
 
     @Override

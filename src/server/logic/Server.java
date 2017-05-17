@@ -62,8 +62,8 @@ public class Server implements ActionListener, InfoHandler{
         bullets = new ArrayList<>();
 
         // TODO for test
-        hero_1 = new PlayerTank(160,448);
-        hero_2 = new PlayerTank(288,448);
+        hero_1 = new PlayerTank(160,448,1);
+        hero_2 = new PlayerTank(288,448,2);
 
         panel_setup = new Panel_Setup(this);
 //        panel_status = new Panel_Status();
@@ -213,6 +213,7 @@ public class Server implements ActionListener, InfoHandler{
 
         // TODO remove this
         System.out.println("ready");
+//        broadcast("init");
 
         // TODO complete map selection
         // todo for test
@@ -242,6 +243,8 @@ public class Server implements ActionListener, InfoHandler{
         broadcast("gmo"+(isPlayersWin?'w':'l'));
 
         JOptionPane.showConfirmDialog(panel_status,"Game over");
+
+        System.exit(0);
     }
 
     @Override
@@ -602,7 +605,7 @@ public class Server implements ActionListener, InfoHandler{
                     hero_2.deactivate();
                     bulletIterator.remove();
                     broadcast("kill_2");
-                    emitter_1.emit("stop");
+                    emitter_2.emit("stop");
                 }
 
                 if (bullet.isSuper()) {
