@@ -322,22 +322,21 @@ public class Server implements ActionListener, InfoHandler{
             return true;
         }
 
-        // TODO add tank-tank check
         if(hero_1!=tank) {
-            if(isTileBlockedByTank(order_1,hero_1) && isTileBlockedByTank(order_2,hero_1)) {
+            if(isTileBlockedByTank(order_1,hero_1) || isTileBlockedByTank(order_2,hero_1)) {
                 return true;
             }
         }
 
         if(hero_2!=tank) {
-            if(isTileBlockedByTank(order_1,hero_2) && isTileBlockedByTank(order_2,hero_2)) {
+            if(isTileBlockedByTank(order_1,hero_2) || isTileBlockedByTank(order_2,hero_2)) {
                 return true;
             }
         }
 
         for(Tank tankIter:tanks) {
             if(tank!=tankIter) {
-                if(isTileBlockedByTank(order_1,tankIter) && isTileBlockedByTank(order_2,tankIter)) {
+                if(isTileBlockedByTank(order_1,tankIter) || isTileBlockedByTank(order_2,tankIter)) {
                     return true;
                 }
             }
