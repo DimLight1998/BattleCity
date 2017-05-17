@@ -66,7 +66,7 @@ public abstract class Tank {
         this.facingStatus = kDirectionDown;
         this.isSuper = false;
         this.isMovable = true;
-        this.activated = false;
+        this.activated = true;
 
         this.fireDelayBase = kFireDelayLevel_p;
     }

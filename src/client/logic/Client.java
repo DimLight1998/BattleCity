@@ -10,6 +10,9 @@ import common.logic.Emitter;
 import common.logic.InfoHandler;
 import common.logic.MapLoader;
 import common.logic.Receiver;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -77,7 +80,16 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
         System.out.println("Connected to the server");
 
         gui_play.display();
-
+//
+//        new JFXPanel();
+//        String backgroundMusicPath = "D:\\File\\Program\\Projects\\BattleCity\\src\\res\\sound\\background.mp3";
+//        Media media = new Media(new File(backgroundMusicPath).toURI().toString());
+//        MediaPlayer mediaPlayer = new MediaPlayer(media);
+//        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+//        mediaPlayer.setAutoPlay(true);
+//
+//        mediaPlayer.play();
+//
         while(!isGameOver) {
             updateStatus();
             paintGame();

@@ -14,9 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.InetAddress;
-import java.net.MulticastSocket;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.concurrent.ThreadLocalRandom;
@@ -46,6 +44,8 @@ public class Server implements ActionListener, InfoHandler{
     private Panel_Setup panel_setup;
     Panel_Status panel_status;
     private File mapFile;
+    int player_1_score;
+    int plater_2_score;
 
     boolean isPortSet = false;
     boolean isPlayerReady_1 = false;
@@ -382,6 +382,59 @@ public class Server implements ActionListener, InfoHandler{
         }
 
         return false;
+    }
+
+
+    private boolean isTileBlocked(Pair<Integer,Integer> order) {
+        if(isTileBlockedByTank(order,hero_1)) {
+            return true;
+        } else if(isTileBlockedByTank(order, hero_2)) {
+            return true;
+        } else {
+            for(Tank tank: tanks) {
+                if(isTileBlockedByTank(order,tank)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+
+    private boolean isRespawnPointBlocked(int respawnPoint) {
+        switch (respawnPoint) {
+            case 0:
+                return isTileBlocked(new Pair<>(0,0));
+            case 1:
+                return isTileBlocked(new Pair<>(0,9));
+            case 2:
+                return isTileBlocked(new Pair<>(0,19));
+            case 3:
+                return isTileBlocked(new Pair<>(0,28));
+        }
+        return false;
+    }
+
+
+    private void respawnTankOnPoint(int respawnPoint) {
+        int tankID = ThreadLocalRandom.current().nextInt(1, 5);
+        if(!isRespawnPointBlocked(respawnPoint)) {
+            switch (tankID) {
+                case kHeavyTankID:
+                    tanks.add(new HeavyTank(initSpawnLocationX[respawnPoint],0));
+                    break;
+                case kLightTankID:
+                    tanks.add(new LightTank(initSpawnLocationX[respawnPoint],0));
+                    break;
+                case kArmoredTankID:
+                    tanks.add(new ArmoredTank(initSpawnLocationX[respawnPoint],0));
+                    break;
+                case kTankDestroyerID:
+                    tanks.add(new TankDestroyer(initSpawnLocationX[respawnPoint],0));
+                    break;
+            }
+        }
     }
 
 
@@ -768,24 +821,9 @@ public class Server implements ActionListener, InfoHandler{
 
 
     private void AIInitialize() {
-        int[] initSpawnLocationX = {0*16,9*16,19*16,28*16};
 
-        for(int i = 0;i<kInitEnemyNumber;i++) {
-            int tankID = ThreadLocalRandom.current().nextInt(1, 5);
-            switch (tankID) {
-                case kHeavyTankID:
-                    tanks.add(new HeavyTank(initSpawnLocationX[i],0));
-                    break;
-                case kLightTankID:
-                    tanks.add(new LightTank(initSpawnLocationX[i],0));
-                    break;
-                case kArmoredTankID:
-                    tanks.add(new ArmoredTank(initSpawnLocationX[i],0));
-                    break;
-                case kTankDestroyerID:
-                    tanks.add(new TankDestroyer(initSpawnLocationX[i],0));
-                    break;
-            }
+        for(int i = 0; i< kEnemyNumberOnMap; i++) {
+            respawnTankOnPoint(i);
         }
 
         for(Tank tank:tanks) {
@@ -793,7 +831,7 @@ public class Server implements ActionListener, InfoHandler{
             tank.resetFireDelay();
         }
 
-        tankActivated = kInitEnemyNumber;
+        tankActivated = kEnemyNumberOnMap;
         tankRemain = kEnemyTankNumber;
     }
 
@@ -807,6 +845,25 @@ public class Server implements ActionListener, InfoHandler{
                 tankIterator.remove();
                 needSynchronization = true;
             }
+        }
+
+        if((tanks.size() < kEnemyNumberOnMap)&&(tankActivated < kEnemyTankNumber)) {
+            ArrayList<Integer> respawnPointOrder = new ArrayList<>();
+            respawnPointOrder.add(0);
+            respawnPointOrder.add(1);
+            respawnPointOrder.add(2);
+            respawnPointOrder.add(3);
+            Collections.shuffle(respawnPointOrder);
+
+            for(int i:respawnPointOrder) {
+                if(!isRespawnPointBlocked(i)) {
+                    respawnTankOnPoint(i);
+                    break;
+                }
+            }
+
+            tankActivated ++;
+
         }
 
 
@@ -837,8 +894,12 @@ public class Server implements ActionListener, InfoHandler{
         if(needSynchronization) {
             forceSynchronizeTank();
         }
+
+
     }
 
+
+    private final int[] initSpawnLocationX = {0*16,9*16,19*16,28*16};
 
     private static final int MAX_MAP_SIZE = 30;
     private static final int kTankPositionCorrectionUnit = 16;
@@ -848,5 +909,5 @@ public class Server implements ActionListener, InfoHandler{
     private static final int kBulletNotHitWall = 2;
 
     private static final int kEnemyTankNumber = 20;
-    private static final int kInitEnemyNumber = 4;
+    private static final int kEnemyNumberOnMap = 4;
 }
