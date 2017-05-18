@@ -158,8 +158,14 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             if(info.charAt(3) == '_') {
                 if(info.endsWith("1")) {
                     bullets.add(new Bullet(hero_1));
+                    if(playerNumber == 1) {
+                        gui_play.playFireSound();
+                    }
                 } else if(info.endsWith("2")) {
                     bullets.add(new Bullet(hero_2));
+                    if(playerNumber == 2) {
+                        gui_play.playFireSound();
+                    }
                 }
             } else {
                 // todo bullets from AI

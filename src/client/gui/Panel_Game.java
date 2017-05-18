@@ -1,12 +1,12 @@
 package client.gui;
 
-import com.sun.org.apache.bcel.internal.generic.ALOAD;
 import common.item.bullet.Bullet;
 import common.item.tank.Tank;
 import common.item.tile.Tile;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicInteger;

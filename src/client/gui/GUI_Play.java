@@ -4,9 +4,13 @@ import client.logic.Client;
 import common.item.bullet.Bullet;
 import common.item.tank.Tank;
 import common.item.tile.Tile;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -52,5 +56,23 @@ public class GUI_Play extends JPanel {
 
     public void repaintPanelGame() {
         panel_game.repaint();
+    }
+
+
+    public  void playFireSound() {
+        new JFXPanel();
+        Media media = null;
+        try {
+            media = new Media(getClass().getResource("/res/sound/fire.wav").toURI().toString());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        assert media!=null;
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setVolume(0.5);
+        mediaPlayer.setAutoPlay(true);
+
+        mediaPlayer.play();
     }
 }
