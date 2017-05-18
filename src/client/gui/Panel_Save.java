@@ -26,7 +26,7 @@ public class Panel_Save extends JPanel implements ActionListener{
 
     public Panel_Save(Client client,File historyFile) {
         recorder = new Recorder(historyFile);
-        text_name = new JTextField(20);
+        text_name = new JTextField("Player",20);
         this.client = client;
 
         mainFrame = new JFrame("Hall of Fame");
@@ -35,6 +35,7 @@ public class Panel_Save extends JPanel implements ActionListener{
         mainFrame.setLayout(new GridLayout(0,1));
         mainFrame.setResizable(false);
         mainFrame.setSize(450,700);
+        mainFrame.setLocationRelativeTo(null);
 
         JLabel label_gameOver = new JLabel("",SwingConstants.CENTER);
         if(client.getIsWin()) {

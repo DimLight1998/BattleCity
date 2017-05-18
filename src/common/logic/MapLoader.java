@@ -1,9 +1,12 @@
 package common.logic;
 
 import common.item.tile.*;
+import jdk.internal.util.xml.impl.Input;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.Scanner;
 
@@ -16,8 +19,8 @@ public class MapLoader {
     public MapLoader() {}
 
 
-    public static void loadMap(File mapFile, Tile[][] tiles) throws FileNotFoundException {
-        Scanner mapScanner = new Scanner(mapFile);
+    private static void loadMap(InputStream inputStream, Tile[][] tiles) throws FileNotFoundException {
+        Scanner mapScanner = new Scanner(inputStream);
 
         int rowCounter = 0;
         int columnCounter = 0;
@@ -70,8 +73,9 @@ public class MapLoader {
 
     public void loadMap(String mapName,Tile[][] tiles) {
         try {
-            loadMap(new File(this.getClass().getResource("/res/map/test.map").toURI()),tiles);
-        } catch (FileNotFoundException | URISyntaxException e) {
+            InputStream in = getClass().getClassLoader().getResourceAsStream("res/map/"+mapName+".map");
+            loadMap(in,tiles);
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
