@@ -220,21 +220,26 @@ public abstract class Tank {
 
 
     public Image getImage() {
-        // TODO remove magic
-        String imagePath = "D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\"+health+"_";
+        String imageName = health+"_"+getImagePrefix();
 
         switch (facingStatus) {
             case kDirectionLeft:
-                return new ImageIcon(imagePath+getImagePrefix()+"_L.png").getImage();
+                imageName+="_L.png";
+                break;
             case kDirectionRight:
-                return new ImageIcon(imagePath+getImagePrefix()+"_R.png").getImage();
+                imageName+="_R.png";
+                break;
             case kDirectionUp:
-                return new ImageIcon(imagePath+getImagePrefix()+"_U.png").getImage();
+                imageName+="_U.png";
+                break;
             case kDirectionDown:
-                return new ImageIcon(imagePath+getImagePrefix()+"_D.png").getImage();
+                imageName+="_D.png";
+                break;
             default:
                 return new ImageIcon().getImage();
         }
+
+        return new ImageIcon(getClass().getResource("..\\..\\..\\res\\pic\\"+imageName)).getImage();
     }
     
     

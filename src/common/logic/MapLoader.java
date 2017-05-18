@@ -4,6 +4,7 @@ import common.item.tile.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
 import java.util.Scanner;
 
 import static common.item.tile.Tile.*;
@@ -12,6 +13,9 @@ import static common.item.tile.Tile.*;
  * Created on 2017/05/03.
  */
 public class MapLoader {
+    public MapLoader() {}
+
+
     public static void loadMap(File mapFile, Tile[][] tiles) throws FileNotFoundException {
         Scanner mapScanner = new Scanner(mapFile);
 
@@ -64,5 +68,13 @@ public class MapLoader {
         }
     }
 
-    final static int MAX_MAP_SIZE_X = 30;
+    public void loadMap(String mapName,Tile[][] tiles) {
+        try {
+            loadMap(new File(getClass().getResource("..\\..\\res\\map\\"+mapName+".txt").toURI()),tiles);
+        } catch (FileNotFoundException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private final static int MAX_MAP_SIZE_X = 30;
 }

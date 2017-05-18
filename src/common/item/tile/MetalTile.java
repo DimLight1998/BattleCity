@@ -48,6 +48,6 @@ public class MetalTile extends Tile {
 
     @Override
     public Image getImage() {
-        return new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\metal_tile.png").getImage();
+        return new ImageIcon(getClass().getResource("..\\..\\..\\res\\pic\\metal_tile.png")).getImage();
     }
 }

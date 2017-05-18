@@ -32,6 +32,7 @@ public class BrickWall extends Tile {
     }
 
     @Override
+
     public boolean isSlippery() {
         return false;
     }
@@ -48,6 +49,6 @@ public class BrickWall extends Tile {
 
     @Override
     public Image getImage() {
-        return new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\brick_wall.png").getImage();
+        return new ImageIcon(this.getClass().getResource("..\\..\\..\\res\\pic\\brick_wall.png")).getImage();
     }
 }

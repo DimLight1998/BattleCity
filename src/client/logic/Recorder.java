@@ -64,13 +64,10 @@ public class Recorder {
     public static ArrayList<HistoryItem> getTopFive(ArrayList<HistoryItem> historyItems) {
         ArrayList<HistoryItem> ret = new ArrayList<>();
 
-        historyItems.sort(new Comparator<HistoryItem>() {
-            @Override
-            public int compare(HistoryItem o1, HistoryItem o2) {
-                Integer score_1 = o1.getScore();
-                Integer score_2 = o2.getScore();
-                return score_1.compareTo(score_2);
-            }
+        historyItems.sort((o1, o2) -> {
+            Integer score_1 = o1.getScore();
+            Integer score_2 = o2.getScore();
+            return score_1.compareTo(score_2);
         });
 
         Collections.reverse(historyItems);

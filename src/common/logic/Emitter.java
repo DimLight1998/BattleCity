@@ -11,11 +11,16 @@ import java.net.Socket;
 public class Emitter{
     private Socket localSocket;
     private DataOutputStream dataOutputStream;
-    boolean isDisabled = false;
+    private boolean isDisabled = false;
 
 
     public void disable() {
         isDisabled = true;
+    }
+
+
+    public void enable() {
+        isDisabled = false;
     }
 
 
@@ -25,12 +30,21 @@ public class Emitter{
     }
 
 
-    public void emit(String info){
-        if(!isDisabled) {
-            try {
-                dataOutputStream.writeUTF(info);
-            } catch (IOException e) {
-                e.printStackTrace();
+    public void emit(String info) {
+        synchronized (this) {
+            emit(info, false);
+        }
+    }
+
+
+    public void emit(String info, boolean override){
+        synchronized (this) {
+            if ((!isDisabled) || override) {
+                try {
+                    dataOutputStream.writeUTF(info);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

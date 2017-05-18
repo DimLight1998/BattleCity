@@ -7,10 +7,7 @@ import common.item.bullet.Bullet;
 import common.item.tank.PlayerTank;
 import common.item.tank.Tank;
 import common.item.tile.*;
-import common.logic.Emitter;
-import common.logic.InfoHandler;
-import common.logic.MapLoader;
-import common.logic.Receiver;
+import common.logic.*;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -22,7 +19,9 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -51,6 +50,7 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
     private boolean isGameOver = false;
     private boolean isWin = false;
     private boolean isGameStart = false;
+    private boolean isPaused = false;
     private int playerNumber;
 
     private AtomicInteger player_1_score = new AtomicInteger(0);
@@ -64,13 +64,13 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
         bullets = new ArrayList<>();
         hero_1 = new PlayerTank(160,448,1);
         hero_2 = new PlayerTank(288,448,2);
-        MapLoader.loadMap(new File("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\map\\test.txt"),tiles);
+        new MapLoader().loadMap("test",tiles);
+
         // TODO for test
 
 
         panel_login = new Panel_Login(this);
         gui_play = new GUI_Play(this,tiles,tanks,bullets,hero_1,hero_2,player_1_score,player_2_score);
-
     }
 
 
@@ -92,17 +92,32 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             Thread.sleep(100);
         }
 
-        new JFXPanel();
-        String backgroundMusicPath = "D:\\File\\Program\\Projects\\BattleCity\\src\\res\\sound\\background.mp3";
-        Media media = new Media(new File(backgroundMusicPath).toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        mediaPlayer.setVolume(0.3);
-        mediaPlayer.setAutoPlay(true);
-
-        mediaPlayer.play();
+        System.out.println("game started");
+//
+//        new JFXPanel();
+//        String backgroundMusicPath = "D:\\File\\Program\\Projects\\BattleCity\\src\\res\\sound\\background.mp3";
+//
+//        Media media = new Media(new File(backgroundMusicPath).toURI().toString());
+//
+//        try {
+//            media = new Media(getClass().getResource("..\\..\\..\\res\\sound\\background.mp3").toURI().toString());
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
+//
+//        MediaPlayer mediaPlayer = new MediaPlayer(media);
+//        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+//        mediaPlayer.setVolume(0.3);
+//        mediaPlayer.setAutoPlay(true);
+//
+//        mediaPlayer.play();
 
         while(!isGameOver) {
+            while(isPaused) {
+                Thread.sleep(100);
+                System.out.println("game paused");
+            }
+
             updateStatus();
             paintGame();
             Thread.sleep(20);
@@ -259,6 +274,16 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
                 isWin = false;
             }
         }
+
+        if(info.startsWith("pause")) {
+            isPaused = true;
+            emitter.disable();
+        }
+
+        if(info.startsWith("unps")) {
+            isPaused = false;
+            emitter.enable();
+        }
     }
 
 
@@ -336,6 +361,8 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             emitter.emit("prs" + Character.toLowerCase(e.getKeyChar()) + playerNumber);
         } else if(e.getKeyChar() == ' ') {
             emitter.emit("fir"+playerNumber);
+        } else if (e.getKeyChar() == 'p') {
+            emitter.emit("reqp",true);
         }
     }
 

@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.InetAddress;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -52,6 +53,7 @@ public class Server implements ActionListener, InfoHandler{
     boolean isPlayerReady_2 = false;
     boolean isGameOver = false;
     boolean isPlayersWin = false;
+    boolean isPaused = false;
 
     private int tankRemain;
     private int tankActivated;
@@ -179,6 +181,16 @@ public class Server implements ActionListener, InfoHandler{
                 }
             }
         }
+
+        if(info.startsWith("reqp")) {
+            if(!isPaused) {
+                broadcast("pause");
+                isPaused = true;
+            } else {
+                broadcast("unps");
+                isPaused = false;
+            }
+        }
     }
 
     public void start() throws InterruptedException, IOException {
@@ -217,8 +229,7 @@ public class Server implements ActionListener, InfoHandler{
 
         // TODO complete map selection
         // todo for test
-        mapFile = new File("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\map\\test.txt");
-        MapLoader.loadMap(mapFile,tiles);
+        new MapLoader().loadMap("test",tiles);
 
         AIInitialize();
 
@@ -227,6 +238,10 @@ public class Server implements ActionListener, InfoHandler{
         int counter = 0;
 
         while(!isGameOver) {
+            while(isPaused) {
+                Thread.sleep(100);
+            }
+
             Thread.sleep(20);// TODO 这是必要的吗
             updateStatus();
             AIUpdate();

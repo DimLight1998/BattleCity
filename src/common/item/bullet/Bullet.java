@@ -122,8 +122,7 @@ public class Bullet {
     }
 
     public Image getImage() {
-        // todo remove magic
-        return new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\bullet.png").getImage();
+        return new ImageIcon(getClass().getResource("..\\..\\..\\res\\pic\\bullet.png")).getImage();
     }
 
     private static final int kNotMoving = 0;

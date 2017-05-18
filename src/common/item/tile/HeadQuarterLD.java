@@ -13,6 +13,6 @@ public class HeadQuarterLD extends HeadQuarter {
 
     @Override
     public Image getImage() {
-        return new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\HQ_LD.png").getImage();
+        return new ImageIcon(getClass().getResource("..\\..\\..\\res\\pic\\HQ_LD.png")).getImage();
     }
 }

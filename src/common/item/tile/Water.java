@@ -48,6 +48,6 @@ public class Water extends Tile {
 
     @Override
     public Image getImage() {
-        return new ImageIcon("D:\\File\\Program\\Projects\\BattleCity\\src\\res\\pic\\water.png").getImage();
+        return new ImageIcon(getClass().getResource("..\\..\\..\\res\\pic\\water.png")).getImage();
     }
 }
