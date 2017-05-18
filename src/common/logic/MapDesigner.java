@@ -93,13 +93,13 @@ public class MapDesigner extends JPanel implements ActionListener,MouseListener{
         mainFrame.add(panel_Map,BorderLayout.CENTER);
         mainFrame.add(panel_Option,BorderLayout.EAST);
 
-        setReserve();
-
         for(int i = 0;i<30;i++) {
             for(int j = 0;j<30;j++) {
                 mapContent[i][j] = 0;
             }
         }
+
+        setReserve();
     }
 
     void setReserve() {
