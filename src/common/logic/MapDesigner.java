@@ -2,10 +2,7 @@ package common.logic;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.io.File;
 import java.io.FileWriter;
 
@@ -37,7 +34,7 @@ public class MapDesigner extends JPanel implements ActionListener,MouseListener{
         mainFrame.setLocationRelativeTo(null);
 
         JPanel panel_Map = new JPanel(new GridLayout(30,30));
-        JPanel panel_Option = new JPanel(new GridLayout(9,1));
+        JPanel panel_Option = new JPanel(new GridLayout(12,1));
 
         labels_Map = new JLabel[30][30];
 
@@ -74,9 +71,15 @@ public class MapDesigner extends JPanel implements ActionListener,MouseListener{
         radioButton_Water.addActionListener(this);
 
         textField_MapName = new JTextField("Enter_map_name");
+        JButton button_SymmetrizeLR = new JButton("Symmetrize (L to R)");
+        JButton button_SymmetrizeRL = new JButton("Symmetrize (R to L)");
+        JButton button_ClearAll = new JButton("Clear All");
         JButton button_Save = new JButton("Save map");
         JButton button_Exit = new JButton("Exit");
 
+        button_SymmetrizeLR.addActionListener(this);
+        button_SymmetrizeRL.addActionListener(this);
+        button_ClearAll.addActionListener(this);
         button_Save.addActionListener(this);
         button_Exit.addActionListener(this);
 
@@ -86,6 +89,9 @@ public class MapDesigner extends JPanel implements ActionListener,MouseListener{
         panel_Option.add(radioButton_MetalTile);
         panel_Option.add(radioButton_Plant);
         panel_Option.add(radioButton_Water);
+        panel_Option.add(button_SymmetrizeLR);
+        panel_Option.add(button_SymmetrizeRL);
+        panel_Option.add(button_ClearAll);
         panel_Option.add(textField_MapName);
         panel_Option.add(button_Save);
         panel_Option.add(button_Exit);
@@ -244,7 +250,35 @@ public class MapDesigner extends JPanel implements ActionListener,MouseListener{
             tileSelected = PLANT;
         } else if(e.getActionCommand().equals("Water")) {
             tileSelected = WATER;
-        } else if(e.getActionCommand().equals("Save map")) {
+        } else if(e.getActionCommand().endsWith("(L to R)")) {
+            for(int i = 0;i<30;i++) {
+                for(int j = 0;j<15;j++) {
+                    if (tileEditable(i, j)) {
+                        mapContent[i][29 - j] = mapContent[i][j];
+                        changeIcon(labels_Map[i][29 - j], mapContent[i][j]);
+                    }
+                }
+            }
+        } else if(e.getActionCommand().endsWith("(R to L)")) {
+            for(int i = 0;i<30;i++) {
+                for(int j = 0;j<15;j++) {
+                    if (tileEditable(i, j)) {
+                        mapContent[i][j] = mapContent[i][29 - j];
+                        changeIcon(labels_Map[i][j], mapContent[i][j]);
+                    }
+                }
+            }
+        } else if(e.getActionCommand().equals("Clear All")) {
+            for(int i = 0;i<30;i++) {
+                for(int j = 0;j<30;j++) {
+                    if (tileEditable(i, j)) {
+                        mapContent[i][j] = 0;
+                        changeIcon(labels_Map[i][j],0);
+                    }
+                }
+            }
+        }
+        else if(e.getActionCommand().equals("Save map")) {
             saveMap();
         } else if(e.getActionCommand().equals("Exit")) {
             System.exit(0);
@@ -267,7 +301,7 @@ public class MapDesigner extends JPanel implements ActionListener,MouseListener{
 
     @Override
     public void mousePressed(MouseEvent e) {
-
+        System.out.println(e.getComponent().getName()+" pressed this");
     }
 
     @Override

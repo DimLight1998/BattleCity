@@ -50,8 +50,8 @@ public class Recorder {
             FileWriter writer = new FileWriter(historyFile);
 
             for (HistoryItem historyItem : list) {
-                writer.append(historyItem.getName()).append("\n");
-                writer.append(Integer.toString(historyItem.getScore())).append("\n");
+                writer.write(historyItem.getName()+"\n");
+                writer.write(Integer.toString(historyItem.getScore())+"\n");
             }
 
             writer.close();

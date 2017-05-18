@@ -371,11 +371,11 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
 
     @Override
     public void keyTyped(KeyEvent e) {
-        if("wasd".indexOf(e.getKeyChar()) >= 0) {
+        if("wasdWASD".indexOf(e.getKeyChar()) >= 0) {
             emitter.emit("prs" + Character.toLowerCase(e.getKeyChar()) + playerNumber);
         } else if(e.getKeyChar() == ' ') {
             emitter.emit("fir"+playerNumber);
-        } else if (e.getKeyChar() == 'p') {
+        } else if (Character.toLowerCase(e.getKeyChar()) == 'p') {
             emitter.emit("reqp",true);
         }
     }

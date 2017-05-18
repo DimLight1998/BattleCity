@@ -708,12 +708,12 @@ public class Server implements ActionListener, InfoHandler{
         int delta_x = bullet_1.getLocationX()-bullet_2.getLocationX();
         int delta_y = bullet_1.getLocationY()-bullet_2.getLocationY();
 
-        if((bullet_1.getLocationY() == bullet_2.getLocationY()) && (delta_x>=-2) &&(delta_x <=2)
+        if((bullet_1.getLocationY() == bullet_2.getLocationY()) && (delta_x>=-3) &&(delta_x <=3)
                 && (bullet_1.getVelocityStatus()==kMovingRight)&&(bullet_2.getVelocityStatus()==kMovingLeft)) {
             return true;
         }
 
-        if((bullet_1.getLocationX() == bullet_2.getLocationX()) && (delta_y>=-2) &&(delta_y <=2)
+        if((bullet_1.getLocationX() == bullet_2.getLocationX()) && (delta_y>=-3) &&(delta_y <=3)
                 && (bullet_1.getVelocityStatus()==kMovingDown)&&(bullet_2.getVelocityStatus()==kMovingUp)) {
             return true;
         }
