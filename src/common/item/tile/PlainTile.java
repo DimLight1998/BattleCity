@@ -48,6 +48,6 @@ public class PlainTile extends Tile {
 
     @Override
     public Image getImage() {
-        return new ImageIcon(getClass().getResource("..\\..\\..\\res\\pic\\plain_tile.png")).getImage();
+        return new ImageIcon(getClass().getResource("/res/pic/plain_tile.png")).getImage();
     }
 }

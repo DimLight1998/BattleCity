@@ -122,7 +122,7 @@ public class Bullet {
     }
 
     public Image getImage() {
-        return new ImageIcon(getClass().getResource("..\\..\\..\\res\\pic\\bullet.png")).getImage();
+        return new ImageIcon(getClass().getResource("/res/pic/bullet.png")).getImage();
     }
 
     private static final int kNotMoving = 0;

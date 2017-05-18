@@ -90,7 +90,7 @@ public class Server implements ActionListener, InfoHandler{
 
         // player selects map
         if(info.startsWith("map")) {
-            mapFile = new File("src/res/map/"+info.substring(3)+".txt");
+            mapFile = new File("src/res/map/"+info.substring(3)+".map");
         }
 
         // player asks if others ready

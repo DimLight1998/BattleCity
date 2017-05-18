@@ -49,6 +49,6 @@ public class BrickWall extends Tile {
 
     @Override
     public Image getImage() {
-        return new ImageIcon(this.getClass().getResource("..\\..\\..\\res\\pic\\brick_wall.png")).getImage();
+        return new ImageIcon(this.getClass().getResource("/res/pic/brick_wall.png")).getImage();
     }
 }

@@ -48,6 +48,6 @@ public class MetalWall extends Tile {
 
     @Override
     public Image getImage() {
-        return new ImageIcon(getClass().getResource("..\\..\\..\\res\\pic\\metal_wall.png")).getImage();
+        return new ImageIcon(getClass().getResource("/res/pic/metal_wall.png")).getImage();
     }
 }

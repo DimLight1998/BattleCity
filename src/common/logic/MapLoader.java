@@ -70,7 +70,7 @@ public class MapLoader {
 
     public void loadMap(String mapName,Tile[][] tiles) {
         try {
-            loadMap(new File(getClass().getResource("..\\..\\res\\map\\"+mapName+".txt").toURI()),tiles);
+            loadMap(new File(this.getClass().getResource("/res/map/test.map").toURI()),tiles);
         } catch (FileNotFoundException | URISyntaxException e) {
             e.printStackTrace();
         }

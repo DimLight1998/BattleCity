@@ -48,6 +48,6 @@ public class Plant extends Tile {
 
     @Override
     public Image getImage() {
-        return new ImageIcon(getClass().getResource("..\\..\\..\\res\\pic\\plant.png")).getImage();
+        return new ImageIcon(getClass().getResource("/res/pic/plant.png")).getImage();
     }
 }

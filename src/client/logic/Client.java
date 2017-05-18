@@ -93,24 +93,22 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
         }
 
         System.out.println("game started");
-//
-//        new JFXPanel();
-//        String backgroundMusicPath = "D:\\File\\Program\\Projects\\BattleCity\\src\\res\\sound\\background.mp3";
-//
-//        Media media = new Media(new File(backgroundMusicPath).toURI().toString());
-//
-//        try {
-//            media = new Media(getClass().getResource("..\\..\\..\\res\\sound\\background.mp3").toURI().toString());
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//        }
-//
-//        MediaPlayer mediaPlayer = new MediaPlayer(media);
-//        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-//        mediaPlayer.setVolume(0.3);
-//        mediaPlayer.setAutoPlay(true);
-//
-//        mediaPlayer.play();
+
+        new JFXPanel();
+        Media media = null;
+        try {
+            media = new Media(getClass().getResource("/res/sound/background.mp3").toURI().toString());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        assert media!=null;
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.setVolume(0.3);
+        mediaPlayer.setAutoPlay(true);
+
+        mediaPlayer.play();
 
         while(!isGameOver) {
             while(isPaused) {

@@ -239,7 +239,7 @@ public abstract class Tank {
                 return new ImageIcon().getImage();
         }
 
-        return new ImageIcon(getClass().getResource("..\\..\\..\\res\\pic\\"+imageName)).getImage();
+        return new ImageIcon(getClass().getResource("/res/pic/"+imageName)).getImage();
     }
     
     

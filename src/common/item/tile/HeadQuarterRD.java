@@ -14,7 +14,7 @@ public class HeadQuarterRD extends HeadQuarter {
 
     @Override
     public Image getImage() {
-        return new ImageIcon(getClass().getResource("..\\..\\..\\res\\pic\\HQ_RD.png")).getImage();
+        return new ImageIcon(getClass().getResource("/res/pic/HQ_RD.png")).getImage();
 
     }
 }

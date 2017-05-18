@@ -41,7 +41,7 @@ public class Panel_Game extends JPanel {
         super.paint(graphics);
 
         // paint layer -1
-        graphics.drawImage(new ImageIcon(getClass().getResource("..\\..\\res\\pic\\plain_tile.png")).getImage(),0,0,480,480,this);
+        graphics.drawImage(new ImageIcon(getClass().getResource("/res/pic/plain_tile.png")).getImage(),0,0,480,480,this);
 
 
         // paint layer 0 (tile except plant)
