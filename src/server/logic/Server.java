@@ -88,11 +88,6 @@ public class Server implements ActionListener, InfoHandler{
             }
         }
 
-        // player selects map
-        if(info.startsWith("map")) {
-            mapFile = new File("src/res/map/"+info.substring(3)+".map");
-        }
-
         // player asks if others ready
         if(info.startsWith("ask") && info.endsWith("1")) {
             if(isPlayerReady_2) {
@@ -229,7 +224,8 @@ public class Server implements ActionListener, InfoHandler{
 
         // TODO complete map selection
         // todo for test
-        new MapLoader().loadMap("test",tiles);
+        new MapLoader().loadMap(panel_setup.getMapName(),tiles);
+        broadcast("map_"+panel_setup.getMapName());
 
         AIInitialize();
 
@@ -242,7 +238,7 @@ public class Server implements ActionListener, InfoHandler{
                 Thread.sleep(100);
             }
 
-            Thread.sleep(20);// TODO 这是必要的吗
+            Thread.sleep(20);
             updateStatus();
             AIUpdate();
             checkGameOver();

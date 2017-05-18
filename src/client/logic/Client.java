@@ -64,7 +64,7 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
         bullets = new ArrayList<>();
         hero_1 = new PlayerTank(160,448,1);
         hero_2 = new PlayerTank(288,448,2);
-        new MapLoader().loadMap("test",tiles);
+        new MapLoader().loadMap("empty",tiles);
 
         // TODO for test
 
@@ -147,6 +147,11 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        if(info.startsWith("map")) {
+            String mapName = info.substring(4);
+            new MapLoader().loadMap(mapName,tiles);
         }
 
         if(info.startsWith("isb")) {
