@@ -29,6 +29,8 @@ public class Panel_Setup extends JPanel{
         mainFrame.getContentPane().add(button_start);
 
         button_start.addActionListener(server);
+
+        mainFrame.setLocationRelativeTo(null);
     }
 
     public void display() {

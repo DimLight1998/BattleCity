@@ -123,12 +123,13 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             Thread.sleep(20);
         }
 
-        gui_play.dispose();
+
 
         String kHistoryFilePath = "history.txt";
         Panel_Save panel_save = new Panel_Save(this,new File(kHistoryFilePath));
 
         panel_save.display();
+        emitter.disable();
     }
 
 
