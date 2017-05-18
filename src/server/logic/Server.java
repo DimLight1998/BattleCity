@@ -206,10 +206,12 @@ public class Server implements ActionListener, InfoHandler{
         multipleReceiver = new MultipleReceiver(serverPortNumber,this);
         multipleReceiver.start();
 
-
         while(!isPlayerReady_2) {
             Thread.sleep(100);
         }
+
+        // set time
+
 
         emitter_1 = new Emitter(address_1,portNumber_1);
         emitter_2 = new Emitter(address_2,portNumber_2);
@@ -224,7 +226,7 @@ public class Server implements ActionListener, InfoHandler{
 
         // TODO complete map selection
         // todo for test
-            new MapLoader().loadMap(panel_setup.getMapName(), tiles);
+        new MapLoader().loadMap(panel_setup.getMapName(), tiles);
         broadcast("map_"+panel_setup.getMapName());
 
         AIInitialize();
@@ -234,11 +236,11 @@ public class Server implements ActionListener, InfoHandler{
         int counter = 0;
 
         while(!isGameOver) {
+            long timeNow = System.currentTimeMillis();
             while(isPaused) {
                 Thread.sleep(100);
             }
 
-            Thread.sleep(20);
             updateStatus();
             AIUpdate();
             checkGameOver();
@@ -248,6 +250,9 @@ public class Server implements ActionListener, InfoHandler{
             if(counter == 5) {
                 forceSynchronize();
                 counter = 0;
+            }
+            while(System.currentTimeMillis() < timeNow + 20) {
+                Thread.sleep(1);
             }
         }
 
@@ -837,8 +842,10 @@ public class Server implements ActionListener, InfoHandler{
         // tanks sync
         StringBuilder tanks_string = new StringBuilder("synct_"+tanks.size());
 
-        for(Tank tank: tanks) {
-            tanks_string.append("_").append(tank.toString());
+        synchronized (tanks) {
+            for (Tank tank : tanks) {
+                tanks_string.append("_").append(tank.toString());
+            }
         }
 
         broadcast(tanks_string.toString()+"%");
@@ -849,8 +856,10 @@ public class Server implements ActionListener, InfoHandler{
         // bullets sync
         StringBuilder bullets_string = new StringBuilder("syncb_" + bullets.size());
 
-        for(Bullet bullet : bullets) {
-            bullets_string.append("_").append(bullet.toString());
+        synchronized (bullets) {
+            for (Bullet bullet : bullets) {
+                bullets_string.append("_").append(bullet.toString());
+            }
         }
 
         broadcast(bullets_string.toString()+"%");

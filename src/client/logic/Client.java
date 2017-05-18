@@ -111,6 +111,7 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
         mediaPlayer.play();
 
         while(!isGameOver) {
+            long timeNow = System.currentTimeMillis();
             while(isPaused) {
                 Thread.sleep(100);
                 System.out.println("game paused");
@@ -119,6 +120,9 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             updateStatus();
             paintGame();
             Thread.sleep(20);
+            while(System.currentTimeMillis() < timeNow + 20) {
+                Thread.sleep(1);
+            }
         }
 
 
