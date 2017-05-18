@@ -4,7 +4,9 @@ import common.item.tile.*;
 import jdk.internal.util.xml.impl.Input;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -73,12 +75,18 @@ public class MapLoader {
 
     public void loadMap(String mapName,Tile[][] tiles) {
         try {
-            InputStream in = getClass().getClassLoader().getResourceAsStream("res/map/"+mapName+".map");
-            loadMap(in,tiles);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            InputStream in = getClass().getClassLoader().getResourceAsStream("res/map/" + mapName + ".map");
+            loadMap(in, tiles);
+        } catch (Exception e) {
+            try {
+                InputStream in = new FileInputStream(mapName+".map");
+                loadMap(in, tiles);
+            } catch (Exception e1) {
+                JOptionPane.showMessageDialog(null, "File doesn't exist");
+            }
         }
     }
 
     private final static int MAX_MAP_SIZE_X = 30;
+
 }

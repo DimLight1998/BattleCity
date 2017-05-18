@@ -9,6 +9,9 @@ public class HistoryItem {
 
     public HistoryItem(String name, int score) {
         this.name = name;
+        if(this.name.isEmpty()) {
+            this.name = "Unnamed";
+        }
         this.score = score;
     }
 

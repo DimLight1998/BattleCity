@@ -150,8 +150,8 @@ public class MapDesigner extends JPanel implements ActionListener,MouseListener{
 
     boolean tileEditable(int row, int column) {
         if((row == 0) || (row==1)) {
-            int columnHalf = (column+1)/2;
-            return !((columnHalf == 1) || (columnHalf == 5) || (columnHalf == 10) || (columnHalf == 15));
+            return !((column == 0 )||( column == 1)||(column==9)||(column==10)||(column==19)||(column==20)||(column==28)||(column==29));
+
         }
 
         if((row == 28) || (row == 29)) {

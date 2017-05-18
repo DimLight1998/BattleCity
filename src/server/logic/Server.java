@@ -224,7 +224,7 @@ public class Server implements ActionListener, InfoHandler{
 
         // TODO complete map selection
         // todo for test
-        new MapLoader().loadMap(panel_setup.getMapName(),tiles);
+            new MapLoader().loadMap(panel_setup.getMapName(), tiles);
         broadcast("map_"+panel_setup.getMapName());
 
         AIInitialize();
@@ -253,7 +253,7 @@ public class Server implements ActionListener, InfoHandler{
 
         broadcast("gmo"+(isPlayersWin?'w':'l'));
 
-        JOptionPane.showConfirmDialog(panel_status,"Game over");
+        JOptionPane.showMessageDialog(panel_status,"Game over");
 
         System.exit(0);
     }

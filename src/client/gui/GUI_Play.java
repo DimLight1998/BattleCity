@@ -59,20 +59,41 @@ public class GUI_Play extends JPanel {
     }
 
 
-    public  void playFireSound() {
-        new JFXPanel();
-        Media media = null;
-        try {
-            media = new Media(getClass().getResource("/res/sound/fire.wav").toURI().toString());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+    public void playFireSound() {
+        (new SoundPlayer("fire.wav")).start();
+    }
+
+    class SoundPlayer extends Thread {
+        String fileName = "";
+
+
+        SoundPlayer(String fileName) {
+            this.fileName = fileName;
         }
 
-        assert media!=null;
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setVolume(0.5);
-        mediaPlayer.setAutoPlay(true);
+        @Override
+        public void run() {
+            super.run();
 
-        mediaPlayer.play();
+            new JFXPanel();
+            Media media = null;
+            try {
+                media = new Media(getClass().getResource("/res/sound/"+fileName).toURI().toString());
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+
+            assert media!=null;
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.5);
+            mediaPlayer.setAutoPlay(true);
+
+            mediaPlayer.play();
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
