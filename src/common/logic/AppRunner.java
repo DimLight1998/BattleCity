@@ -17,20 +17,23 @@ public class AppRunner extends JPanel implements ActionListener{
     private JFrame mainFrame;
     private boolean isClient = false;
     private boolean isServer = false;
+    private boolean isDesigner = false;
 
 
     public static void main(String[] args) throws InterruptedException {
         AppRunner appRunner = new AppRunner();
 
         appRunner.display();
-        while((!appRunner.isServer) && (!appRunner.isClient)) {
+        while((!appRunner.isServer) && (!appRunner.isClient) && (!appRunner.isDesigner)) {
             Thread.sleep(100);
         }
 
         if(appRunner.isClient) {
             openClient();
-        } else {
+        } else if(appRunner.isServer){
             openServer();
+        } else {
+            openDesigner();
         }
     }
 
@@ -48,12 +51,14 @@ public class AppRunner extends JPanel implements ActionListener{
         label_select.setFont(new Font("Romans Times",Font.BOLD,20));
         mainFrame.add(label_select);
 
-        JPanel operations = new JPanel(new GridLayout(1,3));
+        JPanel operations = new JPanel(new GridLayout(1,0));
 
         JButton button_client = new JButton("Start as a player");
         button_client.addActionListener(this);
         JButton button_server = new JButton("Start as server");
         button_server.addActionListener(this);
+        JButton button_designer = new JButton("Map designer");
+        button_designer.addActionListener(this);
         JButton button_exit = new JButton("Exit");
         button_exit.addActionListener(this);
 
@@ -61,15 +66,18 @@ public class AppRunner extends JPanel implements ActionListener{
         panel_client.add(button_client);
         JPanel panel_server = new JPanel(new FlowLayout());
         panel_server.add(button_server);
+        JPanel panel_designer = new JPanel(new FlowLayout());
+        panel_designer.add(button_designer);
         JPanel panel_exit = new JPanel(new FlowLayout());
         panel_exit.add(button_exit);
 
         operations.add(panel_client);
         operations.add(panel_server);
+        operations.add(panel_designer);
         operations.add(panel_exit);
 
         mainFrame.add(operations);
-        mainFrame.setSize(500,300);
+        mainFrame.setSize(600,300);
         mainFrame.setResizable(false);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setLocationRelativeTo(null);
@@ -86,6 +94,9 @@ public class AppRunner extends JPanel implements ActionListener{
         } else if (e.getActionCommand().endsWith("server")) {
             mainFrame.dispose();
             isServer = true;
+        } else if(e.getActionCommand().endsWith("designer")) {
+            mainFrame.dispose();
+            isDesigner = true;
         }
     }
 
@@ -105,5 +116,9 @@ public class AppRunner extends JPanel implements ActionListener{
         } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void openDesigner() {
+        new MapDesigner().display();
     }
 }
