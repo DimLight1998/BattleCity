@@ -13,14 +13,14 @@ import java.util.ArrayList;
  * Created on 2017/04/30.
  */
 public abstract class Tank {
-    int health;
-    int locationX;
-    int locationY;
-    int velocityStatus;
-    int facingStatus;
-    int fireDelay;
-    int fireDelayBase;
-    boolean activated;// used by AI
+    int     health;
+    int     locationX;
+    int     locationY;
+    int     velocityStatus;
+    int     facingStatus;
+    int     fireDelay;
+    int     fireDelayBase;
+    boolean activated;    // used by AI
     boolean isSuper;
     boolean isMovable;
 
@@ -60,13 +60,13 @@ public abstract class Tank {
 
 
     Tank(int locationX, int locationY) {
-        this.locationX = locationX;
-        this.locationY = locationY;
+        this.locationX      = locationX;
+        this.locationY      = locationY;
         this.velocityStatus = kNotMoving;
-        this.facingStatus = kDirectionDown;
-        this.isSuper = false;
-        this.isMovable = true;
-        this.activated = true;
+        this.facingStatus   = kDirectionDown;
+        this.isSuper        = false;
+        this.isMovable      = true;
+        this.activated      = true;
 
         this.fireDelayBase = kFireDelayLevel_p;
     }
@@ -82,25 +82,25 @@ public abstract class Tank {
 
         switch (Integer.valueOf(slices[8])) {
             case kHeavyTankID:
-                tank = new HeavyTank(locationX,locationY);
+                tank = new HeavyTank(locationX, locationY);
                 break;
             case kLightTankID:
-                tank = new LightTank(locationX,locationY);
+                tank = new LightTank(locationX, locationY);
                 break;
             case kArmoredTankID:
-                tank = new ArmoredTank(locationX,locationY);
+                tank = new ArmoredTank(locationX, locationY);
                 break;
             case kTankDestroyerID:
-                tank = new TankDestroyer(locationX,locationY);
+                tank = new TankDestroyer(locationX, locationY);
                 break;
         }
 
         assert tank != null;
-        tank.health = Integer.parseInt(slices[1]);
+        tank.health         = Integer.parseInt(slices[1]);
         tank.velocityStatus = Integer.parseInt(slices[4]);
-        tank.facingStatus = Integer.parseInt(slices[5]);
-        tank.isSuper = (slices[6].equals("1"));
-        tank.isMovable = (slices[7].equals("1"));
+        tank.facingStatus   = Integer.parseInt(slices[5]);
+        tank.isSuper        = (slices[6].equals("1"));
+        tank.isMovable      = (slices[7].equals("1"));
 
         return tank;
     }
@@ -202,7 +202,7 @@ public abstract class Tank {
 
 
     public void updateFireDelay() {
-        if(fireDelay>0) {
+        if (fireDelay > 0) {
             fireDelay--;
         }
     }
@@ -220,29 +220,29 @@ public abstract class Tank {
 
 
     public Image getImage() {
-        String imageName = health+"_"+getImagePrefix();
+        String imageName = health + "_" + getImagePrefix();
 
         switch (facingStatus) {
             case kDirectionLeft:
-                imageName+="_L.png";
+                imageName += "_L.png";
                 break;
             case kDirectionRight:
-                imageName+="_R.png";
+                imageName += "_R.png";
                 break;
             case kDirectionUp:
-                imageName+="_U.png";
+                imageName += "_U.png";
                 break;
             case kDirectionDown:
-                imageName+="_D.png";
+                imageName += "_D.png";
                 break;
             default:
                 return new ImageIcon().getImage();
         }
 
-        return new ImageIcon(getClass().getResource("/res/pic/"+imageName)).getImage();
+        return new ImageIcon(getClass().getResource("/res/pic/" + imageName)).getImage();
     }
-    
-    
+
+
     abstract public int getTypeID();
 
 
@@ -250,7 +250,15 @@ public abstract class Tank {
 
 
     public String toString() {
-        return String.format("{%d.%d.%d.%d.%d.%d.%d.%d}",health,locationX,locationY,velocityStatus,facingStatus,isSuper?1:0,isMovable?1:0,getTypeID());
+        return String.format("{%d.%d.%d.%d.%d.%d.%d.%d}",
+            health,
+            locationX,
+            locationY,
+            velocityStatus,
+            facingStatus,
+            isSuper ? 1 : 0,
+            isMovable ? 1 : 0,
+            getTypeID());
     }
 
 
@@ -258,34 +266,34 @@ public abstract class Tank {
         String[] slices = info.split("(\\.)|(\\{)|(})");
         // todo debug
 
-        health = Integer.parseInt(slices[1]);
-        locationX = Integer.parseInt(slices[2]);
-        locationY = Integer.parseInt(slices[3]);
+        health         = Integer.parseInt(slices[1]);
+        locationX      = Integer.parseInt(slices[2]);
+        locationY      = Integer.parseInt(slices[3]);
         velocityStatus = Integer.parseInt(slices[4]);
-        facingStatus = Integer.parseInt(slices[5]);
-        isSuper = (slices[6].equals("1"));
-        isMovable = (slices[7].equals("1"));
+        facingStatus   = Integer.parseInt(slices[5]);
+        isSuper        = (slices[6].equals("1"));
+        isMovable      = (slices[7].equals("1"));
     }
 
 
-    public static final int kNotMoving = 0;
-    public static final int kMovingLeft = 1;
+    public static final int kNotMoving   = 0;
+    public static final int kMovingLeft  = 1;
     public static final int kMovingRight = 2;
-    public static final int kMovingUp = 3;
-    public static final int kMovingDown = 4;
+    public static final int kMovingUp    = 3;
+    public static final int kMovingDown  = 4;
 
-    public static final int kDirectionLeft = 1;
+    public static final int kDirectionLeft  = 1;
     public static final int kDirectionRight = 2;
-    public static final int kDirectionUp = 3;
-    public static final int kDirectionDown = 4;
+    public static final int kDirectionUp    = 3;
+    public static final int kDirectionDown  = 4;
 
     public static final int kFireDelayLevel_1 = 70;
     public static final int kFireDelayLevel_2 = 50;
     public static final int kFireDelayLevel_3 = 30;
     public static final int kFireDelayLevel_p = 40;
 
-    public static final int kHeavyTankID = 1;
-    public static final int kLightTankID = 2;
-    public static final int kArmoredTankID = 3;
+    public static final int kHeavyTankID     = 1;
+    public static final int kLightTankID     = 2;
+    public static final int kArmoredTankID   = 3;
     public static final int kTankDestroyerID = 4;
 }

@@ -6,7 +6,7 @@ package common.item.tank;
 public class TankDestroyer extends Tank {
     public TankDestroyer(int locationX, int locationY) {
         super(locationX, locationY);
-        health = 3;
+        health        = 3;
         fireDelayBase = kFireDelayLevel_3;
     }
 

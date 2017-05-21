@@ -6,10 +6,10 @@ package common.item.tank;
 public class PlayerTank extends Tank {
     int owner;
 
-    public PlayerTank(int locationX, int locationY,int owner) {
+    public PlayerTank(int locationX, int locationY, int owner) {
         super(locationX, locationY);
-        health = 1;
-        this.owner = owner;
+        health       = 1;
+        this.owner   = owner;
         facingStatus = kDirectionUp;
     }
 
@@ -24,7 +24,7 @@ public class PlayerTank extends Tank {
 
     @Override
     String getImagePrefix() {
-        if(owner == 1) {
+        if (owner == 1) {
             return "P1";
         } else {
             return "P2";

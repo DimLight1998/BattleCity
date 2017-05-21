@@ -11,7 +11,7 @@ import static common.item.tile.Tile.*;
 /**
  * Created on 2017/05/18.
  */
-public class MapDesigner extends JPanel implements ActionListener,MouseListener{
+public class MapDesigner extends JPanel implements ActionListener, MouseListener {
     JFrame mainFrame;
 
     int tileSelected;
@@ -29,19 +29,20 @@ public class MapDesigner extends JPanel implements ActionListener,MouseListener{
         mainFrame.setLayout(new BorderLayout());
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setResizable(true);
-        mainFrame.setSize(615,520);
+        mainFrame.setSize(615, 520);
         mainFrame.setResizable(false);
         mainFrame.setLocationRelativeTo(null);
 
-        JPanel panel_Map = new JPanel(new GridLayout(30,30));
-        JPanel panel_Option = new JPanel(new GridLayout(12,1));
+        JPanel panel_Map    = new JPanel(new GridLayout(30, 30));
+        JPanel panel_Option = new JPanel(new GridLayout(12, 1));
 
         labels_Map = new JLabel[30][30];
 
         for (int i = 0; i < 30; i++) {
             for (int j = 0; j < 30; j++) {
-                labels_Map[i][j] = new JLabel(new ImageIcon(getClass().getResource("/res/pic/plain_tile.png")));
-                labels_Map[i][j].setName(String.format("%d_%d",i,j));
+                labels_Map[i][j] =
+                    new JLabel(new ImageIcon(getClass().getResource("/res/pic/plain_tile.png")));
+                labels_Map[i][j].setName(String.format("%d_%d", i, j));
                 labels_Map[i][j].addMouseListener(this);
                 panel_Map.add(labels_Map[i][j]);
             }
@@ -49,12 +50,12 @@ public class MapDesigner extends JPanel implements ActionListener,MouseListener{
 
         ButtonGroup buttonGroup = new ButtonGroup();
 
-        JRadioButton radioButton_PlainTile = new JRadioButton("Clear",true);
+        JRadioButton radioButton_PlainTile = new JRadioButton("Clear", true);
         JRadioButton radioButton_BrickWall = new JRadioButton("Brick wall");
         JRadioButton radioButton_MetalWall = new JRadioButton("Metal wall");
         JRadioButton radioButton_MetalTile = new JRadioButton("Metal tile");
-        JRadioButton radioButton_Plant = new JRadioButton("Plant");
-        JRadioButton radioButton_Water = new JRadioButton("Water");
+        JRadioButton radioButton_Plant     = new JRadioButton("Plant");
+        JRadioButton radioButton_Water     = new JRadioButton("Water");
 
         buttonGroup.add(radioButton_PlainTile);
         buttonGroup.add(radioButton_BrickWall);
@@ -70,12 +71,12 @@ public class MapDesigner extends JPanel implements ActionListener,MouseListener{
         radioButton_Plant.addActionListener(this);
         radioButton_Water.addActionListener(this);
 
-        textField_MapName = new JTextField("Enter_map_name");
+        textField_MapName           = new JTextField("Enter_map_name");
         JButton button_SymmetrizeLR = new JButton("Symmetrize (L to R)");
         JButton button_SymmetrizeRL = new JButton("Symmetrize (R to L)");
-        JButton button_ClearAll = new JButton("Clear All");
-        JButton button_Save = new JButton("Save map");
-        JButton button_Exit = new JButton("Exit");
+        JButton button_ClearAll     = new JButton("Clear All");
+        JButton button_Save         = new JButton("Save map");
+        JButton button_Exit         = new JButton("Exit");
 
         button_SymmetrizeLR.addActionListener(this);
         button_SymmetrizeRL.addActionListener(this);
@@ -96,11 +97,11 @@ public class MapDesigner extends JPanel implements ActionListener,MouseListener{
         panel_Option.add(button_Save);
         panel_Option.add(button_Exit);
 
-        mainFrame.add(panel_Map,BorderLayout.CENTER);
-        mainFrame.add(panel_Option,BorderLayout.EAST);
+        mainFrame.add(panel_Map, BorderLayout.CENTER);
+        mainFrame.add(panel_Option, BorderLayout.EAST);
 
-        for(int i = 0;i<30;i++) {
-            for(int j = 0;j<30;j++) {
+        for (int i = 0; i < 30; i++) {
+            for (int j = 0; j < 30; j++) {
                 mapContent[i][j] = 0;
             }
         }
@@ -109,45 +110,45 @@ public class MapDesigner extends JPanel implements ActionListener,MouseListener{
     }
 
     void setReserve() {
-        changeIcon(labels_Map[0][0],RESERVE);
-        changeIcon(labels_Map[0][1],RESERVE);
-        changeIcon(labels_Map[1][0],RESERVE);
-        changeIcon(labels_Map[1][1],RESERVE);
+        changeIcon(labels_Map[0][0], RESERVE);
+        changeIcon(labels_Map[0][1], RESERVE);
+        changeIcon(labels_Map[1][0], RESERVE);
+        changeIcon(labels_Map[1][1], RESERVE);
 
-        changeIcon(labels_Map[0][9],RESERVE);
-        changeIcon(labels_Map[0][10],RESERVE);
-        changeIcon(labels_Map[1][9],RESERVE);
-        changeIcon(labels_Map[1][10],RESERVE);
+        changeIcon(labels_Map[0][9], RESERVE);
+        changeIcon(labels_Map[0][10], RESERVE);
+        changeIcon(labels_Map[1][9], RESERVE);
+        changeIcon(labels_Map[1][10], RESERVE);
 
-        changeIcon(labels_Map[0][19],RESERVE);
-        changeIcon(labels_Map[0][20],RESERVE);
-        changeIcon(labels_Map[1][19],RESERVE);
-        changeIcon(labels_Map[1][20],RESERVE);
+        changeIcon(labels_Map[0][19], RESERVE);
+        changeIcon(labels_Map[0][20], RESERVE);
+        changeIcon(labels_Map[1][19], RESERVE);
+        changeIcon(labels_Map[1][20], RESERVE);
 
-        changeIcon(labels_Map[0][28],RESERVE);
-        changeIcon(labels_Map[0][29],RESERVE);
-        changeIcon(labels_Map[1][28],RESERVE);
-        changeIcon(labels_Map[1][29],RESERVE);
+        changeIcon(labels_Map[0][28], RESERVE);
+        changeIcon(labels_Map[0][29], RESERVE);
+        changeIcon(labels_Map[1][28], RESERVE);
+        changeIcon(labels_Map[1][29], RESERVE);
 
-        changeIcon(labels_Map[28][10],RESERVE);
-        changeIcon(labels_Map[28][11],RESERVE);
-        changeIcon(labels_Map[29][10],RESERVE);
-        changeIcon(labels_Map[29][11],RESERVE);
+        changeIcon(labels_Map[28][10], RESERVE);
+        changeIcon(labels_Map[28][11], RESERVE);
+        changeIcon(labels_Map[29][10], RESERVE);
+        changeIcon(labels_Map[29][11], RESERVE);
 
-        changeIcon(labels_Map[28][14],HEAD_QUARTER_LU);
-        changeIcon(labels_Map[28][15],HEAD_QUARTER_RU);
-        changeIcon(labels_Map[29][14],HEAD_QUARTER_LD);
-        changeIcon(labels_Map[29][15],HEAD_QUARTER_RD);
+        changeIcon(labels_Map[28][14], HEAD_QUARTER_LU);
+        changeIcon(labels_Map[28][15], HEAD_QUARTER_RU);
+        changeIcon(labels_Map[29][14], HEAD_QUARTER_LD);
+        changeIcon(labels_Map[29][15], HEAD_QUARTER_RD);
 
-        changeIcon(labels_Map[28][18],RESERVE);
-        changeIcon(labels_Map[28][19],RESERVE);
-        changeIcon(labels_Map[29][18],RESERVE);
-        changeIcon(labels_Map[29][19],RESERVE);
+        changeIcon(labels_Map[28][18], RESERVE);
+        changeIcon(labels_Map[28][19], RESERVE);
+        changeIcon(labels_Map[29][18], RESERVE);
+        changeIcon(labels_Map[29][19], RESERVE);
 
-        mapContent[28][14]=6;
-        mapContent[28][15]=7;
-        mapContent[29][14]=8;
-        mapContent[29][15]=9;
+        mapContent[28][14] = 6;
+        mapContent[28][15] = 7;
+        mapContent[29][14] = 8;
+        mapContent[29][15] = 9;
     }
 
     void display() {
@@ -155,20 +156,23 @@ public class MapDesigner extends JPanel implements ActionListener,MouseListener{
     }
 
     boolean tileEditable(int row, int column) {
-        if((row == 0) || (row==1)) {
-            return !((column == 0 )||( column == 1)||(column==9)||(column==10)||(column==19)||(column==20)||(column==28)||(column==29));
-
+        if ((row == 0) || (row == 1)) {
+            return !((column == 0) || (column == 1) || (column == 9) || (column == 10)
+                     || (column == 19)
+                     || (column == 20)
+                     || (column == 28)
+                     || (column == 29));
         }
 
-        if((row == 28) || (row == 29)) {
-            int columnHalf = column/2;
+        if ((row == 28) || (row == 29)) {
+            int columnHalf = column / 2;
             return !((columnHalf == 5) || (columnHalf == 7) || (columnHalf == 9));
         }
 
         return true;
     }
 
-    void changeIcon(JLabel label,int id) {
+    void changeIcon(JLabel label, int id) {
         String fileName = "";
 
         switch (id) {
@@ -207,12 +211,12 @@ public class MapDesigner extends JPanel implements ActionListener,MouseListener{
                 break;
         }
 
-        label.setIcon(new ImageIcon(getClass().getResource("/res/pic/"+fileName)));
+        label.setIcon(new ImageIcon(getClass().getResource("/res/pic/" + fileName)));
     }
 
-    void saveMap()  {
+    void saveMap() {
         String name = textField_MapName.getText();
-        name+=".map";
+        name += ".map";
 
         File mapFile = new File(name);
 
@@ -238,62 +242,61 @@ public class MapDesigner extends JPanel implements ActionListener,MouseListener{
     public void actionPerformed(ActionEvent e) {
         System.out.println(e.getActionCommand());
 
-        if(e.getActionCommand().equals("Clear")) {
+        if (e.getActionCommand().equals("Clear")) {
             tileSelected = PLAIN_TILE;
-        } else if(e.getActionCommand().equals("Brick wall")) {
+        } else if (e.getActionCommand().equals("Brick wall")) {
             tileSelected = BRICK_WALL;
-        } else if(e.getActionCommand().equals("Metal wall")) {
+        } else if (e.getActionCommand().equals("Metal wall")) {
             tileSelected = METAL_WALL;
-        } else if(e.getActionCommand().equals("Metal tile")) {
+        } else if (e.getActionCommand().equals("Metal tile")) {
             tileSelected = METAL_TILE;
-        } else if(e.getActionCommand().equals("Plant")) {
+        } else if (e.getActionCommand().equals("Plant")) {
             tileSelected = PLANT;
-        } else if(e.getActionCommand().equals("Water")) {
+        } else if (e.getActionCommand().equals("Water")) {
             tileSelected = WATER;
-        } else if(e.getActionCommand().endsWith("(L to R)")) {
-            for(int i = 0;i<30;i++) {
-                for(int j = 0;j<15;j++) {
+        } else if (e.getActionCommand().endsWith("(L to R)")) {
+            for (int i = 0; i < 30; i++) {
+                for (int j = 0; j < 15; j++) {
                     if (tileEditable(i, j)) {
                         mapContent[i][29 - j] = mapContent[i][j];
                         changeIcon(labels_Map[i][29 - j], mapContent[i][j]);
                     }
                 }
             }
-        } else if(e.getActionCommand().endsWith("(R to L)")) {
-            for(int i = 0;i<30;i++) {
-                for(int j = 0;j<15;j++) {
+        } else if (e.getActionCommand().endsWith("(R to L)")) {
+            for (int i = 0; i < 30; i++) {
+                for (int j = 0; j < 15; j++) {
                     if (tileEditable(i, j)) {
                         mapContent[i][j] = mapContent[i][29 - j];
                         changeIcon(labels_Map[i][j], mapContent[i][j]);
                     }
                 }
             }
-        } else if(e.getActionCommand().equals("Clear All")) {
-            for(int i = 0;i<30;i++) {
-                for(int j = 0;j<30;j++) {
+        } else if (e.getActionCommand().equals("Clear All")) {
+            for (int i = 0; i < 30; i++) {
+                for (int j = 0; j < 30; j++) {
                     if (tileEditable(i, j)) {
                         mapContent[i][j] = 0;
-                        changeIcon(labels_Map[i][j],0);
+                        changeIcon(labels_Map[i][j], 0);
                     }
                 }
             }
-        }
-        else if(e.getActionCommand().equals("Save map")) {
+        } else if (e.getActionCommand().equals("Save map")) {
             saveMap();
-        } else if(e.getActionCommand().equals("Exit")) {
+        } else if (e.getActionCommand().equals("Exit")) {
             System.exit(0);
         }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println(e.getComponent().getName()+" clicked this");
+        System.out.println(e.getComponent().getName() + " clicked this");
 
         String[] slices = e.getComponent().getName().split("_");
-        int row = Integer.valueOf(slices[0]);
-        int column = Integer.valueOf(slices[1]);
+        int row         = Integer.valueOf(slices[0]);
+        int column      = Integer.valueOf(slices[1]);
 
-        if(tileEditable(row,column)) {
+        if (tileEditable(row, column)) {
             changeIcon(labels_Map[row][column], tileSelected);
             mapContent[row][column] = tileSelected;
         }
@@ -301,23 +304,17 @@ public class MapDesigner extends JPanel implements ActionListener,MouseListener{
 
     @Override
     public void mousePressed(MouseEvent e) {
-        System.out.println(e.getComponent().getName()+" pressed this");
+        System.out.println(e.getComponent().getName() + " pressed this");
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
+    public void mouseReleased(MouseEvent e) {}
 
     @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
+    public void mouseEntered(MouseEvent e) {}
 
     @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
+    public void mouseExited(MouseEvent e) {}
 
     static final int RESERVE = -1;
 }

@@ -7,7 +7,6 @@ import java.awt.*;
  * Created on 2017/05/03.
  */
 public class HeadQuarterRD extends HeadQuarter {
-
     public HeadQuarterRD(int orderX, int orderY) {
         super(orderX, orderY);
     }
@@ -15,6 +14,5 @@ public class HeadQuarterRD extends HeadQuarter {
     @Override
     public Image getImage() {
         return new ImageIcon(getClass().getResource("/res/pic/HQ_RD.png")).getImage();
-
     }
 }

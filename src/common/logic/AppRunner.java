@@ -13,10 +13,10 @@ import java.io.IOException;
 /**
  * Created on 2017/05/18.
  */
-public class AppRunner extends JPanel implements ActionListener{
-    private JFrame mainFrame;
-    private boolean isClient = false;
-    private boolean isServer = false;
+public class AppRunner extends JPanel implements ActionListener {
+    private JFrame  mainFrame;
+    private boolean isClient   = false;
+    private boolean isServer   = false;
     private boolean isDesigner = false;
 
 
@@ -24,13 +24,13 @@ public class AppRunner extends JPanel implements ActionListener{
         AppRunner appRunner = new AppRunner();
 
         appRunner.display();
-        while((!appRunner.isServer) && (!appRunner.isClient) && (!appRunner.isDesigner)) {
+        while ((!appRunner.isServer) && (!appRunner.isClient) && (!appRunner.isDesigner)) {
             Thread.sleep(100);
         }
 
-        if(appRunner.isClient) {
+        if (appRunner.isClient) {
             openClient();
-        } else if(appRunner.isServer){
+        } else if (appRunner.isServer) {
             openServer();
         } else {
             openDesigner();
@@ -45,13 +45,13 @@ public class AppRunner extends JPanel implements ActionListener{
 
     private AppRunner() {
         mainFrame = new JFrame("Battle City");
-        mainFrame.setLayout(new GridLayout(2,1));
+        mainFrame.setLayout(new GridLayout(2, 1));
 
-        JLabel label_select = new JLabel("Battle City",SwingConstants.CENTER);
-        label_select.setFont(new Font("Romans Times",Font.BOLD,20));
+        JLabel label_select = new JLabel("Battle City", SwingConstants.CENTER);
+        label_select.setFont(new Font("Romans Times", Font.BOLD, 20));
         mainFrame.add(label_select);
 
-        JPanel operations = new JPanel(new GridLayout(1,0));
+        JPanel operations = new JPanel(new GridLayout(1, 0));
 
         JButton button_client = new JButton("Start as a player");
         button_client.addActionListener(this);
@@ -77,7 +77,7 @@ public class AppRunner extends JPanel implements ActionListener{
         operations.add(panel_exit);
 
         mainFrame.add(operations);
-        mainFrame.setSize(600,300);
+        mainFrame.setSize(600, 300);
         mainFrame.setResizable(false);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setLocationRelativeTo(null);
@@ -86,7 +86,7 @@ public class AppRunner extends JPanel implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println(e.getActionCommand());
-        if(e.getActionCommand().equals("Exit")) {
+        if (e.getActionCommand().equals("Exit")) {
             System.exit(0);
         } else if (e.getActionCommand().endsWith("player")) {
             mainFrame.dispose();
@@ -94,7 +94,7 @@ public class AppRunner extends JPanel implements ActionListener{
         } else if (e.getActionCommand().endsWith("server")) {
             mainFrame.dispose();
             isServer = true;
-        } else if(e.getActionCommand().endsWith("designer")) {
+        } else if (e.getActionCommand().endsWith("designer")) {
             mainFrame.dispose();
             isDesigner = true;
         }

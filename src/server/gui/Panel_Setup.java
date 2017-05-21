@@ -8,29 +8,29 @@ import java.awt.*;
 /**
  * Created on 2017/04/30.
  */
-public class Panel_Setup extends JPanel{
+public class Panel_Setup extends JPanel {
     JTextField text_port;
     JTextField text_map;
-    JFrame mainFrame;
+    JFrame     mainFrame;
 
 
     public Panel_Setup(Server server) {
-        text_port = new JTextField(10);
-        text_map = new JTextField("default",10);
-        JLabel label_port  = new JLabel("Run server on port");
-        JLabel label_map = new JLabel("Play on map");
+        text_port            = new JTextField(10);
+        text_map             = new JTextField("default", 10);
+        JLabel  label_port   = new JLabel("Run server on port");
+        JLabel  label_map    = new JLabel("Play on map");
         JButton button_start = new JButton("Start");
 
         mainFrame = new JFrame("Settings");
         mainFrame.setContentPane(this);
-        mainFrame.getContentPane().setLayout(new GridLayout(3,1));
+        mainFrame.getContentPane().setLayout(new GridLayout(3, 1));
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setResizable(false);
-        mainFrame.setSize(300,180);
+        mainFrame.setSize(300, 180);
 
-        JPanel panel_port = new JPanel(new FlowLayout());
-        JPanel panel_map = new JPanel(new FlowLayout());
+        JPanel panel_port  = new JPanel(new FlowLayout());
+        JPanel panel_map   = new JPanel(new FlowLayout());
         JPanel panel_start = new JPanel(new FlowLayout());
 
         panel_port.add(label_port);
@@ -59,11 +59,10 @@ public class Panel_Setup extends JPanel{
     }
 
     public int getPortNumber() {
-        return Integer.valueOf( text_port.getText());
+        return Integer.valueOf(text_port.getText());
     }
 
     public String getMapName() {
         return text_map.getText();
     }
-
 }

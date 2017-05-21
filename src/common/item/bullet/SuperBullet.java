@@ -8,9 +8,9 @@ import common.item.tank.Tank;
 public class SuperBullet extends Bullet {
     int belong;
 
-    public SuperBullet(Tank tank,int belong) {
+    public SuperBullet(Tank tank, int belong) {
         super(tank);
-        isSuper = true;
+        isSuper     = true;
         this.belong = belong;
     }
 

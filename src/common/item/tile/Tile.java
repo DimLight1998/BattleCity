@@ -39,12 +39,12 @@ abstract public class Tile {
 
     public abstract Image getImage();
 
-    public static final int PLAIN_TILE = 0;
-    public static final int BRICK_WALL = 1;
-    public static final int METAL_WALL = 2;
-    public static final int METAL_TILE = 3;
-    public static final int PLANT = 4;
-    public static final int WATER = 5;
+    public static final int PLAIN_TILE      = 0;
+    public static final int BRICK_WALL      = 1;
+    public static final int METAL_WALL      = 2;
+    public static final int METAL_TILE      = 3;
+    public static final int PLANT           = 4;
+    public static final int WATER           = 5;
     public static final int HEAD_QUARTER_LU = 6;
     public static final int HEAD_QUARTER_RU = 7;
     public static final int HEAD_QUARTER_LD = 8;

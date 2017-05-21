@@ -6,7 +6,7 @@ package common.item.tank;
 public class LightTank extends Tank {
     public LightTank(int locationX, int locationY) {
         super(locationX, locationY);
-        health = 1;
+        health        = 1;
         fireDelayBase = kFireDelayLevel_2;
     }
 

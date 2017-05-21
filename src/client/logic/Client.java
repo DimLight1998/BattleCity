@@ -31,26 +31,26 @@ import static common.item.tank.Tank.*;
 /**
  * Created on 2017/04/30.
  */
-public class Client implements ActionListener,KeyListener,InfoHandler{
+public class Client implements ActionListener, KeyListener, InfoHandler {
     private InetAddress IPAddress;
-    private int portNumber;
+    private int         portNumber;
     private Panel_Login panel_login;
-    private GUI_Play gui_play;
-    private Emitter emitter;
-    private Receiver receiver;
+    private GUI_Play    gui_play;
+    private Emitter     emitter;
+    private Receiver    receiver;
 
     Tile[][] tiles;
-    ArrayList<Tank> tanks;
+    ArrayList<Tank>   tanks;
     ArrayList<Bullet> bullets;
-    Tank hero_1;
-    Tank hero_2;
+    Tank              hero_1;
+    Tank              hero_2;
 
-    private boolean isReady = false;
-    private boolean isGameOver = false;
-    private boolean isWin = false;
+    private boolean isReady     = false;
+    private boolean isGameOver  = false;
+    private boolean isWin       = false;
     private boolean isGameStart = false;
-    private boolean isPaused = false;
-    private int playerNumber;
+    private boolean isPaused    = false;
+    private int     playerNumber;
 
     private AtomicInteger player_1_score = new AtomicInteger(0);
     private AtomicInteger player_2_score = new AtomicInteger(0);
@@ -58,18 +58,19 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
 
     public Client() throws FileNotFoundException {
         // TODO for test
-        tiles = new Tile[30][30];
-        tanks = new ArrayList<>();
+        tiles   = new Tile[30][30];
+        tanks   = new ArrayList<>();
         bullets = new ArrayList<>();
-        hero_1 = new PlayerTank(160,448,1);
-        hero_2 = new PlayerTank(288,448,2);
-        new MapLoader().loadMap("empty",tiles);
+        hero_1  = new PlayerTank(160, 448, 1);
+        hero_2  = new PlayerTank(288, 448, 2);
+        new MapLoader().loadMap("empty", tiles);
 
         // TODO for test
 
 
         panel_login = new Panel_Login(this);
-        gui_play = new GUI_Play(this,tiles,tanks,bullets,hero_1,hero_2,player_1_score,player_2_score);
+        gui_play    = new GUI_Play(
+            this, tiles, tanks, bullets, hero_1, hero_2, player_1_score, player_2_score);
     }
 
 
@@ -77,7 +78,7 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
     public void start() throws InterruptedException, IOException {
         panel_login.display();
 
-        while(!isReady) {
+        while (!isReady) {
             Thread.sleep(100);
         }
 
@@ -87,7 +88,7 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
 
         gui_play.display();
 
-        while(!isGameStart) {
+        while (!isGameStart) {
             Thread.sleep(100);
         }
 
@@ -96,12 +97,13 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
         new JFXPanel();
         Media media = null;
         try {
-            media = new Media(getClass().getResource("/res/sound/background.mp3").toURI().toString());
+            media =
+                new Media(getClass().getResource("/res/sound/background.mp3").toURI().toString());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
 
-        assert media!=null;
+        assert      media != null;
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         mediaPlayer.setVolume(0.3);
@@ -109,9 +111,9 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
 
         mediaPlayer.play();
 
-        while(!isGameOver) {
+        while (!isGameOver) {
             long timeNow = System.currentTimeMillis();
-            while(isPaused) {
+            while (isPaused) {
                 Thread.sleep(100);
                 System.out.println("game paused");
             }
@@ -119,54 +121,53 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             updateStatus();
             paintGame();
             Thread.sleep(20);
-            while(System.currentTimeMillis() < timeNow + 20) {
+            while (System.currentTimeMillis() < timeNow + 20) {
                 Thread.sleep(1);
             }
         }
 
 
-
-        String kHistoryFilePath = "history.txt";
-        Panel_Save panel_save = new Panel_Save(this,new File(kHistoryFilePath));
+        String     kHistoryFilePath = "history.txt";
+        Panel_Save panel_save       = new Panel_Save(this, new File(kHistoryFilePath));
 
         panel_save.display();
         emitter.disable();
     }
 
 
-    public void handleInfo(String info, InetAddress inetAddress){
-        if(info.startsWith("dis")) {
-            playerNumber =Character.getNumericValue(info.charAt(3));
+    public void handleInfo(String info, InetAddress inetAddress) {
+        if (info.startsWith("dis")) {
+            playerNumber = Character.getNumericValue(info.charAt(3));
 
             // TODO remove
-            System.out.println("This client plays as player "+playerNumber);
+            System.out.println("This client plays as player " + playerNumber);
 
             int newPort = Integer.parseInt(info.substring(4));
             emitter.closeSocket();
             try {
-                emitter = new Emitter(IPAddress,newPort);
-                System.out.println("Emitter is locked on port"+newPort);
+                emitter = new Emitter(IPAddress, newPort);
+                System.out.println("Emitter is locked on port" + newPort);
                 isGameStart = true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        if(info.startsWith("map")) {
+        if (info.startsWith("map")) {
             String mapName = info.substring(4);
-            new MapLoader().loadMap(mapName,tiles);
+            new MapLoader().loadMap(mapName, tiles);
         }
 
-        if(info.startsWith("isb")) {
-            if(info.charAt(3) == '_') {
-                if(info.endsWith("1")) {
+        if (info.startsWith("isb")) {
+            if (info.charAt(3) == '_') {
+                if (info.endsWith("1")) {
                     synchronized (bullets) {
                         bullets.add(new Bullet(hero_1));
                         if (playerNumber == 1) {
                             gui_play.playFireSound();
                         }
                     }
-                } else if(info.endsWith("2")) {
+                } else if (info.endsWith("2")) {
                     synchronized (bullets) {
                         bullets.add(new Bullet(hero_2));
                         if (playerNumber == 2) {
@@ -179,16 +180,16 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             }
         }
 
-        if(info.startsWith("init")) {
-            tiles = new Tile[30][30];
-            tanks = new ArrayList<>();
+        if (info.startsWith("init")) {
+            tiles   = new Tile[30][30];
+            tanks   = new ArrayList<>();
             bullets = new ArrayList<>();
-            hero_1 = new PlayerTank(160,448,1);
-            hero_2 = new PlayerTank(288,448,2);
+            hero_1  = new PlayerTank(160, 448, 1);
+            hero_2  = new PlayerTank(288, 448, 2);
         }
 
-        if(info.startsWith("updp")) {
-            Tank updated = (info.charAt(4)=='1'?hero_1:hero_2);
+        if (info.startsWith("updp")) {
+            Tank updated = (info.charAt(4) == '1' ? hero_1 : hero_2);
             switch (info.charAt(5)) {
                 case 'w':
                     updated.setVelocityStatus(kMovingUp);
@@ -212,14 +213,14 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             }
         }
 
-        if(info.startsWith("det")) {
-            String[] slices = info.split("_");
-            int row = Integer.parseInt(slices[1]);
-            int column = Integer.parseInt(slices[2]);
-            tiles[row][column] = new PlainTile(row,column);
+        if (info.startsWith("det")) {
+            String[] slices    = info.split("_");
+            int row            = Integer.parseInt(slices[1]);
+            int column         = Integer.parseInt(slices[2]);
+            tiles[row][column] = new PlainTile(row, column);
         }
 
-        if(info.startsWith("kill")) {
+        if (info.startsWith("kill")) {
             switch (info.charAt(5)) {
                 case '1':
                     hero_1.deactivate();
@@ -230,24 +231,24 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             }
         }
 
-        if(info.startsWith("stop")) {
+        if (info.startsWith("stop")) {
             emitter.disable();
         }
 
-        if(info.startsWith("sync") && info.endsWith("%")) {
-            String infoUsed = info.substring(0,info.length()-1);
+        if (info.startsWith("sync") && info.endsWith("%")) {
+            String infoUsed = info.substring(0, info.length() - 1);
 
-            if(infoUsed.charAt(4) == 'h') {
-                if(infoUsed.charAt(5) == '1') {
+            if (infoUsed.charAt(4) == 'h') {
+                if (infoUsed.charAt(5) == '1') {
                     hero_1.loadFromString(infoUsed.substring(6));
-                } else if(infoUsed.charAt(5) == '2') {
+                } else if (infoUsed.charAt(5) == '2') {
                     hero_2.loadFromString(infoUsed.substring(6));
                 }
             }
 
-            if(infoUsed.charAt(4) == 't') {
+            if (infoUsed.charAt(4) == 't') {
                 String[] slices = infoUsed.split("_");
-                int numTank = Integer.valueOf(slices[1]);
+                int numTank     = Integer.valueOf(slices[1]);
 
                 synchronized (tanks) {
                     tanks.clear();
@@ -257,20 +258,20 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
                 }
             }
 
-            if(infoUsed.charAt(4) == 'b') {
-               String[] slices = infoUsed.split("_");
-               int numBullet = Integer.valueOf(slices[1]);
+            if (infoUsed.charAt(4) == 'b') {
+                String[] slices = infoUsed.split("_");
+                int numBullet   = Integer.valueOf(slices[1]);
 
-               synchronized (bullets) {
-                   bullets.clear();
-                   for (int i = 0; i < numBullet; i++) {
-                       bullets.add(new Bullet(slices[i + 2]));
-                   }
-               }
+                synchronized (bullets) {
+                    bullets.clear();
+                    for (int i = 0; i < numBullet; i++) {
+                        bullets.add(new Bullet(slices[i + 2]));
+                    }
+                }
             }
         }
 
-        if(info.startsWith("sco")) {
+        if (info.startsWith("sco")) {
             switch (info.charAt(3)) {
                 case '1':
                     player_1_score.set(Integer.valueOf(info.substring(5)));
@@ -281,9 +282,9 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             }
         }
 
-        if(info.startsWith("gmo")) {
+        if (info.startsWith("gmo")) {
             isGameOver = true;
-            if(info.charAt(3)=='w') {
+            if (info.charAt(3) == 'w') {
                 System.out.println("win");
                 isWin = true;
             } else {
@@ -292,12 +293,12 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             }
         }
 
-        if(info.startsWith("pause")) {
+        if (info.startsWith("pause")) {
             isPaused = true;
             emitter.disable();
         }
 
-        if(info.startsWith("unps")) {
+        if (info.startsWith("unps")) {
             isPaused = false;
             emitter.enable();
         }
@@ -305,7 +306,6 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
 
 
     void updateStatus() {
-
         hero_1.updateLocation();
         hero_1.updateFireDelay();
 
@@ -323,7 +323,6 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
                 tank.updateLocation();
             }
         }
-
     }
 
 
@@ -338,7 +337,7 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
 
 
     public int getScore() {
-        switch ( playerNumber) {
+        switch (playerNumber) {
             case 1:
                 return player_1_score.get();
             case 2:
@@ -350,7 +349,7 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getActionCommand().equals("Start")) {
+        if (e.getActionCommand().equals("Start")) {
             try {
                 IPAddress = panel_login.getAddress();
             } catch (UnknownHostException e1) {
@@ -359,14 +358,14 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
             portNumber = panel_login.getPort();
 
             try {
-                emitter = new Emitter(IPAddress,portNumber);
-                receiver = new Receiver(0,this);
+                emitter  = new Emitter(IPAddress, portNumber);
+                receiver = new Receiver(0, this);
                 receiver.start();
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
 
-            emitter.emit("reg"+receiver.getLocalPort());
+            emitter.emit("reg" + receiver.getLocalPort());
             isReady = true;
         }
     }
@@ -374,12 +373,12 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
 
     @Override
     public void keyTyped(KeyEvent e) {
-        if("wasdWASD".indexOf(e.getKeyChar()) >= 0) {
+        if ("wasdWASD".indexOf(e.getKeyChar()) >= 0) {
             emitter.emit("prs" + Character.toLowerCase(e.getKeyChar()) + playerNumber);
-        } else if(e.getKeyChar() == ' ') {
-            emitter.emit("fir"+playerNumber);
+        } else if (e.getKeyChar() == ' ') {
+            emitter.emit("fir" + playerNumber);
         } else if (Character.toLowerCase(e.getKeyChar()) == 'p') {
-            emitter.emit("reqp",true);
+            emitter.emit("reqp", true);
         }
     }
 
@@ -387,7 +386,7 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
     @Override
     public void keyPressed(KeyEvent e) {
         // TODO delete this
-        if(e.getKeyChar() == 'e') {
+        if (e.getKeyChar() == 'e') {
             System.out.println("press.");
         }
     }
@@ -395,7 +394,6 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
 
     @Override
     public void keyReleased(KeyEvent e) {
-        emitter.emit("rls"+playerNumber);
+        emitter.emit("rls" + playerNumber);
     }
-
 }

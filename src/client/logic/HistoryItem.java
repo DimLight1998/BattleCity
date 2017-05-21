@@ -5,11 +5,11 @@ package client.logic;
  */
 public class HistoryItem {
     String name;
-    int score;
+    int    score;
 
     public HistoryItem(String name, int score) {
         this.name = name;
-        if(this.name.isEmpty()) {
+        if (this.name.isEmpty()) {
             this.name = "Unnamed";
         }
         this.score = score;

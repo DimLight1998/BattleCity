@@ -23,12 +23,15 @@ public class GUI_Play extends JPanel {
 
 
     public GUI_Play(Client client,
-                    Tile[][] tiles,
-                    ArrayList<Tank>   tanks,
-                    ArrayList<Bullet> bullets,
-                    Tank              hero_1,
-                    Tank              hero_2, AtomicInteger player_1_score, AtomicInteger player_2_score) {
-        panel_game = new Panel_Game(tiles, tanks, bullets, hero_1, hero_2,player_1_score,player_2_score);
+        Tile[][] tiles,
+        ArrayList<Tank>   tanks,
+        ArrayList<Bullet> bullets,
+        Tank              hero_1,
+        Tank              hero_2,
+        AtomicInteger     player_1_score,
+        AtomicInteger     player_2_score) {
+        panel_game =
+            new Panel_Game(tiles, tanks, bullets, hero_1, hero_2, player_1_score, player_2_score);
 
         this.setLayout(new GridLayout(1, 1));
         this.add(panel_game);
@@ -78,12 +81,13 @@ public class GUI_Play extends JPanel {
             new JFXPanel();
             Media media = null;
             try {
-                media = new Media(getClass().getResource("/res/sound/"+fileName).toURI().toString());
+                media =
+                    new Media(getClass().getResource("/res/sound/" + fileName).toURI().toString());
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
 
-            assert media!=null;
+            assert      media != null;
             MediaPlayer mediaPlayer = new MediaPlayer(media);
             mediaPlayer.setVolume(0.5);
             mediaPlayer.setAutoPlay(true);

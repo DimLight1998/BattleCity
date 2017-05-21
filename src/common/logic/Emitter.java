@@ -8,10 +8,10 @@ import java.net.Socket;
 /**
  * Created on 2017/05/01.
  */
-public class Emitter{
-    private Socket localSocket;
+public class Emitter {
+    private Socket           localSocket;
     private DataOutputStream dataOutputStream;
-    private boolean isDisabled = false;
+    private boolean          isDisabled = false;
 
 
     public void disable() {
@@ -25,7 +25,7 @@ public class Emitter{
 
 
     public Emitter(InetAddress toAddress, int toPort) throws IOException {
-        localSocket = new Socket(toAddress,toPort);
+        localSocket      = new Socket(toAddress, toPort);
         dataOutputStream = new DataOutputStream(localSocket.getOutputStream());
     }
 
@@ -37,7 +37,7 @@ public class Emitter{
     }
 
 
-    public void emit(String info, boolean override){
+    public void emit(String info, boolean override) {
         synchronized (this) {
             if ((!isDisabled) || override) {
                 try {
@@ -50,7 +50,7 @@ public class Emitter{
     }
 
 
-    public void closeSocket(){
+    public void closeSocket() {
         try {
             localSocket.close();
         } catch (IOException e) {

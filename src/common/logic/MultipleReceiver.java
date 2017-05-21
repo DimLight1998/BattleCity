@@ -10,29 +10,29 @@ import java.net.Socket;
  * Created on 2017/05/16.
  */
 public class MultipleReceiver extends Thread {
-    private InfoHandler infoHandler;
+    private InfoHandler  infoHandler;
     private ServerSocket serverSocket;
 
 
     public MultipleReceiver(int openOnPort, InfoHandler infoHandler) throws IOException {
         this.infoHandler = infoHandler;
-        serverSocket = new ServerSocket(openOnPort);
+        serverSocket     = new ServerSocket(openOnPort);
     }
 
 
     public void run() {
-        String info = null;
+        String          info = null;
         DataInputStream dataInputStream;
-        InetAddress  address= null;
+        InetAddress     address = null;
 
         try {
-            while(true) {
-                Socket socket = serverSocket.accept();
+            while (true) {
+                Socket socket   = serverSocket.accept();
                 dataInputStream = new DataInputStream(socket.getInputStream());
-                info = dataInputStream.readUTF();
-                address = socket.getInetAddress();
-                System.out.println("Received "+info+" from "+address);
-                infoHandler.handleInfo(info,address);
+                info            = dataInputStream.readUTF();
+                address         = socket.getInetAddress();
+                System.out.println("Received " + info + " from " + address);
+                infoHandler.handleInfo(info, address);
                 socket.close();
             }
         } catch (IOException e) {

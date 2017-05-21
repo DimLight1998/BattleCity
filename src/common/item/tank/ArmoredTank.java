@@ -8,7 +8,7 @@ import java.awt.*;
 public class ArmoredTank extends Tank {
     public ArmoredTank(int locationX, int locationY) {
         super(locationX, locationY);
-        health = 2;
+        health        = 2;
         fireDelayBase = kFireDelayLevel_2;
     }
 

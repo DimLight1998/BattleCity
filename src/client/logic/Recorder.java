@@ -9,7 +9,7 @@ import java.util.*;
 public class Recorder {
     private File historyFile;
 
-    public Recorder(File file)  {
+    public Recorder(File file) {
         historyFile = file;
         try {
             historyFile.createNewFile();
@@ -50,8 +50,8 @@ public class Recorder {
             FileWriter writer = new FileWriter(historyFile);
 
             for (HistoryItem historyItem : list) {
-                writer.write(historyItem.getName()+"\n");
-                writer.write(Integer.toString(historyItem.getScore())+"\n");
+                writer.write(historyItem.getName() + "\n");
+                writer.write(Integer.toString(historyItem.getScore()) + "\n");
             }
 
             writer.close();
@@ -72,13 +72,13 @@ public class Recorder {
 
         Collections.reverse(historyItems);
 
-        for(int i = 0;i<Integer.min(5,historyItems.size());i++) {
+        for (int i = 0; i < Integer.min(5, historyItems.size()); i++) {
             ret.add(historyItems.get(i));
         }
 
         int size = ret.size();
-        for(int i = 0;i<5-size;i++) {
-            ret.add(new HistoryItem("Unnamed",0));
+        for (int i = 0; i < 5 - size; i++) {
+            ret.add(new HistoryItem("Unnamed", 0));
         }
 
         return ret;
