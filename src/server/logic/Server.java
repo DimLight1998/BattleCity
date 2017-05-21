@@ -164,15 +164,19 @@ public class Server implements ActionListener, InfoHandler{
         if(info.startsWith("fir")) {
             if(info.endsWith("1")) {
                 if(hero_1.isAbleToFire()) {
-                    bullets.add(new SuperBullet(hero_1,1));
-                    hero_1.resetFireDelay();
-                    broadcast("isb_1");
+                    synchronized (bullets) {
+                        bullets.add(new SuperBullet(hero_1, 1));
+                        hero_1.resetFireDelay();
+                        broadcast("isb_1");
+                    }
                 }
             } else if(info.endsWith("2")) {
                 if(hero_2.isAbleToFire()) {
-                    bullets.add(new SuperBullet(hero_2,2));
-                    hero_2.resetFireDelay();
-                    broadcast("isb_2");
+                    synchronized (bullets) {
+                        bullets.add(new SuperBullet(hero_2, 2));
+                        hero_2.resetFireDelay();
+                        broadcast("isb_2");
+                    }
                 }
             }
         }
@@ -258,7 +262,7 @@ public class Server implements ActionListener, InfoHandler{
 
         broadcast("gmo"+(isPlayersWin?'w':'l'));
 
-        JOptionPane.showMessageDialog(panel_status,"Game over");
+        JOptionPane.showMessageDialog(panel_status,"Game over, server is closing now.");
 
         System.exit(0);
     }
@@ -356,10 +360,12 @@ public class Server implements ActionListener, InfoHandler{
             }
         }
 
-        for(Tank tankIter:tanks) {
-            if(tank!=tankIter) {
-                if(isTileBlockedByTank(order_1,tankIter) || isTileBlockedByTank(order_2,tankIter)) {
-                    return true;
+        synchronized (tanks) {
+            for (Tank tankIter : tanks) {
+                if (tank != tankIter) {
+                    if (isTileBlockedByTank(order_1, tankIter) || isTileBlockedByTank(order_2, tankIter)) {
+                        return true;
+                    }
                 }
             }
         }
@@ -413,9 +419,11 @@ public class Server implements ActionListener, InfoHandler{
         } else if(isTileBlockedByTank(order, hero_2)) {
             return true;
         } else {
-            for(Tank tank: tanks) {
-                if(isTileBlockedByTank(order,tank)) {
-                    return true;
+            synchronized (tanks) {
+                for (Tank tank : tanks) {
+                    if (isTileBlockedByTank(order, tank)) {
+                        return true;
+                    }
                 }
             }
         }
@@ -440,21 +448,23 @@ public class Server implements ActionListener, InfoHandler{
 
 
     private void respawnTankOnPoint(int respawnPoint) {
-        int tankID = ThreadLocalRandom.current().nextInt(1, 5);
-        if(!isRespawnPointBlocked(respawnPoint)) {
-            switch (tankID) {
-                case kHeavyTankID:
-                    tanks.add(new HeavyTank(initSpawnLocationX[respawnPoint],0));
-                    break;
-                case kLightTankID:
-                    tanks.add(new LightTank(initSpawnLocationX[respawnPoint],0));
-                    break;
-                case kArmoredTankID:
-                    tanks.add(new ArmoredTank(initSpawnLocationX[respawnPoint],0));
-                    break;
-                case kTankDestroyerID:
-                    tanks.add(new TankDestroyer(initSpawnLocationX[respawnPoint],0));
-                    break;
+        synchronized (tanks) {
+            int tankID = ThreadLocalRandom.current().nextInt(1, 5);
+            if (!isRespawnPointBlocked(respawnPoint)) {
+                switch (tankID) {
+                    case kHeavyTankID:
+                        tanks.add(new HeavyTank(initSpawnLocationX[respawnPoint], 0));
+                        break;
+                    case kLightTankID:
+                        tanks.add(new LightTank(initSpawnLocationX[respawnPoint], 0));
+                        break;
+                    case kArmoredTankID:
+                        tanks.add(new ArmoredTank(initSpawnLocationX[respawnPoint], 0));
+                        break;
+                    case kTankDestroyerID:
+                        tanks.add(new TankDestroyer(initSpawnLocationX[respawnPoint], 0));
+                        break;
+                }
             }
         }
     }
@@ -625,24 +635,26 @@ public class Server implements ActionListener, InfoHandler{
                 }
 
                 if (bullet.isSuper()) {
-                    for (Tank tank : tanks) {
-                        if (isBulletHittingTank(bullet, tank)) {
-                            tank.decreaseHealth();
+                    synchronized (tanks) {
+                        for (Tank tank : tanks) {
+                            if (isBulletHittingTank(bullet, tank)) {
+                                tank.decreaseHealth();
 
-                            if(!tank.isActivated()) {
-                                switch(bullet.getBelong()) {
-                                    case 1:
-                                        player_1_score += tank.getScore();
-                                        broadcast("sco1_"+player_1_score);
-                                        break;
-                                    case 2:
-                                        plater_2_score += tank.getScore();
-                                        broadcast("sco2_"+plater_2_score);
-                                        break;
+                                if (!tank.isActivated()) {
+                                    switch (bullet.getBelong()) {
+                                        case 1:
+                                            player_1_score += tank.getScore();
+                                            broadcast("sco1_" + player_1_score);
+                                            break;
+                                        case 2:
+                                            plater_2_score += tank.getScore();
+                                            broadcast("sco2_" + plater_2_score);
+                                            break;
+                                    }
                                 }
-                            }
 
-                            bulletIterator.remove();
+                                bulletIterator.remove();
+                            }
                         }
                     }
                 }
@@ -680,26 +692,30 @@ public class Server implements ActionListener, InfoHandler{
         boolean bulletsRemoved = false;
         ArrayList<Integer> simplifyIndexes = new ArrayList<>();
 
-        for(int i = 0;i<bullets.size();i++) {
-            for(int j = i+1;j<bullets.size();j++) {
-                if(isBulletsReducible(bullets.get(i),bullets.get(j)) || isBulletsReducible(bullets.get(j),bullets.get(i))) {
-                    if((!simplifyIndexes.contains(i))&&(!simplifyIndexes.contains(j))) {
-                        simplifyIndexes.add(i);
-                        simplifyIndexes.add(j);
-                        bulletsRemoved = true;
+        synchronized (bullets) {
+            for (int i = 0; i < bullets.size(); i++) {
+                for (int j = i + 1; j < bullets.size(); j++) {
+                    if (isBulletsReducible(bullets.get(i), bullets.get(j)) || isBulletsReducible(bullets.get(j), bullets.get(i))) {
+                        if ((!simplifyIndexes.contains(i)) && (!simplifyIndexes.contains(j))) {
+                            simplifyIndexes.add(i);
+                            simplifyIndexes.add(j);
+                            bulletsRemoved = true;
+                        }
                     }
                 }
             }
-        }
 
-        simplifyIndexes.sort(Collections.reverseOrder());
-        for(int i : simplifyIndexes) {
-            bullets.remove(i);
-        }
 
-        if(bulletsRemoved) {
-            System.out.println("Bullets removed.");
-            forceSynchronizeBullet();
+            simplifyIndexes.sort(Collections.reverseOrder());
+            for (int i : simplifyIndexes) {
+
+                bullets.remove(i);
+            }
+
+            if (bulletsRemoved) {
+                System.out.println("Bullets removed.");
+                forceSynchronizeBullet();
+            }
         }
     }
 
@@ -805,13 +821,15 @@ public class Server implements ActionListener, InfoHandler{
 
 
     private void checkGameOver() {
-        if((tankActivated == 20)&&(tanks.isEmpty())) {
-            isGameOver = true;
-            isPlayersWin = true;
+        synchronized (tanks) {
+            if ((tankActivated == 20) && (tanks.isEmpty())) {
+                isGameOver = true;
+                isPlayersWin = true;
 
-        } else if((!hero_1.isActivated())&&(!hero_2.isActivated())) {
-            isGameOver = true;
-            isPlayersWin = false;
+            } else if ((!hero_1.isActivated()) && (!hero_2.isActivated())) {
+                isGameOver = true;
+                isPlayersWin = false;
+            }
         }
     }
 
@@ -840,9 +858,10 @@ public class Server implements ActionListener, InfoHandler{
 
     private void forceSynchronizeTank() {
         // tanks sync
-        StringBuilder tanks_string = new StringBuilder("synct_"+tanks.size());
-
+        StringBuilder tanks_string = null;
         synchronized (tanks) {
+            tanks_string = new StringBuilder("synct_"+tanks.size());
+
             for (Tank tank : tanks) {
                 tanks_string.append("_").append(tank.toString());
             }
@@ -884,9 +903,11 @@ public class Server implements ActionListener, InfoHandler{
             respawnTankOnPoint(i);
         }
 
-        for(Tank tank:tanks) {
-            tank.activate();
-            tank.resetFireDelay();
+        synchronized (tanks) {
+            for (Tank tank : tanks) {
+                tank.activate();
+                tank.resetFireDelay();
+            }
         }
 
         tankActivated = kEnemyNumberOnMap;
@@ -897,58 +918,63 @@ public class Server implements ActionListener, InfoHandler{
     private void AIUpdate() {
         boolean needSynchronization = false;
 
-        Iterator<Tank> tankIterator = tanks.iterator();
-        while(tankIterator.hasNext()) {
-            if(!tankIterator.next().isActivated()) {
-                tankIterator.remove();
-                needSynchronization = true;
-            }
-        }
-
-        if((tanks.size() < kEnemyNumberOnMap)&&(tankActivated < kEnemyTankNumber)) {
-            ArrayList<Integer> respawnPointOrder = new ArrayList<>();
-            respawnPointOrder.add(0);
-            respawnPointOrder.add(1);
-            respawnPointOrder.add(2);
-            respawnPointOrder.add(3);
-            Collections.shuffle(respawnPointOrder);
-
-            for(int i:respawnPointOrder) {
-                if(!isRespawnPointBlocked(i)) {
-                    respawnTankOnPoint(i);
-                    tankActivated ++;
-                    break;
+        synchronized (tanks) {
+            Iterator<Tank> tankIterator = tanks.iterator();
+            while (tankIterator.hasNext()) {
+                if (!tankIterator.next().isActivated()) {
+                    tankIterator.remove();
+                    needSynchronization = true;
                 }
             }
-        }
 
 
-        for(Tank tank:tanks) {
-            tank.updateFireDelay();
-            tank.tryFire(bullets);
+            if ((tanks.size() < kEnemyNumberOnMap) && (tankActivated < kEnemyTankNumber)) {
+                ArrayList<Integer> respawnPointOrder = new ArrayList<>();
+                respawnPointOrder.add(0);
+                respawnPointOrder.add(1);
+                respawnPointOrder.add(2);
+                respawnPointOrder.add(3);
+                Collections.shuffle(respawnPointOrder);
 
-            if(!isBlockedInDirection(tank,tank.getFacingStatus())) {
-                tank.updateLocation();
-                int rand = ThreadLocalRandom.current().nextInt(0, 50);
-                if(rand == 0) {
+                for (int i : respawnPointOrder) {
+                    if (!isRespawnPointBlocked(i)) {
+                        respawnTankOnPoint(i);
+                        tankActivated++;
+                        break;
+                    }
+                }
+            }
+
+
+            for (Tank tank : tanks) {
+                tank.updateFireDelay();
+                synchronized (bullets) {
+                    tank.tryFire(bullets);
+                }
+
+                if (!isBlockedInDirection(tank, tank.getFacingStatus())) {
+                    tank.updateLocation();
+                    int rand = ThreadLocalRandom.current().nextInt(0, 50);
+                    if (rand == 0) {
+                        tank.setVelocityStatus(ThreadLocalRandom.current().nextInt(0, 5));
+                    }
+                } else {
                     tank.setVelocityStatus(ThreadLocalRandom.current().nextInt(0, 5));
                 }
-            } else {
-                tank.setVelocityStatus(ThreadLocalRandom.current().nextInt(0, 5));
+
+                if (!isInSameDirection(tank.getFacingStatus(), tank.getVelocityStatus())) {
+                    correctTankLocation(tank, tank.getFacingStatus());
+                    needSynchronization = true;
+                }
+
+                if (tank.getVelocityStatus() != kNotMoving) {
+                    tank.setFacingStatus(tank.getVelocityStatus());
+                }
             }
 
-            if(!isInSameDirection(tank.getFacingStatus(),tank.getVelocityStatus())) {
-                correctTankLocation(tank,tank.getFacingStatus());
-                needSynchronization = true;
+            if (needSynchronization) {
+                forceSynchronizeTank();
             }
-
-            if(tank.getVelocityStatus() != kNotMoving) {
-                tank.setFacingStatus(tank.getVelocityStatus());
-            }
-        }
-
-        if(needSynchronization) {
-            forceSynchronizeTank();
         }
 
 

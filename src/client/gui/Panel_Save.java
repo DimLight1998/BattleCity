@@ -17,8 +17,8 @@ import java.util.ArrayList;
 public class Panel_Save extends JPanel implements ActionListener{
     private JTextField text_name;
     private JFrame mainFrame;
-    Recorder recorder;
-    Client client;
+    private Recorder recorder;
+    private Client client;
 
     public static void main(String[] a) {
         new Panel_Save(null,null).display();

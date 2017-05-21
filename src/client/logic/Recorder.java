@@ -32,7 +32,7 @@ public class Recorder {
                     break;
                 }
 
-                int score = scanner.nextInt();
+                int score = Integer.parseInt(scanner.nextLine());
                 ret.add(new HistoryItem(name, score));
             }
 

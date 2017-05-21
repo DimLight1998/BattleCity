@@ -19,7 +19,6 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
@@ -161,14 +160,18 @@ public class Client implements ActionListener,KeyListener,InfoHandler{
         if(info.startsWith("isb")) {
             if(info.charAt(3) == '_') {
                 if(info.endsWith("1")) {
-                    bullets.add(new Bullet(hero_1));
-                    if(playerNumber == 1) {
-                        gui_play.playFireSound();
+                    synchronized (bullets) {
+                        bullets.add(new Bullet(hero_1));
+                        if (playerNumber == 1) {
+                            gui_play.playFireSound();
+                        }
                     }
                 } else if(info.endsWith("2")) {
-                    bullets.add(new Bullet(hero_2));
-                    if(playerNumber == 2) {
-                        gui_play.playFireSound();
+                    synchronized (bullets) {
+                        bullets.add(new Bullet(hero_2));
+                        if (playerNumber == 2) {
+                            gui_play.playFireSound();
+                        }
                     }
                 }
             } else {
