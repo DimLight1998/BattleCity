@@ -12,6 +12,7 @@ public class Panel_Setup extends JPanel {
     JTextField text_port;
     JTextField text_map;
     JFrame     mainFrame;
+    JButton    button_start;
 
 
     public Panel_Setup(Server server) {
@@ -19,7 +20,7 @@ public class Panel_Setup extends JPanel {
         text_map             = new JTextField("default", 10);
         JLabel  label_port   = new JLabel("Run server on port");
         JLabel  label_map    = new JLabel("Play on map");
-        JButton button_start = new JButton("Start");
+        button_start         = new JButton("Start");
 
         mainFrame = new JFrame("Settings");
         mainFrame.setContentPane(this);
@@ -64,5 +65,10 @@ public class Panel_Setup extends JPanel {
 
     public String getMapName() {
         return text_map.getText();
+    }
+
+    public void deactivate() {
+        button_start.setText("Server is running");
+        button_start.setEnabled(false);
     }
 }

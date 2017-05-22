@@ -7,7 +7,6 @@ import common.item.tile.*;
 import common.logic.*;
 import javafx.util.Pair;
 import server.gui.Panel_Setup;
-import server.gui.Panel_Status;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -43,7 +42,6 @@ public class Server implements ActionListener, InfoHandler {
     private Receiver         receiver_1;
     private Receiver         receiver_2;
     private Panel_Setup      panel_setup;
-    Panel_Status             panel_status;
     private File             mapFile;
     int                      player_1_score;
     int                      plater_2_score;
@@ -68,7 +66,6 @@ public class Server implements ActionListener, InfoHandler {
         hero_2 = new PlayerTank(288, 448, 2);
 
         panel_setup = new Panel_Setup(this);
-        //        panel_status = new Panel_Status();
     }
 
     public void handleInfo(String info, InetAddress address) {
@@ -201,7 +198,8 @@ public class Server implements ActionListener, InfoHandler {
             Thread.sleep(100);
         }
 
-        panel_setup.dispose();
+        panel_setup.deactivate();
+
         receiver_1 = new Receiver(0, this);
         receiver_2 = new Receiver(0, this);
 
@@ -263,7 +261,7 @@ public class Server implements ActionListener, InfoHandler {
 
         broadcast("gmo" + (isPlayersWin ? 'w' : 'l'));
 
-        JOptionPane.showMessageDialog(panel_status, "Game over, server is closing now.");
+        JOptionPane.showMessageDialog(null, "Game over, server is closing now.");
 
         System.exit(0);
     }
@@ -750,15 +748,15 @@ public class Server implements ActionListener, InfoHandler {
         int delta_x = bullet_1.getLocationX() - bullet_2.getLocationX();
         int delta_y = bullet_1.getLocationY() - bullet_2.getLocationY();
 
-        if ((bullet_1.getLocationY() == bullet_2.getLocationY()) && (delta_x >= -3)
-            && (delta_x <= 3)
+        if ((bullet_1.getLocationY() == bullet_2.getLocationY()) && (delta_x >= -4)
+            && (delta_x <= 4)
             && (bullet_1.getVelocityStatus() == kMovingRight)
             && (bullet_2.getVelocityStatus() == kMovingLeft)) {
             return true;
         }
 
-        if ((bullet_1.getLocationX() == bullet_2.getLocationX()) && (delta_y >= -3)
-            && (delta_y <= 3)
+        if ((bullet_1.getLocationX() == bullet_2.getLocationX()) && (delta_y >= -4)
+            && (delta_y <= 4)
             && (bullet_1.getVelocityStatus() == kMovingDown)
             && (bullet_2.getVelocityStatus() == kMovingUp)) {
             return true;
