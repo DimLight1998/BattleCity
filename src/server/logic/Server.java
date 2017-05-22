@@ -221,17 +221,13 @@ public class Server implements ActionListener, InfoHandler {
 
         emitter_1.emit("dis1" + receiver_1.getLocalPort());
         emitter_2.emit("dis2" + receiver_2.getLocalPort());
-        //        panel_status.show();
 
-        // TODO remove this
         System.out.println("ready");
-        //        broadcast("init");
 
-        // TODO complete map selection
-        // todo for test
-        new MapLoader().loadMap(panel_setup.getMapName(), tiles);
-        broadcast("map_" + panel_setup.getMapName());
-
+        int[] mapContent = new MapLoader().loadMap(panel_setup.getMapName(), tiles);
+        String mapText = MapLoader.intArrToString(mapContent);
+        broadcast("map_"+mapText);
+        Thread.sleep(300);
         AIInitialize();
 
 

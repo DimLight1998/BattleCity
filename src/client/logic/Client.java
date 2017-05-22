@@ -154,8 +154,9 @@ public class Client implements ActionListener, KeyListener, InfoHandler {
         }
 
         if (info.startsWith("map")) {
-            String mapName = info.substring(4);
-            new MapLoader().loadMap(mapName, tiles);
+            String mapText = info.substring(4);
+            int[] mapContent = MapLoader.stringToIntArr(mapText);
+            MapLoader.loadMap(mapContent, tiles);
         }
 
         if (info.startsWith("isb")) {
