@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.net.BindException;
 import java.net.InetAddress;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -206,7 +207,13 @@ public class Server implements ActionListener, InfoHandler {
         receiver_1.start();
         receiver_2.start();
 
-        multipleReceiver = new MultipleReceiver(serverPortNumber, this);
+        try {
+            multipleReceiver = new MultipleReceiver(serverPortNumber, this);
+        } catch (BindException e) {
+            JOptionPane.showMessageDialog(null,"This port is already in use !");
+            System.exit(0);
+        }
+
         multipleReceiver.start();
 
         while (!isPlayerReady_2) {

@@ -12,6 +12,7 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -19,6 +20,7 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
@@ -362,6 +364,8 @@ public class Client implements ActionListener, KeyListener, InfoHandler {
                 emitter  = new Emitter(IPAddress, portNumber);
                 receiver = new Receiver(0, this);
                 receiver.start();
+            } catch (ConnectException e2) {
+                JOptionPane.showMessageDialog(null,"Connection failed !");
             } catch (IOException e1) {
                 e1.printStackTrace();
             }

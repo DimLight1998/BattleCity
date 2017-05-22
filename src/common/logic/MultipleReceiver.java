@@ -1,7 +1,9 @@
 package common.logic;
 
+import javax.swing.*;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.net.BindException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,7 +18,7 @@ public class MultipleReceiver extends Thread {
 
     public MultipleReceiver(int openOnPort, InfoHandler infoHandler) throws IOException {
         this.infoHandler = infoHandler;
-        serverSocket     = new ServerSocket(openOnPort);
+        serverSocket = new ServerSocket(openOnPort);
     }
 
 
