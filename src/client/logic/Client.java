@@ -220,7 +220,7 @@ public class Client implements ActionListener, KeyListener, InfoHandler {
             String[] slices    = info.split("_");
             int row            = Integer.parseInt(slices[1]);
             int column         = Integer.parseInt(slices[2]);
-            tiles[row][column] = new PlainTile(row, column);
+            tiles[row][column] = new PlainTile(column, row);
         }
 
         if (info.startsWith("kill")) {
