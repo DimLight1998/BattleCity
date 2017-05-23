@@ -1,5 +1,6 @@
 package server.gui;
 
+import common.logic.MapLoader;
 import server.logic.Server;
 
 import javax.swing.*;
@@ -10,14 +11,18 @@ import java.awt.*;
  */
 public class Panel_Setup extends JPanel {
     JTextField text_port;
-    JTextField text_map;
+    JComboBox<String> combo_map;
     JFrame     mainFrame;
     JButton    button_start;
 
 
     public Panel_Setup(Server server) {
         text_port            = new JTextField(10);
-        text_map             = new JTextField("default", 10);
+        combo_map = new JComboBox<>();
+        for(String item:MapLoader.getMapList()) {
+            combo_map.addItem(item);
+        }
+
         JLabel  label_port   = new JLabel("Run server on port");
         JLabel  label_map    = new JLabel("Play on map");
         button_start         = new JButton("Start");
@@ -38,7 +43,7 @@ public class Panel_Setup extends JPanel {
         panel_port.add(text_port);
 
         panel_map.add(label_map);
-        panel_map.add(text_map);
+        panel_map.add(combo_map);
 
         panel_start.add(button_start);
 
@@ -64,7 +69,7 @@ public class Panel_Setup extends JPanel {
     }
 
     public String getMapName() {
-        return text_map.getText();
+        return combo_map.getSelectedItem().toString();
     }
 
     public void deactivate() {

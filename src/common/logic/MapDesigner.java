@@ -29,7 +29,7 @@ public class MapDesigner extends JPanel implements ActionListener, MouseListener
         mainFrame.setLayout(new BorderLayout());
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setResizable(true);
-        mainFrame.setSize(615, 520);
+        mainFrame.setSize(645, 520);
         mainFrame.setResizable(false);
         mainFrame.setLocationRelativeTo(null);
 

@@ -9,7 +9,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import static common.item.tile.Tile.*;
@@ -125,6 +127,45 @@ public class MapLoader {
                 }
             }
         }
+    }
+
+    static ArrayList<String> getMapListFromInner() {
+        // hard coded
+        ArrayList<String> ret = new ArrayList<>();
+        ret.add("bloodstrike");
+        ret.add("cross");
+        ret.add("garden");
+        ret.add("gate");
+        ret.add("island");
+        ret.add("ruins");
+        ret.add("violent_moha");
+        ret.add("information");
+
+        return ret;
+    }
+
+    static ArrayList<String> getMapListFromOuter() {
+        File dir = new File(".");
+        File[] files = dir.listFiles();
+        ArrayList<String> mapFileNames = new ArrayList<>();
+
+        for(File file : files) {
+            if(file.getName().endsWith(".map")) {
+                int length = file.getName().length();
+                mapFileNames.add(file.getName().substring(0,length-4));
+            }
+        }
+
+        return mapFileNames;
+    }
+
+    static public ArrayList<String> getMapList() {
+        ArrayList<String> ret = new ArrayList<>();
+
+        ret.addAll(getMapListFromInner());
+        ret.addAll(getMapListFromOuter());
+
+        return ret;
     }
 
     private final static int MAX_MAP_SIZE_X = 30;
