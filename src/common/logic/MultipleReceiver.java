@@ -18,7 +18,7 @@ public class MultipleReceiver extends Thread {
 
     public MultipleReceiver(int openOnPort, InfoHandler infoHandler) throws IOException {
         this.infoHandler = infoHandler;
-        serverSocket = new ServerSocket(openOnPort);
+        serverSocket     = new ServerSocket(openOnPort);
     }
 
 

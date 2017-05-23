@@ -156,7 +156,7 @@ public class Client implements ActionListener, KeyListener, InfoHandler {
         }
 
         if (info.startsWith("map")) {
-            String mapText = info.substring(4);
+            String mapText   = info.substring(4);
             int[] mapContent = MapLoader.stringToIntArr(mapText);
             MapLoader.loadMap(mapContent, tiles);
         }
@@ -365,7 +365,7 @@ public class Client implements ActionListener, KeyListener, InfoHandler {
                 receiver = new Receiver(0, this);
                 receiver.start();
             } catch (ConnectException e2) {
-                JOptionPane.showMessageDialog(null,"Connection failed !");
+                JOptionPane.showMessageDialog(null, "Connection failed !");
             } catch (IOException e1) {
                 e1.printStackTrace();
             }

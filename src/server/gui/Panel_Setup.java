@@ -10,22 +10,22 @@ import java.awt.*;
  * Created on 2017/04/30.
  */
 public class Panel_Setup extends JPanel {
-    JTextField text_port;
+    JTextField        text_port;
     JComboBox<String> combo_map;
-    JFrame     mainFrame;
-    JButton    button_start;
+    JFrame            mainFrame;
+    JButton           button_start;
 
 
     public Panel_Setup(Server server) {
-        text_port            = new JTextField(10);
+        text_port = new JTextField(10);
         combo_map = new JComboBox<>();
-        for(String item:MapLoader.getMapList()) {
+        for (String item : MapLoader.getMapList()) {
             combo_map.addItem(item);
         }
 
-        JLabel  label_port   = new JLabel("Run server on port");
-        JLabel  label_map    = new JLabel("Play on map");
-        button_start         = new JButton("Start");
+        JLabel label_port = new JLabel("Run server on port");
+        JLabel label_map  = new JLabel("Play on map");
+        button_start      = new JButton("Start");
 
         mainFrame = new JFrame("Settings");
         mainFrame.setContentPane(this);
