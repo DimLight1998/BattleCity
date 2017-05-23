@@ -210,7 +210,7 @@ public class Server implements ActionListener, InfoHandler {
         try {
             multipleReceiver = new MultipleReceiver(serverPortNumber, this);
         } catch (BindException e) {
-            JOptionPane.showMessageDialog(null,"This port is already in use !");
+            JOptionPane.showMessageDialog(null, "This port is already in use !");
             System.exit(0);
         }
 
@@ -232,8 +232,8 @@ public class Server implements ActionListener, InfoHandler {
         System.out.println("ready");
 
         int[] mapContent = new MapLoader().loadMap(panel_setup.getMapName(), tiles);
-        String mapText = MapLoader.intArrToString(mapContent);
-        broadcast("map_"+mapText);
+        String mapText   = MapLoader.intArrToString(mapContent);
+        broadcast("map_" + mapText);
         Thread.sleep(300);
         AIInitialize();
 
