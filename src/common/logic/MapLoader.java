@@ -26,16 +26,16 @@ public class MapLoader {
     private static int[] loadMap(InputStream inputStream, Tile[][] tiles)
         throws FileNotFoundException {
         int[] content = getInts(inputStream);
-        loadMap(content,tiles);
+        loadMap(content, tiles);
         return content;
     }
 
     private static int[] getInts(InputStream inputStream) {
-        int[] ret = new int[900];
+        int[] ret   = new int[900];
         int counter = 0;
 
         Scanner scanner = new Scanner(inputStream);
-        while(scanner.hasNextInt()){
+        while (scanner.hasNextInt()) {
             ret[counter] = scanner.nextInt();
             counter++;
         }
@@ -45,7 +45,7 @@ public class MapLoader {
 
     public static String intArrToString(int[] content) {
         StringBuilder ret = new StringBuilder();
-        for(int i : content) {
+        for (int i : content) {
             ret.append(Integer.toString(i));
         }
 
@@ -55,13 +55,13 @@ public class MapLoader {
     public static int[] stringToIntArr(String text) {
         int[] ret = new int[900];
 
-        for(int i = 0;i<900;i++) {
+        for (int i = 0; i < 900; i++) {
             ret[i] = Character.getNumericValue(text.charAt(i));
         }
 
         return ret;
     }
-    
+
     private static Tile getTileByIndex(int index, int column, int row) {
         switch (index) {
             case PLAIN_TILE:
@@ -85,7 +85,7 @@ public class MapLoader {
             case HEAD_QUARTER_RD:
                 return new HeadQuarterRD(column, row);
             default:
-                return new PlainTile(column,row);
+                return new PlainTile(column, row);
         }
     }
 
@@ -99,7 +99,7 @@ public class MapLoader {
         } catch (Exception e) {
             try {
                 InputStream in = new FileInputStream(mapName + ".map");
-                ret = loadMap(in, tiles);
+                ret            = loadMap(in, tiles);
             } catch (Exception e1) {
                 JOptionPane.showMessageDialog(null, "File doesn't exist");
             }
@@ -107,22 +107,22 @@ public class MapLoader {
 
         return ret;
     }
-    
-    public static void loadMap(int[] mapContent,Tile[][] tiles) {
+
+    public static void loadMap(int[] mapContent, Tile[][] tiles) {
         int rowCounter    = 0;
         int columnCounter = 0;
 
-        while(true) {
-            int read = mapContent[30*rowCounter+columnCounter];
+        while (true) {
+            int read = mapContent[30 * rowCounter + columnCounter];
 
-            tiles[rowCounter][columnCounter] = getTileByIndex(read,columnCounter,rowCounter);
+            tiles[rowCounter][columnCounter] = getTileByIndex(read, columnCounter, rowCounter);
 
             columnCounter++;
             if (columnCounter == MAX_MAP_SIZE_X) {
                 columnCounter = 0;
                 rowCounter++;
 
-                if(rowCounter == MAX_MAP_SIZE_X) {
+                if (rowCounter == MAX_MAP_SIZE_X) {
                     break;
                 }
             }
@@ -145,14 +145,14 @@ public class MapLoader {
     }
 
     static ArrayList<String> getMapListFromOuter() {
-        File dir = new File(".");
-        File[] files = dir.listFiles();
+        File dir                       = new File(".");
+        File[] files                   = dir.listFiles();
         ArrayList<String> mapFileNames = new ArrayList<>();
 
-        for(File file : files) {
-            if(file.getName().endsWith(".map")) {
+        for (File file : files) {
+            if (file.getName().endsWith(".map")) {
                 int length = file.getName().length();
-                mapFileNames.add(file.getName().substring(0,length-4));
+                mapFileNames.add(file.getName().substring(0, length - 4));
             }
         }
 
